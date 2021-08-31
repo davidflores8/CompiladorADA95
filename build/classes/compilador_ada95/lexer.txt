@@ -1,0 +1,58 @@
+package compilador_ada95;
+
+import java_cup.runtime.Symbol;
+
+%%
+
+%unicode
+%line
+%column
+%public
+%cup
+
+%{
+
+%}
+
+LETRA = [a-zA-Z]
+DIGITO = [0-9]+ 
+ID = {LETRA}({LETRA}|{DIGITO}|_)*|_{LETRA}({LETRA}|{DIGITO}|_)*
+COMA = ,
+IGUAL = :=
+PUNTOCOMA = ;
+PARENTESISI = "("
+PARENTESISD = ")"
+ESPACIO = (" ")+
+SALTOLINEA = \n|\r|\n\r|{ESPACIO}
+OPREL = <>|<|>|<=|>=|=
+OPADICION = "+"|"-"
+OPMULTI = "*"|"/"
+IF = if
+ENDIF = end{ESPACIO}if
+THEN = then
+INTEGER = INTEGER
+CHAR = CHAR
+BOOLEAN = BOOLEAN
+
+
+
+%%
+
+{IF} {System.out.println("Encontro un if - "+yytext());return new Symbol (sym.TK_IF, yyline + 1, yycolumn +1 , yytext() ) ; }
+{PARENTESISI} {return new Symbol (sym.TK_PARENTESISI, yyline + 1, yycolumn +1 , yytext() ) ; }
+{OPREL} {return new Symbol (sym.TK_OPREL, yyline + 1, yycolumn +1 , yytext() ) ; }
+{DIGITO} {return new Symbol (sym.TK_DIGITO, yyline + 1, yycolumn +1 , yytext() ) ; }
+{PARENTESISD} {return new Symbol (sym.TK_PARENTESISD, yyline + 1, yycolumn +1 , yytext() ) ; }
+{THEN} {System.out.println("Encontro un then - "+yytext());return new Symbol (sym.TK_THEN, yyline + 1, yycolumn +1 , yytext() ) ; }
+{ENDIF} {return new Symbol (sym.TK_ENDIF, yyline + 1, yycolumn +1 , yytext() ) ; }
+{PUNTOCOMA} {return new Symbol (sym.TK_PUNTOCOMA, yyline + 1, yycolumn +1 , yytext() ) ; }
+{IGUAL} {System.out.println("Encontro un igual");return new Symbol (sym.TK_IGUAL, yyline + 1, yycolumn +1 , yytext() ) ; }
+{BOOLEAN} {System.out.println("Encontro un Boolean");return new Symbol (sym.TK_BOOLEAN, yyline + 1, yycolumn +1 , yytext() ) ; }
+{INTEGER} {System.out.println("Encontro un integer");return new Symbol (sym.TK_INTEGER, yyline + 1, yycolumn +1 , yytext() ) ; }
+{CHAR} {System.out.println("Encontro un char");return new Symbol (sym.TK_CHAR, yyline + 1, yycolumn +1 , yytext() ) ; }
+{COMA} {return new Symbol (sym.TK_COMA, yyline + 1, yycolumn +1 , yytext() ) ; }
+//{ESPACIO} {return new Symbol (sym.TK_ESPACIO, yyline + 1, yycolumn +1 , yytext() ) ; }
+{ID} {System.out.println("Encontro un id - "+yytext());return new Symbol (sym.TK_ID, yyline + 1, yycolumn +1 , yytext() ) ; }
+{SALTOLINEA} {  }
+
+.  {System.out.println("Error lexico en linea "+yyline +1 + " y columna "+yycolumn+" y en el texto: "+yytext());}
