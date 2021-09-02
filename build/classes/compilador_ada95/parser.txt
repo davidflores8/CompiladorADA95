@@ -34,37 +34,39 @@ terminal String TK_INTEGER;
 terminal String TK_BOOLEAN;
 terminal String TK_CHAR;
 terminal String TK_COMA;
+terminal String TK_LOOP;
+terminal String TK_ENDLOOP;
+terminal String TK_WHILE;
+terminal String TK_OPADICION;
+terminal String TK_MULTI;
 //terminal String TK_ESPACIO;
 
 non terminal DECISION;
 non terminal ASIGNACIONES;
-non terminal CREACION;
-//non terminal DECLARACION;
+non terminal WHILE;
 
 
 
 //DOC ::= LISTA {: System.out.println("doc ok"); :};
-
-//al asignar la variable al token, es decir TK_ID : id, se crean automaticamente las variable
-//idleft y idright , lo mismo sucede con cualquier nombre que usemos para la variable
-//por ejemplo TK_ID:palabra, crearia las palabras palabraleft y palabraright
 
 
 //LISTA ::= LISTA TK_COMA TK_ID:id {: System.out.println("ID en linea "+idleft + " Columna " +idright+ " lexema "+id); :}
 //        | TK_ID:id {:System.out.println("Id en linea "+idleft+" Columna "+idright+ " Lexema "+id); :}
 //;
 
-DECISION ::= TK_IF TK_PARENTESISI TK_ID TK_OPREL TK_DIGITO TK_PARENTESISD TK_THEN ASIGNACIONES TK_ENDIF TK_PUNTOCOMA ;
-ASIGNACIONES ::= TK_ID TK_IGUAL TK_ID ;
 
-CREACION ::=  TK_ID TK_COMA CREACION 
-            | TK_ID           
+
+DECISION ::= TK_IF TK_PARENTESISI TK_ID TK_OPREL TK_DIGITO TK_PARENTESISD TK_THEN ASIGNACIONES TK_ENDIF TK_PUNTOCOMA ;
+
+ASIGNACIONES ::= TK_ID TK_IGUAL TK_ID TK_PUNTOCOMA ASIGNACIONES
+               |TK_ID TK_IGUAL TK_ID TK_OPADICION TK_ID TK_PUNTOCOMA ASIGNACIONES
+               |TK_ID TK_IGUAL TK_ID TK_OPADICION TK_DIGITO TK_PUNTOCOMA ASIGNACIONES
+               |TK_ID TK_IGUAL TK_ID TK_MULTI TK_ID TK_PUNTOCOMA ASIGNACIONES
+               |TK_ID TK_IGUAL TK_ID TK_MULTI TK_DIGITO TK_PUNTOCOMA ASIGNACIONES
+               | 
 ;
 
-//DECLARACION ::= CREACION TK_IGUAL TK_INTEGER TK_PUNTOCOMA 
-//            | CREACION TK_IGUAL TK_BOOLEAN TK_PUNTOCOMA 
-//            | CREACION TK_IGUAL TK_CHAR TK_PUNTOCOMA 
-//;
+//WHILE ::= TK_WHILE TK_PARENTESISI TK_ID TK_OPREL TK_DIGITO TK_PARENTESISD TK_LOOP ASIGNACIONES TK_ENDLOOP TK_PUNTOCOMA ;
 
 
 

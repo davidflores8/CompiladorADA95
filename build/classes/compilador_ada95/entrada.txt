@@ -1,1 +1,7 @@
-if(palabra>10) then palabra:=palabrita end if;
+if (palabra>23) then 
+    palabra := acumulador; 
+    contador := contadorPrevio + contador1;
+    contador := contadorPrevio - contador2;
+    contador := contadorPrevio / contador3;
+    contador := contadorPrevio * contador4;
+end if;

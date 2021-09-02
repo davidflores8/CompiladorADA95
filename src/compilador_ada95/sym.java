@@ -8,22 +8,27 @@ package compilador_ada95;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int TK_PARENTESISI = 3;
-  public static final int TK_BOOLEAN = 13;
-  public static final int TK_CHAR = 14;
-  public static final int TK_PARENTESISD = 4;
-  public static final int TK_COMA = 15;
-  public static final int TK_PUNTOCOMA = 10;
-  public static final int TK_IF = 2;
-  public static final int TK_IGUAL = 11;
-  public static final int TK_ID = 5;
-  public static final int EOF = 0;
+  public static final int TK_ENDLOOP = 17;
   public static final int TK_OPREL = 6;
-  public static final int TK_THEN = 8;
-  public static final int TK_DIGITO = 7;
-  public static final int error = 1;
+  public static final int TK_PARENTESISI = 3;
+  public static final int TK_OPADICION = 19;
+  public static final int TK_PARENTESISD = 4;
+  public static final int TK_IGUAL = 11;
   public static final int TK_ENDIF = 9;
+  public static final int TK_WHILE = 18;
+  public static final int TK_BOOLEAN = 13;
+  public static final int TK_THEN = 8;
+  public static final int TK_MULTI = 20;
+  public static final int TK_PUNTOCOMA = 10;
+  public static final int TK_CHAR = 14;
+  public static final int TK_LOOP = 16;
+  public static final int EOF = 0;
   public static final int TK_INTEGER = 12;
+  public static final int error = 1;
+  public static final int TK_COMA = 15;
+  public static final int TK_DIGITO = 7;
+  public static final int TK_IF = 2;
+  public static final int TK_ID = 5;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -40,7 +45,12 @@ public class sym {
   "TK_INTEGER",
   "TK_BOOLEAN",
   "TK_CHAR",
-  "TK_COMA"
+  "TK_COMA",
+  "TK_LOOP",
+  "TK_ENDLOOP",
+  "TK_WHILE",
+  "TK_OPADICION",
+  "TK_MULTI"
   };
 }
 

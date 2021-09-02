@@ -1,6 +1,7 @@
 package compilador_ada95;
 
 import java_cup.runtime.Symbol;
+import javax.swing.JOptionPane;
 
 %%
 
@@ -24,15 +25,18 @@ PARENTESISI = "("
 PARENTESISD = ")"
 ESPACIO = (" ")+
 SALTOLINEA = \n|\r|\n\r|{ESPACIO}
-OPREL = <>|<|>|<=|>=|=
-OPADICION = "+"|"-"
-OPMULTI = "*"|"/"
+OPREL = <|>|<=|>=|=
+OPADICION = [+-]
+OPMULTI = [*/]
 IF = if
 ENDIF = end{ESPACIO}if
 THEN = then
 INTEGER = INTEGER
 CHAR = CHAR
 BOOLEAN = BOOLEAN
+LOOP = loop
+ENDLOOP = end{ESPACIO}loop
+WHILE = while
 
 
 
@@ -48,11 +52,16 @@ BOOLEAN = BOOLEAN
 {PUNTOCOMA} {return new Symbol (sym.TK_PUNTOCOMA, yyline + 1, yycolumn +1 , yytext() ) ; }
 {IGUAL} {System.out.println("Encontro un igual");return new Symbol (sym.TK_IGUAL, yyline + 1, yycolumn +1 , yytext() ) ; }
 {BOOLEAN} {System.out.println("Encontro un Boolean");return new Symbol (sym.TK_BOOLEAN, yyline + 1, yycolumn +1 , yytext() ) ; }
-{INTEGER} {System.out.println("Encontro un integer");return new Symbol (sym.TK_INTEGER, yyline + 1, yycolumn +1 , yytext() ) ; }
+{INTEGER} {return new Symbol (sym.TK_INTEGER, yyline + 1, yycolumn +1 , yytext() ) ; }
 {CHAR} {System.out.println("Encontro un char");return new Symbol (sym.TK_CHAR, yyline + 1, yycolumn +1 , yytext() ) ; }
 {COMA} {return new Symbol (sym.TK_COMA, yyline + 1, yycolumn +1 , yytext() ) ; }
+{LOOP} {return new Symbol (sym.TK_LOOP, yyline + 1, yycolumn +1 , yytext() ) ; }
+{ENDLOOP} {return new Symbol (sym.TK_ENDLOOP, yyline + 1, yycolumn +1 , yytext() ) ; }
+{WHILE} {return new Symbol (sym.TK_WHILE, yyline + 1, yycolumn +1 , yytext() ) ; }
+{OPADICION} {return new Symbol (sym.TK_OPADICION, yyline + 1, yycolumn +1 , yytext() ) ; }
+{OPMULTI} {return new Symbol (sym.TK_MULTI, yyline + 1, yycolumn +1 , yytext() ) ; }
 //{ESPACIO} {return new Symbol (sym.TK_ESPACIO, yyline + 1, yycolumn +1 , yytext() ) ; }
 {ID} {System.out.println("Encontro un id - "+yytext());return new Symbol (sym.TK_ID, yyline + 1, yycolumn +1 , yytext() ) ; }
 {SALTOLINEA} {  }
 
-.  {System.out.println("Error lexico en linea "+yyline +1 + " y columna "+yycolumn+" y en el texto: "+yytext());}
+.  {JOptionPane.showMessageDialog(null, "Error lexico en linea "+yyline +1 + " y columna "+yycolumn+" y en el texto:\n "+yytext());}

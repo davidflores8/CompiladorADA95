@@ -6,6 +6,7 @@
 package compilador_ada95;
 
 import java.io.FileReader;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -28,9 +29,11 @@ public class main {
             p.parse();
             
             
+            
         }catch(Exception e){
                 e.printStackTrace();
         }
+        
     }
     
 }
