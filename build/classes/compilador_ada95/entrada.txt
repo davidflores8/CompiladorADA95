@@ -1,7 +1,5 @@
-if (palabra>23) then 
-    palabra := acumulador; 
-    contador := contadorPrevio + contador1;
-    contador := contadorPrevio - contador2;
-    contador := contadorPrevio / contador3;
-    contador := contadorPrevio * contador4;
-end if;
+while (palabra>2) loop
+    palabra:=palabra+3; 
+end loop;
+
+

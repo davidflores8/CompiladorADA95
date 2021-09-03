@@ -10,13 +10,14 @@ import javax.swing.JOptionPane;
 %column
 %public
 %cup
+%state COMENTARIOS
 
 %{
 
 %}
 
 LETRA = [a-zA-Z]
-DIGITO = [0-9]+ 
+DIGITO = [0-9] 
 ID = {LETRA}({LETRA}|{DIGITO}|_)*|_{LETRA}({LETRA}|{DIGITO}|_)*
 COMA = ,
 IGUAL = :=
@@ -37,10 +38,12 @@ BOOLEAN = BOOLEAN
 LOOP = loop
 ENDLOOP = end{ESPACIO}loop
 WHILE = while
-
+COMENTARIO = --
 
 
 %%
+
+<YYINITIAL>{
 
 {IF} {System.out.println("Encontro un if - "+yytext());return new Symbol (sym.TK_IF, yyline + 1, yycolumn +1 , yytext() ) ; }
 {PARENTESISI} {return new Symbol (sym.TK_PARENTESISI, yyline + 1, yycolumn +1 , yytext() ) ; }
@@ -61,7 +64,19 @@ WHILE = while
 {OPADICION} {return new Symbol (sym.TK_OPADICION, yyline + 1, yycolumn +1 , yytext() ) ; }
 {OPMULTI} {return new Symbol (sym.TK_MULTI, yyline + 1, yycolumn +1 , yytext() ) ; }
 //{ESPACIO} {return new Symbol (sym.TK_ESPACIO, yyline + 1, yycolumn +1 , yytext() ) ; }
+{COMENTARIO} {yybegin(COMENTARIOS);}
 {ID} {System.out.println("Encontro un id - "+yytext());return new Symbol (sym.TK_ID, yyline + 1, yycolumn +1 , yytext() ) ; }
 {SALTOLINEA} {  }
 
 .  {JOptionPane.showMessageDialog(null, "Error lexico en linea "+yyline +1 + " y columna "+yycolumn+" y en el texto:\n "+yytext());}
+}
+
+
+<COMENTARIOS>{
+    
+    . {System.out.print("Hola");}
+
+    {SALTOLINEA} {yybegin(YYINITIAL);}
+
+}
+

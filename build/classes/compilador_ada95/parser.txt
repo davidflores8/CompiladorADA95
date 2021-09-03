@@ -39,22 +39,21 @@ terminal String TK_ENDLOOP;
 terminal String TK_WHILE;
 terminal String TK_OPADICION;
 terminal String TK_MULTI;
+terminal String TK_COMENTARIO;
 //terminal String TK_ESPACIO;
 
 non terminal DECISION;
 non terminal ASIGNACIONES;
 non terminal WHILE;
+non terminal PRINCIPAL;
 
 
 
-//DOC ::= LISTA {: System.out.println("doc ok"); :};
-
-
-//LISTA ::= LISTA TK_COMA TK_ID:id {: System.out.println("ID en linea "+idleft + " Columna " +idright+ " lexema "+id); :}
-//        | TK_ID:id {:System.out.println("Id en linea "+idleft+" Columna "+idright+ " Lexema "+id); :}
-//;
-
-
+PRINCIPAL::= DECISION 
+            |WHILE 
+            |ASIGNACIONES 
+            | 
+;
 
 DECISION ::= TK_IF TK_PARENTESISI TK_ID TK_OPREL TK_DIGITO TK_PARENTESISD TK_THEN ASIGNACIONES TK_ENDIF TK_PUNTOCOMA ;
 
@@ -66,7 +65,7 @@ ASIGNACIONES ::= TK_ID TK_IGUAL TK_ID TK_PUNTOCOMA ASIGNACIONES
                | 
 ;
 
-//WHILE ::= TK_WHILE TK_PARENTESISI TK_ID TK_OPREL TK_DIGITO TK_PARENTESISD TK_LOOP ASIGNACIONES TK_ENDLOOP TK_PUNTOCOMA ;
+WHILE ::= TK_WHILE TK_PARENTESISI TK_ID TK_OPREL TK_DIGITO TK_PARENTESISD TK_LOOP ASIGNACIONES TK_ENDLOOP TK_PUNTOCOMA ;
 
 
 

@@ -23,6 +23,7 @@ public class sym {
   public static final int TK_CHAR = 14;
   public static final int TK_LOOP = 16;
   public static final int EOF = 0;
+  public static final int TK_COMENTARIO = 21;
   public static final int TK_INTEGER = 12;
   public static final int error = 1;
   public static final int TK_COMA = 15;
@@ -50,7 +51,8 @@ public class sym {
   "TK_ENDLOOP",
   "TK_WHILE",
   "TK_OPADICION",
-  "TK_MULTI"
+  "TK_MULTI",
+  "TK_COMENTARIO"
   };
 }
 
