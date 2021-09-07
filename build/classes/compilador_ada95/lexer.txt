@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 %state COMENTARIOS
 
 %{
-
+    String comentario="";
 %}
 
 LETRA = [a-zA-Z]
@@ -74,9 +74,9 @@ COMENTARIO = --
 
 <COMENTARIOS>{
     
-    . {System.out.print("Hola");}
+    . {comentario = comentario+yytext();}
 
-    {SALTOLINEA} {yybegin(YYINITIAL);}
+    {SALTOLINEA} {System.out.println("Este es un comentario: "+comentario); comentario =" ";yybegin(YYINITIAL);}
 
 }
 

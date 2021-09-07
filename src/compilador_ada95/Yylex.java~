@@ -327,7 +327,7 @@ public class Yylex implements java_cup.runtime.Scanner {
   private boolean zzEOFDone;
 
   /* user code: */
-
+    String comentario="";
 
 
   /**
@@ -791,12 +791,12 @@ public class Yylex implements java_cup.runtime.Scanner {
             // fall through
           case 35: break;
           case 12:
-            { System.out.print("Hola");
+            { comentario = comentario+yytext();
             }
             // fall through
           case 36: break;
           case 13:
-            { yybegin(YYINITIAL);
+            { System.out.println(comentario); comentario =" ";yybegin(YYINITIAL);
             }
             // fall through
           case 37: break;

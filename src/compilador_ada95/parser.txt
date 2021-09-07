@@ -15,43 +15,15 @@ public void syntax_error (Symbol s){
 
 :} ;
 
-//terminal String TK_ID;
-//terminal String TK_COMA;
-//non terminal DOC;
-//non terminal LISTA ;
 
-terminal String TK_IF;
-terminal String TK_PARENTESISI;
-terminal String TK_PARENTESISD;
-terminal String TK_ID;
-terminal String TK_OPREL;
-terminal String TK_DIGITO;
-terminal String TK_THEN;
-terminal String TK_ENDIF;
-terminal String TK_PUNTOCOMA;
-terminal String TK_IGUAL;
-terminal String TK_INTEGER;
-terminal String TK_BOOLEAN;
-terminal String TK_CHAR;
-terminal String TK_COMA;
-terminal String TK_LOOP;
-terminal String TK_ENDLOOP;
-terminal String TK_WHILE;
-terminal String TK_OPADICION;
-terminal String TK_MULTI;
+terminal String TK_IF, TK_PARENTESISI, TK_PARENTESISD, TK_ID, TK_OPREL, TK_DIGITO, TK_THEN, TK_ENDIF, TK_PUNTOCOMA;
+terminal String TK_IGUAL, TK_INTEGER, TK_BOOLEAN, TK_CHAR, TK_COMA, TK_LOOP, TK_ENDLOOP, TK_WHILE, TK_OPADICION, TK_MULTI;
 terminal String TK_COMENTARIO;
-//terminal String TK_ESPACIO;
 
-non terminal DECISION;
-non terminal ASIGNACIONES;
-non terminal WHILE;
-non terminal PRINCIPAL;
+non terminal PRINCIPAL, WHILE, DECISION, ASIGNACIONES;
 
 
-
-PRINCIPAL::= DECISION 
-            |WHILE 
-            |ASIGNACIONES 
+PRINCIPAL::= WHILE
             | 
 ;
 

@@ -1,5 +1,4 @@
-while (palabra>2) loop
-    palabra:=palabra+3; 
-end loop;
+--La variable aun no esta declarada
+--La variable ya esta declarada
 
 
