@@ -6,9 +6,13 @@
 procedure CUENTA is
     numero:=contador;
 begin  
-    if (numero>100) then
-        numero:=contador;
-    end if;
+    procedure PROCESO is
+        contador:=acumulador;
+    begin
+        if (numero>100) then
+            numero:=contador;
+        end if;
+    end PROCESO;
 end CUENTA; 
 
 

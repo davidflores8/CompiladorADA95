@@ -265,6 +265,7 @@ public class Principal extends javax.swing.JFrame {
                 guardarDatos();
             } catch (IOException ex) {
                 Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Hola");
             }
         }
         else{

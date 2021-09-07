@@ -1,16 +1,12 @@
 package compilador_ada95;
-
 import java_cup.runtime.Symbol;
 
 parser code {:
 
-
 public void syntax_error (Symbol s){
-
     System.out.println("Error de sintaxis");
     System.out.println("Linea " +s.left);
     System.out.println("Columna " +s.right);
-
 }
 
 :} ;
@@ -28,6 +24,7 @@ PROCEDURE::= TK_PROCEDURE TK_ID TK_IS ASIGNACIONES TK_BEGIN PROCEDURE_PRIME TK_E
 PROCEDURE_PRIME::= DECISION
                 | WHILE
                 | ASIGNACIONES
+                | PROCEDURE
 ;
 
 
