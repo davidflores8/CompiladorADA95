@@ -17,14 +17,14 @@ import javax.swing.JOptionPane;
 %}
 
 LETRA = [a-zA-Z]
-DIGITO = [0-9] 
+DIGITO = [0-9]+ 
 ID = {LETRA}({LETRA}|{DIGITO}|_)*|_{LETRA}({LETRA}|{DIGITO}|_)*
 COMA = ,
 IGUAL = :=
 PUNTOCOMA = ;
 PARENTESISI = "("
 PARENTESISD = ")"
-ESPACIO = (" ")+
+ESPACIO = [" "]+
 SALTOLINEA = \n|\r|\n\r|{ESPACIO}
 OPREL = <|>|<=|>=|=
 OPADICION = [+-]
@@ -38,13 +38,20 @@ BOOLEAN = BOOLEAN
 LOOP = loop
 ENDLOOP = end{ESPACIO}loop
 WHILE = while
+PROCEDURE = procedure
+BEGIN = begin
+END = end
+IS = is
 COMENTARIO = --
 
 
 %%
 
 <YYINITIAL>{
-
+{PROCEDURE} {return new Symbol (sym.TK_PROCEDURE, yyline + 1, yycolumn +1 , yytext() ) ; }
+{IS} {return new Symbol (sym.TK_IS, yyline + 1, yycolumn +1 , yytext() ) ; }
+{BEGIN} {return new Symbol (sym.TK_BEGIN, yyline + 1, yycolumn +1 , yytext() ) ; }
+{END} {return new Symbol (sym.TK_END, yyline + 1, yycolumn +1 , yytext() ) ; }
 {IF} {System.out.println("Encontro un if - "+yytext());return new Symbol (sym.TK_IF, yyline + 1, yycolumn +1 , yytext() ) ; }
 {PARENTESISI} {return new Symbol (sym.TK_PARENTESISI, yyline + 1, yycolumn +1 , yytext() ) ; }
 {OPREL} {return new Symbol (sym.TK_OPREL, yyline + 1, yycolumn +1 , yytext() ) ; }

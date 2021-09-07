@@ -1,4 +1,14 @@
 --La variable aun no esta declarada
 --La variable ya esta declarada
+--if (numero>contador) then
+--numero:=contador
+
+procedure CUENTA is
+    numero:=contador;
+begin  
+    if (numero>100) then
+        numero:=contador;
+    end if;
+end CUENTA; 
 
 

@@ -11,6 +11,7 @@ public class sym {
   public static final int TK_ENDLOOP = 17;
   public static final int TK_OPREL = 6;
   public static final int TK_PARENTESISI = 3;
+  public static final int TK_PROCEDURE = 22;
   public static final int TK_OPADICION = 19;
   public static final int TK_PARENTESISD = 4;
   public static final int TK_IGUAL = 11;
@@ -23,11 +24,14 @@ public class sym {
   public static final int TK_CHAR = 14;
   public static final int TK_LOOP = 16;
   public static final int EOF = 0;
+  public static final int TK_IS = 23;
+  public static final int TK_BEGIN = 24;
   public static final int TK_COMENTARIO = 21;
   public static final int TK_INTEGER = 12;
   public static final int error = 1;
   public static final int TK_COMA = 15;
   public static final int TK_DIGITO = 7;
+  public static final int TK_END = 25;
   public static final int TK_IF = 2;
   public static final int TK_ID = 5;
   public static final String[] terminalNames = new String[] {
@@ -52,7 +56,11 @@ public class sym {
   "TK_WHILE",
   "TK_OPADICION",
   "TK_MULTI",
-  "TK_COMENTARIO"
+  "TK_COMENTARIO",
+  "TK_PROCEDURE",
+  "TK_IS",
+  "TK_BEGIN",
+  "TK_END"
   };
 }
 
