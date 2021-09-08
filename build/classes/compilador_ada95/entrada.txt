@@ -4,15 +4,14 @@
 --numero:=contador
 
 procedure CUENTA is
-    numero:=contador;
-begin  
-    procedure PROCESO is
-        contador:=acumulador;
-    begin
-        if (numero>100) then
-            numero:=contador;
-        end if;
-    end PROCESO;
+    numero:BOOLEAN:=true;
+    contador:CHAR:=a;
+    acumulador:INTEGER:=5;
+begin
+    while (numero>4) loop
+        numero:=acumulador;
+    end loop;
+
 end CUENTA; 
 
 

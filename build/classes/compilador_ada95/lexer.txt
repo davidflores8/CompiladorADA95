@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
 %}
 
 LETRA = [a-zA-Z]
-DIGITO = [0-9]+ 
+DIGITO = [0-9]
 ID = {LETRA}({LETRA}|{DIGITO}|_)*|_{LETRA}({LETRA}|{DIGITO}|_)*
 COMA = ,
 IGUAL = :=
@@ -26,7 +26,10 @@ PARENTESISI = "("
 PARENTESISD = ")"
 ESPACIO = [" "]+
 SALTOLINEA = \n|\r|\n\r|{ESPACIO}
+AND = &
+OR = "|"
 OPREL = <|>|<=|>=|=
+COLON = :
 OPADICION = [+-]
 OPMULTI = [*/]
 IF = if
@@ -42,9 +45,9 @@ PROCEDURE = procedure
 BEGIN = begin
 END = end
 IS = is
+TRUE = true
+FALSE = false
 COMENTARIO = --
-
-
 %%
 
 <YYINITIAL>{
@@ -55,7 +58,13 @@ COMENTARIO = --
 {IF} {System.out.println("Encontro un if - "+yytext());return new Symbol (sym.TK_IF, yyline + 1, yycolumn +1 , yytext() ) ; }
 {PARENTESISI} {return new Symbol (sym.TK_PARENTESISI, yyline + 1, yycolumn +1 , yytext() ) ; }
 {OPREL} {return new Symbol (sym.TK_OPREL, yyline + 1, yycolumn +1 , yytext() ) ; }
+{LETRA} {return new Symbol (sym.TK_LETRA, yyline + 1, yycolumn +1 , yytext() ) ; }
 {DIGITO} {return new Symbol (sym.TK_DIGITO, yyline + 1, yycolumn +1 , yytext() ) ; }
+{COLON} {return new Symbol (sym.TK_COLON, yyline + 1, yycolumn +1 , yytext() ) ; }
+{AND} {return new Symbol (sym.TK_AND, yyline + 1, yycolumn +1 , yytext() ) ; }
+{OR} {return new Symbol (sym.TK_OR, yyline + 1, yycolumn +1 , yytext() ) ; }
+{TRUE} {return new Symbol (sym.TK_TRUE, yyline + 1, yycolumn +1 , yytext() ) ; }
+{FALSE} {return new Symbol (sym.TK_FALSE, yyline + 1, yycolumn +1 , yytext() ) ; }
 {PARENTESISD} {return new Symbol (sym.TK_PARENTESISD, yyline + 1, yycolumn +1 , yytext() ) ; }
 {THEN} {System.out.println("Encontro un then - "+yytext());return new Symbol (sym.TK_THEN, yyline + 1, yycolumn +1 , yytext() ) ; }
 {ENDIF} {return new Symbol (sym.TK_ENDIF, yyline + 1, yycolumn +1 , yytext() ) ; }

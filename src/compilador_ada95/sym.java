@@ -8,30 +8,35 @@ package compilador_ada95;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int TK_ENDLOOP = 17;
+  public static final int TK_ENDLOOP = 18;
   public static final int TK_OPREL = 6;
   public static final int TK_PARENTESISI = 3;
   public static final int TK_PROCEDURE = 22;
-  public static final int TK_OPADICION = 19;
+  public static final int TK_OPADICION = 20;
   public static final int TK_PARENTESISD = 4;
-  public static final int TK_IGUAL = 11;
-  public static final int TK_ENDIF = 9;
-  public static final int TK_WHILE = 18;
-  public static final int TK_BOOLEAN = 13;
-  public static final int TK_THEN = 8;
-  public static final int TK_MULTI = 20;
-  public static final int TK_PUNTOCOMA = 10;
-  public static final int TK_CHAR = 14;
-  public static final int TK_LOOP = 16;
+  public static final int TK_IGUAL = 12;
+  public static final int TK_ENDIF = 10;
+  public static final int TK_LETRA = 8;
+  public static final int TK_WHILE = 19;
+  public static final int TK_BOOLEAN = 14;
+  public static final int TK_THEN = 9;
+  public static final int TK_MULTI = 21;
+  public static final int TK_PUNTOCOMA = 11;
+  public static final int TK_CHAR = 15;
+  public static final int TK_LOOP = 17;
+  public static final int TK_COLON = 28;
   public static final int EOF = 0;
+  public static final int TK_TRUE = 26;
   public static final int TK_IS = 23;
+  public static final int TK_AND = 29;
   public static final int TK_BEGIN = 24;
-  public static final int TK_COMENTARIO = 21;
-  public static final int TK_INTEGER = 12;
+  public static final int TK_OR = 30;
+  public static final int TK_INTEGER = 13;
   public static final int error = 1;
-  public static final int TK_COMA = 15;
+  public static final int TK_COMA = 16;
   public static final int TK_DIGITO = 7;
   public static final int TK_END = 25;
+  public static final int TK_FALSE = 27;
   public static final int TK_IF = 2;
   public static final int TK_ID = 5;
   public static final String[] terminalNames = new String[] {
@@ -43,6 +48,7 @@ public class sym {
   "TK_ID",
   "TK_OPREL",
   "TK_DIGITO",
+  "TK_LETRA",
   "TK_THEN",
   "TK_ENDIF",
   "TK_PUNTOCOMA",
@@ -56,11 +62,15 @@ public class sym {
   "TK_WHILE",
   "TK_OPADICION",
   "TK_MULTI",
-  "TK_COMENTARIO",
   "TK_PROCEDURE",
   "TK_IS",
   "TK_BEGIN",
-  "TK_END"
+  "TK_END",
+  "TK_TRUE",
+  "TK_FALSE",
+  "TK_COLON",
+  "TK_AND",
+  "TK_OR"
   };
 }
 
