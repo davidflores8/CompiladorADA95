@@ -1,16 +1,28 @@
 --La variable aun no esta declarada
 --La variable ya esta declarada
---if (numero>contador) then
---numero:=contador
+
 
 procedure CUENTA is
-    numero:BOOLEAN:=true;
-    contador:CHAR:=a;
-    acumulador:INTEGER:=5;
+    numero,numerito:INTEGER:=4;
+    letra:CHAR:=a;
+    numero,numerito:INTEGER:=4;
+    letra:CHAR:=a;
+    flag:BOOLEAN:=true;
 begin
+
     while (numero>4) loop
         numero:=acumulador;
-    end loop;
+    end loop; 
+    
+    numero:=acumulador;
+    numerito:= numero;
+
+    if(numero>4) then
+        numero:=numerito;
+    end if;
+
+    
+    
 
 end CUENTA; 
 
