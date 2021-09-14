@@ -4,13 +4,14 @@
 
 procedure CUENTA is
     numero,numerito:INTEGER;
-    numero,numerito:INTEGER;
-    numero,numerito:INTEGER;
+    bandera,littleBandera:BOOLEAN;
+    caracter,caracterPequeno:CHAR;
     
 begin
 
-    numero,numerito:INTEGER;
-    numero,numerito:INTEGER;
+    numero,numerito:INTEGER:=4;
+    bandera,littleBandera:BOOLEAN:=true;
+    caracter,caracterPequeno:CHAR:=a;
 
     if(numero>4) then
         numero:=numerito;
