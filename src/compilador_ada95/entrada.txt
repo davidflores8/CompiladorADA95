@@ -3,26 +3,31 @@
 
 
 procedure CUENTA is
-    numero,numerito:INTEGER:=4;
-    letra:CHAR:=a;
-    numero,numerito:INTEGER:=4;
-    letra:CHAR:=a;
-    flag:BOOLEAN:=true;
+    numero,numerito:INTEGER;
+    numero,numerito:INTEGER;
+    numero,numerito:INTEGER;
+    
 begin
 
-    while (numero>4) loop
-        numero:=acumulador;
-    end loop; 
-    
-    numero:=acumulador;
-    numerito:= numero;
+    numero,numerito:INTEGER;
+    numero,numerito:INTEGER;
 
     if(numero>4) then
         numero:=numerito;
     end if;
 
-    
-    
+    procedure NUMEROS is
+        primero, segundo:INTEGER;
+
+    begin   
+        while(primero>segundo) loop
+            segundo:=segundo+1;
+        end loop;
+
+        if (tercero=0) then
+            tercero:=1;
+        end if;
+    end NUMEROS;
 
 end CUENTA; 
 

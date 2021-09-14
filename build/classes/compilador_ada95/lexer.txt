@@ -33,6 +33,7 @@ COLON = :
 OPADICION = [+-]
 OPMULTI = [*/]
 IF = if
+ELSE = else
 ENDIF = end{ESPACIO}if
 THEN = then
 INTEGER = INTEGER
@@ -56,6 +57,7 @@ COMENTARIO = --
 {BEGIN} {return new Symbol (sym.TK_BEGIN, yyline + 1, yycolumn +1 , yytext() ) ; }
 {END} {return new Symbol (sym.TK_END, yyline + 1, yycolumn +1 , yytext() ) ; }
 {IF} {System.out.println("Encontro un if - "+yytext());return new Symbol (sym.TK_IF, yyline + 1, yycolumn +1 , yytext() ) ; }
+{ELSE} {return new Symbol (sym.TK_ELSE, yyline + 1, yycolumn +1 , yytext() ) ; }
 {PARENTESISI} {return new Symbol (sym.TK_PARENTESISI, yyline + 1, yycolumn +1 , yytext() ) ; }
 {OPREL} {return new Symbol (sym.TK_OPREL, yyline + 1, yycolumn +1 , yytext() ) ; }
 {LETRA} {return new Symbol (sym.TK_LETRA, yyline + 1, yycolumn +1 , yytext() ) ; }
