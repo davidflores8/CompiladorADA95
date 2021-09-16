@@ -23,7 +23,6 @@ public class sym {
   public static final int TK_THEN = 10;
   public static final int TK_MULTI = 22;
   public static final int TK_PUNTOCOMA = 12;
-  public static final int TK_CHAR = 16;
   public static final int TK_LOOP = 18;
   public static final int TK_COLON = 29;
   public static final int EOF = 0;
@@ -34,6 +33,7 @@ public class sym {
   public static final int TK_OR = 31;
   public static final int TK_INTEGER = 14;
   public static final int error = 1;
+  public static final int TK_FLOAT = 16;
   public static final int TK_COMA = 17;
   public static final int TK_DIGITO = 8;
   public static final int TK_END = 26;
@@ -57,7 +57,7 @@ public class sym {
   "TK_IGUAL",
   "TK_INTEGER",
   "TK_BOOLEAN",
-  "TK_CHAR",
+  "TK_FLOAT",
   "TK_COMA",
   "TK_LOOP",
   "TK_ENDLOOP",

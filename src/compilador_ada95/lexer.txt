@@ -37,7 +37,7 @@ ELSE = else
 ENDIF = end{ESPACIO}if
 THEN = then
 INTEGER = INTEGER
-CHAR = CHAR
+FLOAT = FLOAT
 BOOLEAN = BOOLEAN
 LOOP = loop
 ENDLOOP = end{ESPACIO}loop
@@ -74,7 +74,7 @@ COMENTARIO = --
 {IGUAL} {System.out.println("Encontro un igual");return new Symbol (sym.TK_IGUAL, yyline + 1, yycolumn +1 , yytext() ) ; }
 {BOOLEAN} {System.out.println("Encontro un Boolean");return new Symbol (sym.TK_BOOLEAN, yyline + 1, yycolumn +1 , yytext() ) ; }
 {INTEGER} {return new Symbol (sym.TK_INTEGER, yyline + 1, yycolumn +1 , yytext() ) ; }
-{CHAR} {System.out.println("Encontro un char");return new Symbol (sym.TK_CHAR, yyline + 1, yycolumn +1 , yytext() ) ; }
+{FLOAT} {System.out.println("Encontro un float");return new Symbol (sym.TK_FLOAT, yyline + 1, yycolumn +1 , yytext() ) ; }
 {COMA} {return new Symbol (sym.TK_COMA, yyline + 1, yycolumn +1 , yytext() ) ; }
 {LOOP} {return new Symbol (sym.TK_LOOP, yyline + 1, yycolumn +1 , yytext() ) ; }
 {ENDLOOP} {return new Symbol (sym.TK_ENDLOOP, yyline + 1, yycolumn +1 , yytext() ) ; }

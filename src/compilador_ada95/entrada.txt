@@ -5,13 +5,13 @@
 procedure CUENTA is
     numero,numerito:INTEGER;
     bandera,littleBandera:BOOLEAN;
-    caracter,caracterPequeno:CHAR;
+    caracter,caracterPequeno:FLOAT;
     
 begin
 
     numero,numerito:INTEGER:=4;
     bandera,littleBandera:BOOLEAN:=true;
-    caracter,caracterPequeno:CHAR:=a;
+    caracter,caracterPequeno:FLOAT:=4;
 
     if(numero>4) then
         numero:=numerito;
