@@ -1,34 +1,37 @@
 --La variable aun no esta declarada
 --La variable ya esta declarada
 
+$
 
 procedure CUENTA is
-    numero,numerito:INTEGER;
+    numero,numerito:INTEGER:=45;
+    numero,numerito:INTEGER:=4;
     bandera,littleBandera:BOOLEAN;
-    caracter,caracterPequeno:FLOAT;
+    caracter,caracterPequeno:FLOAT:=123.45;
     
 begin
 
-    numero,numerito:INTEGER:=4;
-    bandera,littleBandera:BOOLEAN:=true;
-    caracter,caracterPequeno:FLOAT:=4;
-
-    if(numero>4) then
+    if (numero>4) then
         numero:=numerito;
     end if;
 
-    procedure NUMEROS is
-        primero, segundo:INTEGER;
+    put();
 
-    begin   
-        while(primero>segundo) loop
-            segundo:=segundo+1;
-        end loop;
+    if(numero>4) then
+        numero:=numerito;
+    else
+       numero:=numerito;
+    end if;
 
-        if (tercero=0) then
-            tercero:=1;
-        end if;
-    end NUMEROS;
+    get();
+
+    if(numero>4) then
+        numero:=numerito;
+    elseif(numero>4) then
+       numero:=numerito;
+    elseif(numero>4) then
+       numero:=numerito;
+    end if;
 
 end CUENTA; 
 

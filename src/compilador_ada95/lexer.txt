@@ -2,6 +2,7 @@ package compilador_ada95;
 
 import java_cup.runtime.Symbol;
 import javax.swing.JOptionPane;
+import java.util.ArrayList;
 
 %%
 
@@ -14,17 +15,20 @@ import javax.swing.JOptionPane;
 
 %{
     String comentario="";
+    ArrayList erroresLexicos = new ArrayList();
+    
 %}
 
 LETRA = [a-zA-Z]
-DIGITO = [0-9]
+DIGITO = [+-]?[0-9]+
+ESPACIO = [" "]
+DIGITOFLOAT = [+-]?([0-9]*[.])?[0-9]+
 ID = {LETRA}({LETRA}|{DIGITO}|_)*|_{LETRA}({LETRA}|{DIGITO}|_)*
 COMA = ,
 IGUAL = :=
 PUNTOCOMA = ;
 PARENTESISI = "("
 PARENTESISD = ")"
-ESPACIO = [" "]+
 SALTOLINEA = \n|\r|\n\r|{ESPACIO}
 AND = &
 OR = "|"
@@ -34,13 +38,14 @@ OPADICION = [+-]
 OPMULTI = [*/]
 IF = if
 ELSE = else
-ENDIF = end{ESPACIO}if
+ELSEIF = elseif
+ENDIF = end[{ESPACIO}]+if
 THEN = then
 INTEGER = INTEGER
 FLOAT = FLOAT
 BOOLEAN = BOOLEAN
 LOOP = loop
-ENDLOOP = end{ESPACIO}loop
+ENDLOOP = end[{ESPACIO}]+loop
 WHILE = while
 PROCEDURE = procedure
 BEGIN = begin
@@ -49,6 +54,8 @@ IS = is
 TRUE = true
 FALSE = false
 COMENTARIO = --
+PUT = put
+GET = get
 %%
 
 <YYINITIAL>{
@@ -58,10 +65,12 @@ COMENTARIO = --
 {END} {return new Symbol (sym.TK_END, yyline + 1, yycolumn +1 , yytext() ) ; }
 {IF} {System.out.println("Encontro un if - "+yytext());return new Symbol (sym.TK_IF, yyline + 1, yycolumn +1 , yytext() ) ; }
 {ELSE} {return new Symbol (sym.TK_ELSE, yyline + 1, yycolumn +1 , yytext() ) ; }
+{ELSEIF} {return new Symbol (sym.TK_ELSEIF, yyline + 1, yycolumn +1 , yytext() ) ; }
 {PARENTESISI} {return new Symbol (sym.TK_PARENTESISI, yyline + 1, yycolumn +1 , yytext() ) ; }
 {OPREL} {return new Symbol (sym.TK_OPREL, yyline + 1, yycolumn +1 , yytext() ) ; }
 {LETRA} {return new Symbol (sym.TK_LETRA, yyline + 1, yycolumn +1 , yytext() ) ; }
-{DIGITO} {return new Symbol (sym.TK_DIGITO, yyline + 1, yycolumn +1 , yytext() ) ; }
+{DIGITO} {System.out.println("Encontro un digito "+yytext());return new Symbol (sym.TK_DIGITO, yyline + 1, yycolumn +1 , yytext() ) ; }
+{DIGITOFLOAT} {System.out.println("Encontro un digito float "+yytext());return new Symbol (sym.TK_DIGITOFLOAT, yyline + 1, yycolumn +1 , yytext() ) ; }
 {COLON} {return new Symbol (sym.TK_COLON, yyline + 1, yycolumn +1 , yytext() ) ; }
 {AND} {return new Symbol (sym.TK_AND, yyline + 1, yycolumn +1 , yytext() ) ; }
 {OR} {return new Symbol (sym.TK_OR, yyline + 1, yycolumn +1 , yytext() ) ; }
@@ -76,17 +85,18 @@ COMENTARIO = --
 {INTEGER} {return new Symbol (sym.TK_INTEGER, yyline + 1, yycolumn +1 , yytext() ) ; }
 {FLOAT} {System.out.println("Encontro un float");return new Symbol (sym.TK_FLOAT, yyline + 1, yycolumn +1 , yytext() ) ; }
 {COMA} {return new Symbol (sym.TK_COMA, yyline + 1, yycolumn +1 , yytext() ) ; }
+{PUT} {return new Symbol (sym.TK_PUT, yyline + 1, yycolumn +1 , yytext() ) ; }
+{GET} {return new Symbol (sym.TK_GET, yyline + 1, yycolumn +1 , yytext() ) ; }
 {LOOP} {return new Symbol (sym.TK_LOOP, yyline + 1, yycolumn +1 , yytext() ) ; }
 {ENDLOOP} {return new Symbol (sym.TK_ENDLOOP, yyline + 1, yycolumn +1 , yytext() ) ; }
 {WHILE} {return new Symbol (sym.TK_WHILE, yyline + 1, yycolumn +1 , yytext() ) ; }
 {OPADICION} {return new Symbol (sym.TK_OPADICION, yyline + 1, yycolumn +1 , yytext() ) ; }
 {OPMULTI} {return new Symbol (sym.TK_MULTI, yyline + 1, yycolumn +1 , yytext() ) ; }
-//{ESPACIO} {return new Symbol (sym.TK_ESPACIO, yyline + 1, yycolumn +1 , yytext() ) ; }
 {COMENTARIO} {yybegin(COMENTARIOS);}
 {ID} {System.out.println("Encontro un id - "+yytext());return new Symbol (sym.TK_ID, yyline + 1, yycolumn +1 , yytext() ) ; }
 {SALTOLINEA} {  }
 
-.  {JOptionPane.showMessageDialog(null, "Error lexico en linea "+yyline +1 + " y columna "+yycolumn+" y en el texto:\n "+yytext());}
+.  {erroresLexicos.add("Error lexico en linea "+yyline+" y columna "+yycolumn+" y en el texto: "+yytext());}
 }
 
 

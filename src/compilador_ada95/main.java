@@ -6,6 +6,7 @@
 package compilador_ada95;
 
 import java.io.FileReader;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
@@ -26,6 +27,24 @@ public class main {
             
             p.parse();
             
+            if(lexer.erroresLexicos.isEmpty()){
+                   System.out.println("Felicidades, no hay errores léxicos");
+            }
+            else{
+                for (int i = 0; i < lexer.erroresLexicos.size(); i++) {
+                     System.out.println(lexer.erroresLexicos.get(i));
+                }
+            }
+            
+            if(lexer.erroresLexicos.isEmpty()){
+                   System.out.println("Felicidades, no hay errores sintácticos");
+            }
+            else{
+                for (int i = 0; i < p.erroresSintacticos.size(); i++) {
+                     System.out.println(p.erroresSintacticos.get(i));
+                }
+            }
+                        
             
             
         }catch(Exception e){
@@ -33,6 +52,8 @@ public class main {
         }
         
     }
+
+ 
     
 }
 
