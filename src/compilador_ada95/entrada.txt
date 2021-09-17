@@ -1,6 +1,9 @@
 --La variable aun no esta declarada
 --La variable ya esta declarada
 
+
+
+
 procedure CUENTA (Valor: in FLOAT;
                  Valor2: out FLOAT;
                  Valor3: inout INTEGER)is
