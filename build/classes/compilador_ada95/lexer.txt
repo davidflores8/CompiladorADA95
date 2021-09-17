@@ -56,6 +56,9 @@ FALSE = false
 COMENTARIO = --
 PUT = put
 GET = get
+IN = in
+OUT = out 
+INOUT = inout
 %%
 
 <YYINITIAL>{
@@ -87,6 +90,9 @@ GET = get
 {COMA} {return new Symbol (sym.TK_COMA, yyline + 1, yycolumn +1 , yytext() ) ; }
 {PUT} {return new Symbol (sym.TK_PUT, yyline + 1, yycolumn +1 , yytext() ) ; }
 {GET} {return new Symbol (sym.TK_GET, yyline + 1, yycolumn +1 , yytext() ) ; }
+{IN} {return new Symbol (sym.TK_IN, yyline + 1, yycolumn +1 , yytext() ) ; }
+{OUT} {return new Symbol (sym.TK_OUT, yyline + 1, yycolumn +1 , yytext() ) ; }
+{INOUT} {return new Symbol (sym.TK_INOUT, yyline + 1, yycolumn +1 , yytext() ) ; }
 {LOOP} {return new Symbol (sym.TK_LOOP, yyline + 1, yycolumn +1 , yytext() ) ; }
 {ENDLOOP} {return new Symbol (sym.TK_ENDLOOP, yyline + 1, yycolumn +1 , yytext() ) ; }
 {WHILE} {return new Symbol (sym.TK_WHILE, yyline + 1, yycolumn +1 , yytext() ) ; }

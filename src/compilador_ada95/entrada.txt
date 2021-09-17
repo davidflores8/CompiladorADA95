@@ -1,36 +1,16 @@
 --La variable aun no esta declarada
 --La variable ya esta declarada
 
-$
-
-procedure CUENTA is
-    numero,numerito:INTEGER:=45;
-    numero,numerito:INTEGER:=4;
-    bandera,littleBandera:BOOLEAN;
-    caracter,caracterPequeno:FLOAT:=123.45;
+procedure CUENTA (Valor: in FLOAT;
+                 Valor2: out FLOAT;
+                 Valor3: inout INTEGER)is
+    numero:INTEGER:=45;
+    numerito:INTEGER:=50;
     
 begin
 
     if (numero>4) then
         numero:=numerito;
-    end if;
-
-    put();
-
-    if(numero>4) then
-        numero:=numerito;
-    else
-       numero:=numerito;
-    end if;
-
-    get();
-
-    if(numero>4) then
-        numero:=numerito;
-    elseif(numero>4) then
-       numero:=numerito;
-    elseif(numero>4) then
-       numero:=numerito;
     end if;
 
 end CUENTA; 

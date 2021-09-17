@@ -8,11 +8,14 @@ package compilador_ada95;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
+  public static final int TK_INOUT = 38;
+  public static final int TK_OUT = 37;
   public static final int TK_ENDLOOP = 20;
   public static final int TK_IS = 25;
   public static final int TK_IGUAL = 14;
   public static final int TK_AND = 31;
   public static final int TK_LETRA = 10;
+  public static final int TK_IN = 36;
   public static final int TK_OR = 32;
   public static final int TK_BEGIN = 26;
   public static final int TK_OPREL = 8;
@@ -80,7 +83,10 @@ public class sym {
   "TK_OR",
   "TK_PUT",
   "TK_GET",
-  "TK_DIGITOFLOAT"
+  "TK_DIGITOFLOAT",
+  "TK_IN",
+  "TK_OUT",
+  "TK_INOUT"
   };
 }
 
