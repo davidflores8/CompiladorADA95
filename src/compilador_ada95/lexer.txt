@@ -22,6 +22,7 @@ import java.util.ArrayList;
 LETRA = [a-zA-Z]
 DIGITO = [+-]?[0-9]+
 ESPACIO = [" "]
+COMILLA = \"
 DIGITOFLOAT = [+-]?([0-9]*[.])?[0-9]+
 ID = {LETRA}({LETRA}|{DIGITO}|_)*|_{LETRA}({LETRA}|{DIGITO}|_)*
 COMA = ,
@@ -45,6 +46,10 @@ INTEGER = INTEGER
 FLOAT = FLOAT
 BOOLEAN = BOOLEAN
 LOOP = loop
+EXIT = exit
+WHEN = when
+FUNCTION = function
+RETURN = return
 ENDLOOP = end[{ESPACIO}]+loop
 WHILE = while
 PROCEDURE = procedure
@@ -93,13 +98,19 @@ INOUT = inout
 {IN} {return new Symbol (sym.TK_IN, yyline + 1, yycolumn +1 , yytext() ) ; }
 {OUT} {return new Symbol (sym.TK_OUT, yyline + 1, yycolumn +1 , yytext() ) ; }
 {INOUT} {return new Symbol (sym.TK_INOUT, yyline + 1, yycolumn +1 , yytext() ) ; }
+{FUNCTION} {return new Symbol (sym.TK_FUNCTION, yyline + 1, yycolumn +1 , yytext() ) ; }
+{RETURN} {return new Symbol (sym.TK_RETURN, yyline + 1, yycolumn +1 , yytext() ) ; }
 {LOOP} {return new Symbol (sym.TK_LOOP, yyline + 1, yycolumn +1 , yytext() ) ; }
+{WHEN} {return new Symbol (sym.TK_WHEN, yyline + 1, yycolumn +1 , yytext() ) ; }
+{EXIT} {return new Symbol (sym.TK_EXIT, yyline + 1, yycolumn +1 , yytext() ) ; }
 {ENDLOOP} {return new Symbol (sym.TK_ENDLOOP, yyline + 1, yycolumn +1 , yytext() ) ; }
 {WHILE} {return new Symbol (sym.TK_WHILE, yyline + 1, yycolumn +1 , yytext() ) ; }
 {OPADICION} {return new Symbol (sym.TK_OPADICION, yyline + 1, yycolumn +1 , yytext() ) ; }
 {OPMULTI} {return new Symbol (sym.TK_MULTI, yyline + 1, yycolumn +1 , yytext() ) ; }
 {COMENTARIO} {yybegin(COMENTARIOS);}
 {ID} {System.out.println("Encontro un id - "+yytext());return new Symbol (sym.TK_ID, yyline + 1, yycolumn +1 , yytext() ) ; }
+{COMILLA} {System.out.println("Comilla -  "+yytext());return new Symbol (sym.TK_COMILLA, yyline + 1, yycolumn +1 , yytext() ) ; }
+
 {SALTOLINEA} {  }
 
 .  {erroresLexicos.add("Error lexico en linea "+yyline+" y columna "+yycolumn+" y en el texto: "+yytext());}

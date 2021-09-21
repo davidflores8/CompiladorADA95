@@ -6,7 +6,8 @@
             <file>file:/C:/Users/mejia/Desktop/Compilador_ADA95/src/compilador_ada95/lexer.txt</file>
             <file>file:/C:/Users/mejia/Desktop/Compilador_ADA95/src/compilador_ada95/entrada.txt</file>
             <file>file:/C:/Users/mejia/Desktop/Compilador_ADA95/src/compilador_ada95/parser.txt</file>
-            <file>file:/C:/Users/mejia/Desktop/Compilador_ADA95/src/compilador_ada95/Principal.java</file>
+            <file>file:/C:/Users/mejia/Desktop/Compilador_ADA95/src/compilador_ada95/sym.java</file>
+            <file>file:/C:/Users/mejia/Desktop/Compilador_ADA95/src/compilador_ada95/Yylex.java</file>
         </group>
     </open-files>
 </project-private>

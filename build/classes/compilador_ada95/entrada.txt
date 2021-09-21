@@ -4,17 +4,48 @@
 
 
 
-procedure CUENTA (Valor: in FLOAT;
-                 Valor2: out FLOAT;
-                 Valor3: inout INTEGER)is
+
+procedure CUENTA (Valor: in FLOAT; Valor2: out FLOAT; Valor3: inout INTEGER) is
     numero:INTEGER:=45;
     numerito:INTEGER:=50;
     
+    procedure CUENTA (Valor: in FLOAT; Valor2: out FLOAT; Valor3: inout INTEGER)is
+    numero:INTEGER:=45;
+    numerito:INTEGER:=50; 
+    begin
+
+        put("Hola");
+        get(variable);
+
+        if (numero>4) then
+            numero:=numerito;
+        end if; 
+
+    end CUENTA; 
+    
+    Iteracion:
+        loop 
+               exit Iteracion when numero>10 | numerito>12;
+               numero:=numero+1;
+        end loop Iteracion;
+
 begin
 
     if (numero>4) then
         numero:=numerito;
     end if;
+
+    function prueba1 (Left : in INTEGER; Right : in FLOAT ) return FLOAT is
+        numero:INTEGER:=45;
+        numerito:INTEGER:=50;
+    begin
+        Iteracion:
+        loop 
+               exit Iteracion when numero>10 | numerito>12;
+               numero:=numero+1;
+        end loop Iteracion;
+        return Left; 
+    end prueba1;
 
 end CUENTA; 
 
