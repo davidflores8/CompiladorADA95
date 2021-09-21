@@ -36,12 +36,13 @@ public class main {
                 }
             }
             
-            if(lexer.erroresLexicos.isEmpty()){
+            if(p.errores.isEmpty()){
                    System.out.println("Felicidades, no hay errores sintácticos");
             }
             else{
-                for (int i = 0; i < p.erroresSintacticos.size(); i++) {
-                     System.out.println(p.erroresSintacticos.get(i));
+                System.out.println("Errores sintacticos: ");
+                for (int i = 0; i < p.errores.size(); i++) {
+                     System.out.println(p.errores.get(i));
                 }
             }
                         

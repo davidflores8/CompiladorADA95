@@ -213,13 +213,13 @@ public class Principal extends javax.swing.JFrame {
                 Yylex lexer  = new Yylex( new FileReader(archivo)); 
                 parser p = new parser(lexer);
                 p.parse();
-                if (p.erroresSintacticos.isEmpty() && lexer.erroresLexicos.isEmpty()){
+                if (p.errores.isEmpty() && lexer.erroresLexicos.isEmpty()){
                     JOptionPane.showMessageDialog(this, "Código compilado sin ningún problema ","Información", JOptionPane.INFORMATION_MESSAGE);
                 }
-                else if (!p.erroresSintacticos.isEmpty()){
+                else if (!p.errores.isEmpty()){
                     JOptionPane.showMessageDialog(this, "Se han encontrado errores sintácticos ","Información", JOptionPane.INFORMATION_MESSAGE);
-                    for (int i = 0; i < p.erroresSintacticos.size(); i++) {
-                        textAreaErroresSintacticos.setText(textAreaErroresSintacticos.getText()+""+p.erroresSintacticos.get(i)+"\n");
+                    for (int i = 0; i < p.errores.size(); i++) {
+                        textAreaErroresSintacticos.setText(textAreaErroresSintacticos.getText()+""+p.errores.get(i)+"\n");
                     }
                     
                     erroresSintacticos.setModal(true);
