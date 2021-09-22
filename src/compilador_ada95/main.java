@@ -41,6 +41,7 @@ public class main {
             }
             else{
                 System.out.println("Errores sintacticos: ");
+                System.out.println("-------------------------");
                 for (int i = 0; i < p.errores.size(); i++) {
                      System.out.println(p.errores.get(i));
                 }

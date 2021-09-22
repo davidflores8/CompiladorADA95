@@ -71,27 +71,27 @@ INOUT = inout
 {IS} {return new Symbol (sym.TK_IS, yyline + 1, yycolumn +1 , yytext() ) ; }
 {BEGIN} {return new Symbol (sym.TK_BEGIN, yyline + 1, yycolumn +1 , yytext() ) ; }
 {END} {return new Symbol (sym.TK_END, yyline + 1, yycolumn +1 , yytext() ) ; }
-{IF} {System.out.println("Encontro un if - "+yytext());return new Symbol (sym.TK_IF, yyline + 1, yycolumn +1 , yytext() ) ; }
+{IF} {return new Symbol (sym.TK_IF, yyline + 1, yycolumn +1 , yytext() ) ; }
 {ELSE} {return new Symbol (sym.TK_ELSE, yyline + 1, yycolumn +1 , yytext() ) ; }
 {ELSEIF} {return new Symbol (sym.TK_ELSEIF, yyline + 1, yycolumn +1 , yytext() ) ; }
 {PARENTESISI} {return new Symbol (sym.TK_PARENTESISI, yyline + 1, yycolumn +1 , yytext() ) ; }
 {OPREL} {return new Symbol (sym.TK_OPREL, yyline + 1, yycolumn +1 , yytext() ) ; }
 {LETRA} {return new Symbol (sym.TK_LETRA, yyline + 1, yycolumn +1 , yytext() ) ; }
-{DIGITO} {System.out.println("Encontro un digito "+yytext());return new Symbol (sym.TK_DIGITO, yyline + 1, yycolumn +1 , yytext() ) ; }
-{DIGITOFLOAT} {System.out.println("Encontro un digito float "+yytext());return new Symbol (sym.TK_DIGITOFLOAT, yyline + 1, yycolumn +1 , yytext() ) ; }
+{DIGITO} {return new Symbol (sym.TK_DIGITO, yyline + 1, yycolumn +1 , yytext() ) ; }
+{DIGITOFLOAT} {return new Symbol (sym.TK_DIGITOFLOAT, yyline + 1, yycolumn +1 , yytext() ) ; }
 {COLON} {return new Symbol (sym.TK_COLON, yyline + 1, yycolumn +1 , yytext() ) ; }
 {AND} {return new Symbol (sym.TK_AND, yyline + 1, yycolumn +1 , yytext() ) ; }
 {OR} {return new Symbol (sym.TK_OR, yyline + 1, yycolumn +1 , yytext() ) ; }
 {TRUE} {return new Symbol (sym.TK_TRUE, yyline + 1, yycolumn +1 , yytext() ) ; }
 {FALSE} {return new Symbol (sym.TK_FALSE, yyline + 1, yycolumn +1 , yytext() ) ; }
 {PARENTESISD} {return new Symbol (sym.TK_PARENTESISD, yyline + 1, yycolumn +1 , yytext() ) ; }
-{THEN} {System.out.println("Encontro un then - "+yytext());return new Symbol (sym.TK_THEN, yyline + 1, yycolumn +1 , yytext() ) ; }
+{THEN} {return new Symbol (sym.TK_THEN, yyline + 1, yycolumn +1 , yytext() ) ; }
 {ENDIF} {return new Symbol (sym.TK_ENDIF, yyline + 1, yycolumn +1 , yytext() ) ; }
 {PUNTOCOMA} {return new Symbol (sym.TK_PUNTOCOMA, yyline + 1, yycolumn +1 , yytext() ) ; }
-{IGUAL} {System.out.println("Encontro un igual");return new Symbol (sym.TK_IGUAL, yyline + 1, yycolumn +1 , yytext() ) ; }
-{BOOLEAN} {System.out.println("Encontro un Boolean");return new Symbol (sym.TK_BOOLEAN, yyline + 1, yycolumn +1 , yytext() ) ; }
+{IGUAL} {return new Symbol (sym.TK_IGUAL, yyline + 1, yycolumn +1 , yytext() ) ; }
+{BOOLEAN} {return new Symbol (sym.TK_BOOLEAN, yyline + 1, yycolumn +1 , yytext() ) ; }
 {INTEGER} {return new Symbol (sym.TK_INTEGER, yyline + 1, yycolumn +1 , yytext() ) ; }
-{FLOAT} {System.out.println("Encontro un float");return new Symbol (sym.TK_FLOAT, yyline + 1, yycolumn +1 , yytext() ) ; }
+{FLOAT} {return new Symbol (sym.TK_FLOAT, yyline + 1, yycolumn +1 , yytext() ) ; }
 {COMA} {return new Symbol (sym.TK_COMA, yyline + 1, yycolumn +1 , yytext() ) ; }
 {PUT} {return new Symbol (sym.TK_PUT, yyline + 1, yycolumn +1 , yytext() ) ; }
 {GET} {return new Symbol (sym.TK_GET, yyline + 1, yycolumn +1 , yytext() ) ; }
@@ -108,8 +108,8 @@ INOUT = inout
 {OPADICION} {return new Symbol (sym.TK_OPADICION, yyline + 1, yycolumn +1 , yytext() ) ; }
 {OPMULTI} {return new Symbol (sym.TK_MULTI, yyline + 1, yycolumn +1 , yytext() ) ; }
 {COMENTARIO} {yybegin(COMENTARIOS);}
-{ID} {System.out.println("Encontro un id - "+yytext());return new Symbol (sym.TK_ID, yyline + 1, yycolumn +1 , yytext() ) ; }
-{COMILLA} {System.out.println("Comilla -  "+yytext());return new Symbol (sym.TK_COMILLA, yyline + 1, yycolumn +1 , yytext() ) ; }
+{ID} {return new Symbol (sym.TK_ID, yyline + 1, yycolumn +1 , yytext() ) ; }
+{COMILLA} {return new Symbol (sym.TK_COMILLA, yyline + 1, yycolumn +1 , yytext() ) ; }
 
 {SALTOLINEA} {  }
 

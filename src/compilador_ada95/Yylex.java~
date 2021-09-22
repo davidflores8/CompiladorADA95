@@ -799,7 +799,7 @@ public class Yylex implements java_cup.runtime.Scanner {
             // fall through
           case 49: break;
           case 3:
-            { System.out.println("Comilla -  "+yytext());return new Symbol (sym.TK_COMILLA, yyline + 1, yycolumn +1 , yytext() ) ;
+            { return new Symbol (sym.TK_COMILLA, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 50: break;
@@ -834,7 +834,7 @@ public class Yylex implements java_cup.runtime.Scanner {
             // fall through
           case 56: break;
           case 10:
-            { System.out.println("Encontro un digito "+yytext());return new Symbol (sym.TK_DIGITO, yyline + 1, yycolumn +1 , yytext() ) ;
+            { return new Symbol (sym.TK_DIGITO, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 57: break;
@@ -879,22 +879,22 @@ public class Yylex implements java_cup.runtime.Scanner {
             // fall through
           case 65: break;
           case 19:
-            { System.out.println("Encontro un digito float "+yytext());return new Symbol (sym.TK_DIGITOFLOAT, yyline + 1, yycolumn +1 , yytext() ) ;
+            { return new Symbol (sym.TK_DIGITOFLOAT, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 66: break;
           case 20:
-            { System.out.println("Encontro un igual");return new Symbol (sym.TK_IGUAL, yyline + 1, yycolumn +1 , yytext() ) ;
+            { return new Symbol (sym.TK_IGUAL, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 67: break;
           case 21:
-            { System.out.println("Encontro un id - "+yytext());return new Symbol (sym.TK_ID, yyline + 1, yycolumn +1 , yytext() ) ;
+            { return new Symbol (sym.TK_ID, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 68: break;
           case 22:
-            { System.out.println("Encontro un if - "+yytext());return new Symbol (sym.TK_IF, yyline + 1, yycolumn +1 , yytext() ) ;
+            { return new Symbol (sym.TK_IF, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 69: break;
@@ -944,7 +944,7 @@ public class Yylex implements java_cup.runtime.Scanner {
             // fall through
           case 78: break;
           case 32:
-            { System.out.println("Encontro un then - "+yytext());return new Symbol (sym.TK_THEN, yyline + 1, yycolumn +1 , yytext() ) ;
+            { return new Symbol (sym.TK_THEN, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 79: break;
@@ -959,7 +959,7 @@ public class Yylex implements java_cup.runtime.Scanner {
             // fall through
           case 81: break;
           case 35:
-            { System.out.println("Encontro un float");return new Symbol (sym.TK_FLOAT, yyline + 1, yycolumn +1 , yytext() ) ;
+            { return new Symbol (sym.TK_FLOAT, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 82: break;
@@ -999,7 +999,7 @@ public class Yylex implements java_cup.runtime.Scanner {
             // fall through
           case 89: break;
           case 43:
-            { System.out.println("Encontro un Boolean");return new Symbol (sym.TK_BOOLEAN, yyline + 1, yycolumn +1 , yytext() ) ;
+            { return new Symbol (sym.TK_BOOLEAN, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 90: break;

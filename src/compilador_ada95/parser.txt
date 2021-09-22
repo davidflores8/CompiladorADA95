@@ -7,6 +7,7 @@ parser code {:
    ArrayList errores = new ArrayList();
 
 public void syntax_error (Symbol s){
+    System.out.println("-----------------------");
     System.out.println("Error de sintaxis");
     System.out.println("Linea " +s.left);
     System.out.println("Columna " +s.right);
@@ -107,22 +108,29 @@ GET::= TK_GET TK_PARENTESISI TK_ID TK_PARENTESISD TK_PUNTOCOMA;
 
 //Parametros
 
-TIPOS_VARIABLES::= TK_INTEGER
+TIPOS_VARIABLES::= TK_INTEGER 
                 | TK_FLOAT
                 | TK_BOOLEAN
+                | error {: errores.add("Los tipos de datos permitidos son INTEGER, FLOAT y BOOLEAN. "); :}
 ;
 
 TIPOS_PARAMETROS::= TK_IN
                 | TK_OUT
                 | TK_INOUT
+                | error {: errores.add("Los tipos de parámetros permitidos son in, out e inout. "); :}
 ;
 
 PARAMETROS::= TK_PARENTESISI PARAMETROS_PRIME
+             | error PARAMETROS_PRIME {: errores.add("Se esparaba un \"(\" "); :}
 ;
 
-PARAMETROS_PRIME::= TK_ID TK_COLON TIPOS_PARAMETROS TIPOS_VARIABLES PARAMETROS_PRIME
-                   | TK_PUNTOCOMA PARAMETROS_PRIME
-                   | TK_PARENTESISD
+PARAMETROS_PRIME::= TK_ID TK_COLON TIPOS_PARAMETROS TIPOS_VARIABLES TK_PUNTOCOMA PARAMETROS_PRIME
+                    | TK_ID TK_COLON TIPOS_PARAMETROS TIPOS_VARIABLES TK_PARENTESISD 
+                    | error TK_COLON TIPOS_PARAMETROS TIPOS_VARIABLES TK_PUNTOCOMA PARAMETROS_PRIME {: errores.add("Se esparaba un identificador "); :}
+                    | TK_ID error TIPOS_PARAMETROS TIPOS_VARIABLES TK_PUNTOCOMA PARAMETROS_PRIME {: errores.add("Se esparaba un \":\" "); :}
+                    | TK_ID TK_COLON TIPOS_PARAMETROS TIPOS_VARIABLES error PARAMETROS_PRIME{: errores.add("Se esparaba un \";\" "); :}
+                    
+       
 ;
 
 //Loop
@@ -140,5 +148,10 @@ LOOP ::= TK_ID TK_COLON TK_LOOP TK_EXIT TK_ID TK_WHEN EXPRESIONES TK_PUNTOCOMA P
 
 //FUNCTIONS
 
-FUNCTION ::= TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS TK_IS PROCEDURE_PRIME TK_BEGIN PROCEDURE_PRIME
-            TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA;
+FUNCTION ::= TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA
+            | error TK_ID PARAMETROS TK_RETURN TIPOS TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un \"function\" "); :}
+            | TK_FUNCTION error PARAMETROS TK_RETURN TIPOS TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un identificador "); :}
+            | TK_FUNCTION TK_ID PARAMETROS error TIPOS TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un \"return\" "); :}
+            | TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS error DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un \"is\" "); :}
+            | TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS TK_IS DECLARACIONES error PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un \"begin\" "); :}
+;

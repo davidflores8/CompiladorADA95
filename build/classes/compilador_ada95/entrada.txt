@@ -5,17 +5,12 @@
 
 
 
-procedure CUENTA (Valor: in FLOAT; Valor2: out FLOAT; Valor3: inout INTEGER) is
+procedure CUENTA (Valor: in INTEGER Valor2: out FLOAT Valor3: inout INTEGER) is
     numero:INTEGER:=45;
     numerito:INTEGER:=50;
 
 begin
-        
-    Iteracion:
-        loop
-               exit Iteracion when numero>10 | numerito>12;
-               numero:=numero+1;
-        end loop Iteracion;
+  
 
 end CUENTA; 
 
