@@ -8,50 +8,49 @@ package compilador_ada95;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int TK_INOUT = 38;
-  public static final int TK_OUT = 37;
-  public static final int TK_ENDLOOP = 20;
-  public static final int TK_IS = 25;
-  public static final int TK_IGUAL = 14;
-  public static final int TK_AND = 31;
-  public static final int TK_LETRA = 10;
-  public static final int TK_IN = 36;
-  public static final int TK_OR = 32;
-  public static final int TK_BEGIN = 26;
+  public static final int TK_INOUT = 37;
+  public static final int TK_OUT = 36;
+  public static final int TK_ENDLOOP = 19;
+  public static final int TK_IS = 24;
+  public static final int TK_IGUAL = 13;
+  public static final int TK_AND = 30;
+  public static final int TK_IN = 35;
+  public static final int TK_OR = 31;
+  public static final int TK_BEGIN = 25;
   public static final int TK_OPREL = 8;
-  public static final int TK_GET = 34;
+  public static final int TK_GET = 33;
   public static final int TK_ELSEIF = 4;
   public static final int TK_PARENTESISI = 5;
   public static final int TK_IF = 2;
   public static final int TK_ID = 7;
   public static final int TK_PARENTESISD = 6;
-  public static final int TK_BOOLEAN = 16;
-  public static final int TK_EXIT = 40;
-  public static final int TK_LOOP = 19;
-  public static final int TK_OPADICION = 22;
-  public static final int TK_RETURN = 43;
-  public static final int TK_COMILLA = 39;
-  public static final int TK_TRUE = 28;
-  public static final int TK_COMA = 18;
+  public static final int TK_BOOLEAN = 15;
+  public static final int TK_EXIT = 38;
+  public static final int TK_LOOP = 18;
+  public static final int TK_OPADICION = 21;
+  public static final int TK_RETURN = 41;
+  public static final int TK_TRUE = 27;
+  public static final int TK_COMA = 17;
   public static final int TK_DIGITO = 9;
-  public static final int TK_COLON = 30;
+  public static final int TK_COLON = 29;
   public static final int EOF = 0;
-  public static final int TK_ENDIF = 12;
+  public static final int TK_ENDIF = 11;
   public static final int error = 1;
-  public static final int TK_WHILE = 21;
-  public static final int TK_FLOAT = 17;
-  public static final int TK_DIGITOFLOAT = 35;
+  public static final int TK_WHILE = 20;
+  public static final int TK_FLOAT = 16;
+  public static final int TK_DIGITOFLOAT = 34;
   public static final int TK_ELSE = 3;
-  public static final int TK_MULTI = 23;
-  public static final int TK_END = 27;
-  public static final int TK_FALSE = 29;
-  public static final int TK_THEN = 11;
-  public static final int TK_PROCEDURE = 24;
-  public static final int TK_FUNCTION = 42;
-  public static final int TK_PUNTOCOMA = 13;
-  public static final int TK_WHEN = 41;
-  public static final int TK_PUT = 33;
-  public static final int TK_INTEGER = 15;
+  public static final int TK_MULTI = 22;
+  public static final int TK_END = 26;
+  public static final int TK_FALSE = 28;
+  public static final int TK_THEN = 10;
+  public static final int TK_PROCEDURE = 23;
+  public static final int TK_STRING = 42;
+  public static final int TK_FUNCTION = 40;
+  public static final int TK_PUNTOCOMA = 12;
+  public static final int TK_WHEN = 39;
+  public static final int TK_PUT = 32;
+  public static final int TK_INTEGER = 14;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -63,7 +62,6 @@ public class sym {
   "TK_ID",
   "TK_OPREL",
   "TK_DIGITO",
-  "TK_LETRA",
   "TK_THEN",
   "TK_ENDIF",
   "TK_PUNTOCOMA",
@@ -92,11 +90,11 @@ public class sym {
   "TK_IN",
   "TK_OUT",
   "TK_INOUT",
-  "TK_COMILLA",
   "TK_EXIT",
   "TK_WHEN",
   "TK_FUNCTION",
-  "TK_RETURN"
+  "TK_RETURN",
+  "TK_STRING"
   };
 }
 

@@ -5,12 +5,18 @@
 
 
 
-procedure CUENTA (Valor: in INTEGER Valor2: out FLOAT Valor3: inout INTEGER) is
-    numero:INTEGER:=45;
-    numerito:INTEGER:=50;
-
+procedure CUENTA (Valor: in INTEGER; Valor2: out FLOAT; Valor3: inout INTEGER) is
+    numero,hola:INTEGER:=34;
+    numerito:BOOLEAN:=true;
+    numerito:FLOAT:=234.4;
 begin
-  
+  function Valor (Valor: in INTEGER; Valor2: out FLOAT; Valor3: inout INTEGER) return INTEGER is
+
+    begin
+        
+        get(valor);
+        return valor;
+    end valor;
 
 end CUENTA; 
 

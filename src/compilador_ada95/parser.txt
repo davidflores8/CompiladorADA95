@@ -11,16 +11,17 @@ public void syntax_error (Symbol s){
     System.out.println("Error de sintaxis");
     System.out.println("Linea " +s.left);
     System.out.println("Columna " +s.right);
+    System.out.println("Valor " +s.value);
     errores.add("Syntax error: " +  s.value + " Linea: " + (s.left) + " Columna: " + (s.right));
 }
 
 :} ;
 
 
-terminal String TK_IF, TK_ELSE, TK_ELSEIF, TK_PARENTESISI, TK_PARENTESISD, TK_ID, TK_OPREL, TK_DIGITO, TK_LETRA, TK_THEN, TK_ENDIF, TK_PUNTOCOMA;
+terminal String TK_IF, TK_ELSE, TK_ELSEIF, TK_PARENTESISI, TK_PARENTESISD, TK_ID, TK_OPREL, TK_DIGITO, TK_THEN, TK_ENDIF, TK_PUNTOCOMA;
 terminal String TK_IGUAL, TK_INTEGER, TK_BOOLEAN, TK_FLOAT, TK_COMA, TK_LOOP, TK_ENDLOOP, TK_WHILE, TK_OPADICION, TK_MULTI;
 terminal String TK_PROCEDURE, TK_IS, TK_BEGIN, TK_END, TK_TRUE, TK_FALSE, TK_COLON, TK_AND, TK_OR, TK_PUT, TK_GET;
-terminal String TK_DIGITOFLOAT, TK_IN, TK_OUT, TK_INOUT, TK_COMILLA, TK_EXIT, TK_WHEN, TK_FUNCTION, TK_RETURN;
+terminal String TK_DIGITOFLOAT, TK_IN, TK_OUT, TK_INOUT, TK_EXIT, TK_WHEN, TK_FUNCTION, TK_RETURN, TK_STRING;
 
 non terminal PROCEDURE, PROCEDURE_PRIME, WHILE, DECISION, DECISION_PRIME, ASIGNACIONES, LOOP;
 non terminal DECLARACIONES, ID, EXPRESIONES, EP, TIPOS, PUT, GET, PARAMETROS, TIPOS_PARAMETROS, TIPOS_VARIABLES, PARAMETROS_PRIME;
@@ -80,7 +81,7 @@ EP::= TK_ID TK_OPREL TK_ID
     | TK_DIGITOFLOAT TK_OPREL TK_ID
 ;
 
-//Declaraciones de variables
+//Gramática para declaraciones de variables
 
 DECLARACIONES::= ID 
                 | ID TK_PUNTOCOMA DECLARACIONES
@@ -88,25 +89,51 @@ DECLARACIONES::= ID
 ;
 
 ID::= TK_ID TK_COMA ID
-    | TK_ID TK_COLON TIPOS
+    | TK_ID error ID {: errores.add("Se esperaba un \",\" "); :}
+    | TK_ID TK_COLON TIPOS 
+    | TK_ID error TIPOS {: errores.add("Se esperaba un \":\" "); :}
+    
 ;
 
 TIPOS::= TK_BOOLEAN 
         |TK_BOOLEAN TK_IGUAL TK_FALSE 
         |TK_BOOLEAN TK_IGUAL TK_TRUE 
+        |TK_BOOLEAN error TK_TRUE {: errores.add("Se esperaba un \":=\" "); :}
+        |TK_BOOLEAN error TK_FALSE {: errores.add("Se esperaba un \":=\" "); :}
+        |TK_BOOLEAN TK_IGUAL error {: errores.add("Se esperaba un true o false "); :}
         |TK_INTEGER
         |TK_INTEGER TK_IGUAL TK_DIGITO
+        |TK_INTEGER error TK_DIGITO {: errores.add("Se esperaba un \":=\" "); :}
+        |TK_INTEGER TK_IGUAL error {: errores.add("Se esperaba un numero "); :}
         |TK_FLOAT
         |TK_FLOAT TK_IGUAL TK_DIGITOFLOAT
+        |TK_FLOAT error TK_DIGITOFLOAT  {: errores.add("Se esperaba un \":=\" "); :}
+        |TK_FLOAT TK_IGUAL error {: errores.add("Se esperaba un numero decimal "); :}
+        |error {: errores.add("Los tipos de datos permitidos son INTEGER, FLOAT y BOOLEAN. "); :}
+
+
 ;
                 
-//Get y Put
+//Gramática de Put y Get
 
-PUT::= TK_PUT TK_PARENTESISI TK_COMILLA TK_ID TK_COMILLA TK_PARENTESISD  TK_PUNTOCOMA;
-GET::= TK_GET TK_PARENTESISI TK_ID TK_PARENTESISD TK_PUNTOCOMA;
+PUT::= TK_PUT TK_PARENTESISI TK_STRING TK_PARENTESISD  TK_PUNTOCOMA
+    | error TK_PARENTESISI TK_STRING TK_PARENTESISD  TK_PUNTOCOMA {: errores.add("Se esperaba un \"put\" "); :}
+    | TK_PUT error TK_STRING TK_PARENTESISD  TK_PUNTOCOMA {: errores.add("Se esperaba un \"(\" "); :}
+    | TK_PUT TK_PARENTESISI error TK_PARENTESISD  TK_PUNTOCOMA {: errores.add("Se esperaba una cadena "); :}
+    | TK_PUT TK_PARENTESISI TK_STRING error  TK_PUNTOCOMA {: errores.add("Se esperaba un \")\" "); :}
+    | TK_PUT TK_PARENTESISI TK_STRING TK_PARENTESISD  error {: errores.add("Se esperaba un \";\" "); :}
+;
+
+GET::= TK_GET TK_PARENTESISI TK_ID TK_PARENTESISD TK_PUNTOCOMA
+    | error TK_PARENTESISI TK_ID TK_PARENTESISD TK_PUNTOCOMA {: errores.add("Se esperaba un \"get\" "); :}
+    | TK_GET error TK_ID TK_PARENTESISD TK_PUNTOCOMA {: errores.add("Se esperaba un \"(\" "); :}
+    | TK_GET TK_PARENTESISI error TK_PARENTESISD TK_PUNTOCOMA {: errores.add("Se esperaba un identificador "); :}
+    | TK_GET TK_PARENTESISI TK_ID error TK_PUNTOCOMA {: errores.add("Se esperaba un \")\" "); :}
+    | TK_GET TK_PARENTESISI TK_ID TK_PARENTESISD error {: errores.add("Se esperaba un \";\" "); :}
+;
 
 
-//Parametros
+//Gramática de parámetros
 
 TIPOS_VARIABLES::= TK_INTEGER 
                 | TK_FLOAT
@@ -121,19 +148,17 @@ TIPOS_PARAMETROS::= TK_IN
 ;
 
 PARAMETROS::= TK_PARENTESISI PARAMETROS_PRIME
-             | error PARAMETROS_PRIME {: errores.add("Se esparaba un \"(\" "); :}
+             | error PARAMETROS_PRIME {: errores.add("Se esparaba un \"(\" "); :} 
 ;
 
 PARAMETROS_PRIME::= TK_ID TK_COLON TIPOS_PARAMETROS TIPOS_VARIABLES TK_PUNTOCOMA PARAMETROS_PRIME
                     | TK_ID TK_COLON TIPOS_PARAMETROS TIPOS_VARIABLES TK_PARENTESISD 
                     | error TK_COLON TIPOS_PARAMETROS TIPOS_VARIABLES TK_PUNTOCOMA PARAMETROS_PRIME {: errores.add("Se esparaba un identificador "); :}
                     | TK_ID error TIPOS_PARAMETROS TIPOS_VARIABLES TK_PUNTOCOMA PARAMETROS_PRIME {: errores.add("Se esparaba un \":\" "); :}
-                    | TK_ID TK_COLON TIPOS_PARAMETROS TIPOS_VARIABLES error PARAMETROS_PRIME{: errores.add("Se esparaba un \";\" "); :}
-                    
-       
+                        
 ;
 
-//Loop
+//Gramática de loop
 
 LOOP ::= TK_ID TK_COLON TK_LOOP TK_EXIT TK_ID TK_WHEN EXPRESIONES TK_PUNTOCOMA PROCEDURE_PRIME TK_ENDLOOP TK_ID TK_PUNTOCOMA
         |error TK_COLON TK_LOOP TK_EXIT TK_ID TK_WHEN EXPRESIONES TK_PUNTOCOMA PROCEDURE_PRIME TK_ENDLOOP TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un identificador "); :}
@@ -144,14 +169,18 @@ LOOP ::= TK_ID TK_COLON TK_LOOP TK_EXIT TK_ID TK_WHEN EXPRESIONES TK_PUNTOCOMA P
         |TK_ID TK_COLON TK_LOOP TK_EXIT TK_ID error EXPRESIONES TK_PUNTOCOMA PROCEDURE_PRIME TK_ENDLOOP TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un \"when\" "); :}
         |TK_ID TK_COLON TK_LOOP TK_EXIT TK_ID TK_WHEN EXPRESIONES TK_PUNTOCOMA PROCEDURE_PRIME TK_ENDLOOP error TK_PUNTOCOMA {: errores.add("Se esparaba un identificador "); :}
         |TK_ID TK_COLON TK_LOOP TK_EXIT TK_ID TK_WHEN EXPRESIONES TK_PUNTOCOMA PROCEDURE_PRIME TK_ENDLOOP TK_ID error {: errores.add("Se esparaba un \";\" "); :}
+
 ;
 
-//FUNCTIONS
+//Gramática de functions
 
-FUNCTION ::= TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA
-            | error TK_ID PARAMETROS TK_RETURN TIPOS TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un \"function\" "); :}
-            | TK_FUNCTION error PARAMETROS TK_RETURN TIPOS TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un identificador "); :}
-            | TK_FUNCTION TK_ID PARAMETROS error TIPOS TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un \"return\" "); :}
-            | TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS error DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un \"is\" "); :}
-            | TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS TK_IS DECLARACIONES error PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un \"begin\" "); :}
+FUNCTION ::= TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA
+            | error TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un \"function\" "); :}
+            | TK_FUNCTION error PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un identificador "); :}
+            | TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN error TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un identificador "); :}
+            | TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID error TK_END TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un \";\" "); :}
+            | TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA error TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un \"end\" "); :}
+            | TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END error TK_PUNTOCOMA {: errores.add("Se esparaba un identificador "); :}
+            | TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID error {: errores.add("Se esparaba un \";\" "); :}
+
 ;
