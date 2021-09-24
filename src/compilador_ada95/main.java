@@ -5,6 +5,7 @@
  */
 package compilador_ada95;
 
+import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -27,24 +28,13 @@ public class main {
             
             p.parse();
             
-            if(lexer.erroresLexicos.isEmpty()){
-                   System.out.println("Felicidades, no hay errores léxicos");
-            }
-            else{
-                for (int i = 0; i < lexer.erroresLexicos.size(); i++) {
-                     System.out.println(lexer.erroresLexicos.get(i));
-                }
+            if(lexer.erroresLexicos.isEmpty() && p.errores.isEmpty()){
+                    
             }
             
-            if(p.errores.isEmpty()){
-                   System.out.println("Felicidades, no hay errores sintácticos");
-            }
             else{
-                System.out.println("Errores sintacticos: ");
                 System.out.println("-------------------------");
-                for (int i = 0; i < p.errores.size(); i++) {
-                     System.out.println(p.errores.get(i));
-                }
+                System.out.println("Hay errores");
             }
                         
             
@@ -55,7 +45,7 @@ public class main {
         
     }
 
- 
+
     
 }
 

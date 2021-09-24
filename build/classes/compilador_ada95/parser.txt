@@ -1,10 +1,15 @@
 package compilador_ada95;
 import java_cup.runtime.Symbol;
 import java.util.ArrayList;
+import java.util.*;
+import java.io.*;
 
 parser code {:
 
    ArrayList errores = new ArrayList();
+
+    public Nodo raiz;    
+    public int cont = 0;
 
 public void syntax_error (Symbol s){
     System.out.println("-----------------------");
@@ -17,20 +22,45 @@ public void syntax_error (Symbol s){
 
 :} ;
 
+terminal  TK_IGUAL, TK_INTEGER, TK_BOOLEAN, TK_FLOAT, TK_IF, TK_ELSE, TK_ELSEIF;
+terminal  TK_LOOP, TK_ENDLOOP, TK_WHILE, TK_OPADICION, TK_MULTI, TK_ID, TK_OPREL, TK_DIGITO, TK_THEN, TK_ENDIF;
+terminal  TK_PROCEDURE, TK_IS, TK_BEGIN, TK_END, TK_PUT, TK_GET;
+terminal  TK_DIGITOFLOAT, TK_IN, TK_OUT, TK_INOUT, TK_EXIT, TK_WHEN, TK_FUNCTION, TK_RETURN, TK_STRING;
+terminal  TK_PARENTESISI, TK_PARENTESISD,TK_PUNTOCOMA, TK_COMA,TK_TRUE, TK_FALSE, TK_COLON, TK_AND, TK_OR;
 
-terminal String TK_IF, TK_ELSE, TK_ELSEIF, TK_PARENTESISI, TK_PARENTESISD, TK_ID, TK_OPREL, TK_DIGITO, TK_THEN, TK_ENDIF, TK_PUNTOCOMA;
-terminal String TK_IGUAL, TK_INTEGER, TK_BOOLEAN, TK_FLOAT, TK_COMA, TK_LOOP, TK_ENDLOOP, TK_WHILE, TK_OPADICION, TK_MULTI;
-terminal String TK_PROCEDURE, TK_IS, TK_BEGIN, TK_END, TK_TRUE, TK_FALSE, TK_COLON, TK_AND, TK_OR, TK_PUT, TK_GET;
-terminal String TK_DIGITOFLOAT, TK_IN, TK_OUT, TK_INOUT, TK_EXIT, TK_WHEN, TK_FUNCTION, TK_RETURN, TK_STRING;
+non terminal PROCEDURE;
+non terminal PROCEDURE_PRIME;
+non terminal Nodo PARAMETROS, PARAMETROS_PRIME;
+non terminal WHILE, DECISION, DECISION_PRIME, ASIGNACIONES, LOOP;
+non terminal DECLARACIONES;
+non terminal FUNCTION, ID, EXPRESIONES, EP, TIPOS, PUT, GET;
+non terminal TIPOS_PARAMETROS, TIPOS_VARIABLES;
 
-non terminal PROCEDURE, PROCEDURE_PRIME, WHILE, DECISION, DECISION_PRIME, ASIGNACIONES, LOOP;
-non terminal DECLARACIONES, ID, EXPRESIONES, EP, TIPOS, PUT, GET, PARAMETROS, TIPOS_PARAMETROS, TIPOS_VARIABLES, PARAMETROS_PRIME;
-non terminal FUNCTION;
+precedence left TK_OPADICION;
+precedence left TK_MULTI;
 
 start with PROCEDURE;
 
 
-PROCEDURE::= TK_PROCEDURE TK_ID PARAMETROS TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_END TK_ID TK_PUNTOCOMA; 
+PROCEDURE::= TK_PROCEDURE:proc TK_ID:id PARAMETROS:p TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_END TK_ID TK_PUNTOCOMA
+            {:     
+                System.out.println("Esto es procedure");
+                Nodo node = new Nodo("INICIO",parser.cont);
+                parser.cont++;
+                node.addHijo( new Nodo("PROCEDURE",parser.cont));
+                parser.cont++;
+                node.addHijo(new Nodo (id.toString(), parser.cont));
+                parser.cont++;
+                node.addHijo(p);
+                parser.raiz = node;
+    
+            :}
+            | error TK_ID PARAMETROS TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_END TK_ID TK_PUNTOCOMA {: errores.add("Se esperaba un \"procedure\" "); :}
+            | TK_PROCEDURE error PARAMETROS TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_END TK_ID TK_PUNTOCOMA {: errores.add("Se esperaba un identificador "); :}
+            | TK_PROCEDURE TK_ID PARAMETROS TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_END error TK_PUNTOCOMA {: errores.add("Se esperaba un identificador "); :}
+            | TK_PROCEDURE TK_ID PARAMETROS TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_END TK_ID error {: errores.add("Se esperaba un \";\" "); :}
+            
+; 
 
 PROCEDURE_PRIME::= DECISION PROCEDURE_PRIME
                 | WHILE PROCEDURE_PRIME
@@ -43,6 +73,77 @@ PROCEDURE_PRIME::= DECISION PROCEDURE_PRIME
                 | 
 ;
 
+//Gramática de parámetros
+
+TIPOS_VARIABLES::= TK_INTEGER:i {:
+                    RESULT = i;
+                :}
+                | TK_FLOAT:f{:
+                    RESULT = f;
+                :}
+                | TK_BOOLEAN:b{:
+                    RESULT = b;
+                :}
+                | error {: errores.add("Los tipos de datos permitidos son INTEGER, FLOAT y BOOLEAN. "); :}
+;
+
+TIPOS_PARAMETROS::= TK_IN:ti {:
+                    RESULT = ti;
+                :}
+                | TK_OUT:to {:
+                    RESULT = to;
+                :}
+                | TK_INOUT:tio {:
+                    RESULT = tio;
+                :}
+                | error {: errores.add("Los tipos de parámetros permitidos son in, out e inout. "); :}
+;
+
+PARAMETROS::= TK_PARENTESISI PARAMETROS_PRIME:p
+                {:
+                    //System.out.println("Esto es parametros");
+                    //Nodo node = new Nodo ("PARAMETROS",parser.cont);
+                    //parser.cont++;
+                    //node.addHijo(p);
+                    RESULT = p;
+                :}
+        
+             | error PARAMETROS_PRIME {: errores.add("Se esparaba un \"(\" "); :} 
+;
+
+PARAMETROS_PRIME::= TK_ID:id TK_COLON TIPOS_PARAMETROS:tp TIPOS_VARIABLES:tv TK_PUNTOCOMA PARAMETROS_PRIME:pm {:
+
+                        Nodo node = new Nodo ("PARAMETROS",parser.cont);
+                        parser.cont++;
+                        node.addHijo(new Nodo(id.toString(), parser.cont));
+                        parser.cont++;
+                        node.addHijo(new Nodo(tp.toString(), parser.cont));
+                        parser.cont++;
+                        node.addHijo(new Nodo(tv.toString(), parser.cont));
+                        parser.cont++;
+                        node.addHijo(pm);
+                        RESULT = node;
+                    :}
+                    | TK_ID:id TK_COLON TIPOS_PARAMETROS:tp TIPOS_VARIABLES:tv TK_PARENTESISD {:
+
+                        Nodo node = new Nodo ("PARAMETROS",parser.cont);
+                        parser.cont++;
+                        node.addHijo(new Nodo(id.toString(), parser.cont));
+                        parser.cont++;
+                        node.addHijo(new Nodo(tp.toString(), parser.cont));
+                        parser.cont++;
+                        node.addHijo(new Nodo(tv.toString(), parser.cont));
+                        parser.cont++;
+                        RESULT = node;
+                    :}
+                    | error TK_COLON TIPOS_PARAMETROS TIPOS_VARIABLES TK_PUNTOCOMA PARAMETROS_PRIME {: errores.add("Se esparaba un identificador "); :}
+                    | TK_ID error TIPOS_PARAMETROS TIPOS_VARIABLES TK_PUNTOCOMA PARAMETROS_PRIME {: errores.add("Se esparaba un \":\" "); :}
+                        
+;
+
+
+
+//Gramática para decisiones
 
 DECISION ::=  TK_IF TK_PARENTESISI EXPRESIONES TK_PARENTESISD TK_THEN PROCEDURE_PRIME DECISION_PRIME;
 
@@ -51,7 +152,8 @@ DECISION_PRIME ::= TK_ELSEIF TK_PARENTESISI EXPRESIONES TK_PARENTESISD TK_THEN P
             | TK_ENDIF TK_PUNTOCOMA 
 ;
 
-  
+//Gramática para asignaciones
+
 ASIGNACIONES ::= TK_ID TK_IGUAL TK_ID TK_PUNTOCOMA
                |TK_ID TK_IGUAL TK_ID TK_OPADICION TK_ID TK_PUNTOCOMA 
                |TK_ID TK_IGUAL TK_ID TK_OPADICION TK_DIGITO TK_PUNTOCOMA 
@@ -63,9 +165,12 @@ ASIGNACIONES ::= TK_ID TK_IGUAL TK_ID TK_PUNTOCOMA
                |TK_ID TK_IGUAL TK_FALSE TK_PUNTOCOMA
 ;
 
-//Ciclo while
+//Gramática para ciclo while
 
 WHILE ::= TK_WHILE TK_PARENTESISI EXPRESIONES TK_PARENTESISD TK_LOOP PROCEDURE_PRIME TK_ENDLOOP TK_PUNTOCOMA;
+
+
+//Gramática para expresiones
 
 EXPRESIONES ::= EP
               | EP TK_OR EP
@@ -133,30 +238,7 @@ GET::= TK_GET TK_PARENTESISI TK_ID TK_PARENTESISD TK_PUNTOCOMA
 ;
 
 
-//Gramática de parámetros
 
-TIPOS_VARIABLES::= TK_INTEGER 
-                | TK_FLOAT
-                | TK_BOOLEAN
-                | error {: errores.add("Los tipos de datos permitidos son INTEGER, FLOAT y BOOLEAN. "); :}
-;
-
-TIPOS_PARAMETROS::= TK_IN
-                | TK_OUT
-                | TK_INOUT
-                | error {: errores.add("Los tipos de parámetros permitidos son in, out e inout. "); :}
-;
-
-PARAMETROS::= TK_PARENTESISI PARAMETROS_PRIME
-             | error PARAMETROS_PRIME {: errores.add("Se esparaba un \"(\" "); :} 
-;
-
-PARAMETROS_PRIME::= TK_ID TK_COLON TIPOS_PARAMETROS TIPOS_VARIABLES TK_PUNTOCOMA PARAMETROS_PRIME
-                    | TK_ID TK_COLON TIPOS_PARAMETROS TIPOS_VARIABLES TK_PARENTESISD 
-                    | error TK_COLON TIPOS_PARAMETROS TIPOS_VARIABLES TK_PUNTOCOMA PARAMETROS_PRIME {: errores.add("Se esparaba un identificador "); :}
-                    | TK_ID error TIPOS_PARAMETROS TIPOS_VARIABLES TK_PUNTOCOMA PARAMETROS_PRIME {: errores.add("Se esparaba un \":\" "); :}
-                        
-;
 
 //Gramática de loop
 
