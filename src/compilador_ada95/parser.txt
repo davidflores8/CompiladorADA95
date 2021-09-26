@@ -12,13 +12,11 @@ parser code {:
     public int cont = 0;
 
 public void syntax_error (Symbol s){
-  //  System.out.println("-----------------------");
-   // System.out.println("Error de sintaxis");
-   // System.out.println("Linea " +s.left);
-   // System.out.println("Columna " +s.right);
-   // System.out.println("Valor " +s.value);
-    errores.add("Syntax error: " +  s.value + " Linea: " + (s.left) + " Columna: " + (s.right));
+    errores.add("Esta es Linea: " + (s.left) + " Columna: " + (s.right));
 }
+public void unrecovered_syntax_error(Symbol s){
+        errores.add("Error desconocido: " +  s.value + " Linea: " + (s.left + 1) + " Columna: " + (s.right + 1));
+    }
 
 :} ;
 
@@ -29,10 +27,10 @@ terminal  TK_DIGITOFLOAT, TK_IN, TK_OUT, TK_INOUT, TK_EXIT, TK_WHEN, TK_FUNCTION
 terminal  TK_PARENTESISI, TK_PARENTESISD,TK_PUNTOCOMA, TK_COMA,TK_TRUE, TK_FALSE, TK_COLON, TK_AND, TK_OR;
 
 non terminal PROCEDURE;
-non terminal PROCEDURE_PRIME;
-non terminal Nodo PARAMETROS, PARAMETROS_PRIME, DECLARACIONES, TIPOS, ID;
-non terminal WHILE, DECISION, DECISION_PRIME, ASIGNACIONES, LOOP;
-non terminal FUNCTION, EXPRESIONES, EP, PUT, GET;
+non terminal Nodo PROCEDURE_PRIME, EXPRESIONES, EP, DECISION, DECISION_PRIME,WHILE;
+non terminal Nodo PARAMETROS, PARAMETROS_PRIME, DECLARACIONES, TIPOS, ID, PUT, GET;
+non terminal ASIGNACIONES, LOOP;
+non terminal FUNCTION;
 non terminal TIPOS_PARAMETROS, TIPOS_VARIABLES;
 
 precedence left TK_OPADICION;
@@ -41,7 +39,7 @@ precedence left TK_MULTI;
 start with PROCEDURE;
 
 
-PROCEDURE::= TK_PROCEDURE:proc TK_ID:id PARAMETROS:p TK_IS DECLARACIONES:d TK_BEGIN PROCEDURE_PRIME TK_END TK_ID TK_PUNTOCOMA
+PROCEDURE::= TK_PROCEDURE:proc TK_ID:id PARAMETROS:p TK_IS DECLARACIONES:d TK_BEGIN PROCEDURE_PRIME:s TK_END TK_ID TK_PUNTOCOMA
             {:     
                 System.out.println("Esto es procedure");
                 Nodo node = new Nodo("INICIO",parser.cont);
@@ -52,6 +50,7 @@ PROCEDURE::= TK_PROCEDURE:proc TK_ID:id PARAMETROS:p TK_IS DECLARACIONES:d TK_BE
                 parser.cont++;
                 nodo.addHijo(p);
                 nodo.addHijo(d);
+                nodo.addHijo(s);
                 node.addHijo(nodo);
                 parser.raiz = node;
     
@@ -63,15 +62,51 @@ PROCEDURE::= TK_PROCEDURE:proc TK_ID:id PARAMETROS:p TK_IS DECLARACIONES:d TK_BE
             
 ; 
 
-PROCEDURE_PRIME::= DECISION PROCEDURE_PRIME
-                | WHILE PROCEDURE_PRIME
+PROCEDURE_PRIME::= DECISION:d PROCEDURE_PRIME:s
+                {:
+                    Nodo nodo = new Nodo("ESTRUCTURA",parser.cont);
+                    parser.cont++;
+                    nodo.addHijo(d);
+                    nodo.addHijo(s);
+                    RESULT = nodo;
+                :}
+                | WHILE:w PROCEDURE_PRIME:s 
+                {:
+                    Nodo nodo = new Nodo("ESTRUCTURA",parser.cont);
+                    parser.cont++;
+                    nodo.addHijo(w);
+                    nodo.addHijo(s);
+                    RESULT = nodo;
+
+                :}
                 | ASIGNACIONES PROCEDURE_PRIME
                 | PROCEDURE PROCEDURE_PRIME
-                | PUT PROCEDURE_PRIME
-                | GET PROCEDURE_PRIME
+                | PUT:p PROCEDURE_PRIME:s
+                {:
+                    Nodo nodo = new Nodo("ESTRUCTURA",parser.cont);
+                    parser.cont++;
+                    nodo.addHijo(p);
+                    nodo.addHijo(s);
+                    RESULT = nodo;
+                :}
+                | GET:g PROCEDURE_PRIME:s
+                {:
+                    Nodo nodo = new Nodo("ESTRUCTURA",parser.cont);
+                    parser.cont++;
+                    nodo.addHijo(g);
+                    nodo.addHijo(s);
+                    RESULT = nodo;
+                :}
                 | LOOP PROCEDURE_PRIME
                 | FUNCTION PROCEDURE_PRIME
                 | 
+                {:
+                    Nodo node = new Nodo("ESTRUCTURA",parser.cont);
+                    parser.cont++;
+                    node.addHijo(new Nodo("VACIO",parser.cont++));
+                    parser.cont++;
+                    RESULT = node;
+                :}
 ;
 
 //Gramática de parámetros
@@ -102,10 +137,6 @@ TIPOS_PARAMETROS::= TK_IN:ti {:
 
 PARAMETROS::= TK_PARENTESISI PARAMETROS_PRIME:p
                 {:
-                    //System.out.println("Esto es parametros");
-                    //Nodo node = new Nodo ("PARAMETROS",parser.cont);
-                    //parser.cont++;
-                    //node.addHijo(p);
                     RESULT = p;
                 :}
         
@@ -146,11 +177,23 @@ PARAMETROS_PRIME::= TK_ID:id TK_COLON TIPOS_PARAMETROS:tp TIPOS_VARIABLES:tv TK_
 
 //Gramática para decisiones
 
-DECISION ::=  TK_IF TK_PARENTESISI EXPRESIONES TK_PARENTESISD TK_THEN PROCEDURE_PRIME DECISION_PRIME;
+DECISION ::=  TK_IF TK_PARENTESISI EXPRESIONES:e TK_PARENTESISD TK_THEN PROCEDURE_PRIME:p DECISION_PRIME:dp 
+            {:
+                Nodo nodo = new Nodo("DECISION",parser.cont);
+                parser.cont++;
+                Nodo c = new Nodo("EXPRESIONES",parser.cont);
+                parser.cont++;
+                c.addHijo(e);
+                nodo.addHijo(c);
+                nodo.addHijo(p);
+                RESULT = nodo;
+            :}                
+;
 
 DECISION_PRIME ::= TK_ELSEIF TK_PARENTESISI EXPRESIONES TK_PARENTESISD TK_THEN PROCEDURE_PRIME DECISION_PRIME
-            | TK_ELSE PROCEDURE_PRIME TK_ENDIF TK_PUNTOCOMA 
-            | TK_ENDIF TK_PUNTOCOMA 
+                | TK_ELSE PROCEDURE_PRIME TK_ENDIF TK_PUNTOCOMA
+                | TK_ENDIF TK_PUNTOCOMA 
+
 ;
 
 //Gramática para asignaciones
@@ -168,23 +211,111 @@ ASIGNACIONES ::= TK_ID TK_IGUAL TK_ID TK_PUNTOCOMA
 
 //Gramática para ciclo while
 
-WHILE ::= TK_WHILE TK_PARENTESISI EXPRESIONES TK_PARENTESISD TK_LOOP PROCEDURE_PRIME TK_ENDLOOP TK_PUNTOCOMA;
+WHILE ::= TK_WHILE:w TK_PARENTESISI EXPRESIONES:e TK_PARENTESISD TK_LOOP PROCEDURE_PRIME:p TK_ENDLOOP TK_PUNTOCOMA
+           {:
+                   Nodo nodo = new Nodo(w.toString(),parser.cont);
+                   parser.cont++;
+                   nodo.addHijo(p);
+                   RESULT = nodo;
+            :}
+
+;
 
 
 //Gramática para expresiones
 
-EXPRESIONES ::= EP
-              | EP TK_OR EP
-              | EP TK_AND EP
+EXPRESIONES ::= EP:e 
+                {:
+                    RESULT = e;
+                :}
+              | EP:e TK_OR:o EP:ep
+                {:
+                    Nodo nodo = new Nodo(o.toString(),parser.cont);
+                    parser.cont++;
+                    nodo.addHijo(e);
+                    nodo.addHijo(ep);
+                    RESULT = nodo;
+                :}
+              | EP:e TK_AND:a EP:ep
+               {:
+                    Nodo nodo = new Nodo(a.toString(),parser.cont);
+                    parser.cont++;
+                    nodo.addHijo(e);
+                    nodo.addHijo(ep);
+                    RESULT = nodo;
+                :}
 ;
 
-EP::= TK_ID TK_OPREL TK_ID 
-    | TK_ID TK_OPREL TK_DIGITO 
-    | TK_ID TK_OPREL TK_DIGITOFLOAT 
-    | TK_ID TK_OPREL TK_TRUE 
-    | TK_ID TK_OPREL TK_FALSE 
-    | TK_DIGITO TK_OPREL TK_ID
-    | TK_DIGITOFLOAT TK_OPREL TK_ID
+EP::= TK_ID:id1 TK_OPREL:op TK_ID:id2
+    {:
+        Nodo nodo = new Nodo(op.toString(),parser.cont);
+        parser.cont++;
+        nodo.addHijo(new Nodo(id1.toString(),parser.cont));
+        parser.cont++;
+        nodo.addHijo(new Nodo(id2.toString(),parser.cont));
+        parser.cont++;
+        RESULT = nodo;
+    :}
+    | TK_ID:id TK_OPREL:op TK_DIGITO:dI
+    {:
+        Nodo nodo = new Nodo(op.toString(),parser.cont);
+        parser.cont++;
+        nodo.addHijo(new Nodo(id.toString(),parser.cont));
+        parser.cont++;
+        nodo.addHijo(new Nodo(dI.toString(),parser.cont));
+        parser.cont++;
+        RESULT = nodo;
+    :}
+    | TK_ID:id TK_OPREL:op TK_DIGITOFLOAT:dF
+    {:
+        Nodo nodo = new Nodo(op.toString(),parser.cont);
+        parser.cont++;
+        nodo.addHijo(new Nodo(id.toString(),parser.cont));
+        parser.cont++;
+        nodo.addHijo(new Nodo(dF.toString(),parser.cont));
+        parser.cont++;
+        RESULT = nodo;
+    :}
+    | TK_ID:id TK_OPREL:op TK_TRUE:t 
+    {:
+        Nodo nodo = new Nodo(op.toString(),parser.cont);
+        parser.cont++;
+        nodo.addHijo(new Nodo(id.toString(),parser.cont));
+        parser.cont++;
+        nodo.addHijo(new Nodo(t.toString(),parser.cont));
+        parser.cont++;
+        RESULT = nodo;
+    :}
+    | TK_ID:id TK_OPREL:op TK_FALSE:f 
+    {:
+        Nodo nodo = new Nodo(op.toString(),parser.cont);
+        parser.cont++;
+        nodo.addHijo(new Nodo(id.toString(),parser.cont));
+        parser.cont++;
+        nodo.addHijo(new Nodo(f.toString(),parser.cont));
+        parser.cont++;
+        RESULT = nodo;
+    :}
+    | TK_DIGITO:dI TK_OPREL:op TK_ID:id
+    {:
+        Nodo nodo = new Nodo(op.toString(),parser.cont);
+        parser.cont++;
+        nodo.addHijo(new Nodo(dI.toString(),parser.cont));
+        parser.cont++;
+        nodo.addHijo(new Nodo(id.toString(),parser.cont));
+        parser.cont++;
+        RESULT = nodo;
+    :}
+    | TK_DIGITOFLOAT:dF TK_OPREL:op TK_ID:id
+    {:
+        Nodo nodo = new Nodo(op.toString(),parser.cont);
+        parser.cont++;
+        nodo.addHijo(new Nodo(dF.toString(),parser.cont));
+        parser.cont++;
+        nodo.addHijo(new Nodo(id.toString(),parser.cont));
+        parser.cont++;
+        RESULT = nodo;
+    :}
 ;
 
 //Gramática para declaraciones de variables
@@ -302,15 +433,29 @@ TIPOS::= TK_BOOLEAN:t
                 
 //Gramática de Put y Get
 
-PUT::= TK_PUT TK_PARENTESISI TK_STRING TK_PARENTESISD  TK_PUNTOCOMA
-    | error TK_PARENTESISI TK_STRING TK_PARENTESISD  TK_PUNTOCOMA {: errores.add("Se esperaba un \"put\" "); :}
+PUT::= TK_PUT:p TK_PARENTESISI TK_STRING:s TK_PARENTESISD  TK_PUNTOCOMA 
+    {:
+        Nodo nodo = new Nodo (p.toString(),parser.cont);
+        parser.cont++;
+        nodo.addHijo(new Nodo(s.toString(),parser.cont));
+        parser.cont++;
+        RESULT = nodo;
+    :}
+    | error TK_PARENTESISI TK_STRING TK_PARENTESISD  TK_PUNTOCOMA {: errores.add("Se esperaba un \"put o un if\" "); :}
     | TK_PUT error TK_STRING TK_PARENTESISD  TK_PUNTOCOMA {: errores.add("Se esperaba un \"(\" "); :}
     | TK_PUT TK_PARENTESISI error TK_PARENTESISD  TK_PUNTOCOMA {: errores.add("Se esperaba una cadena "); :}
     | TK_PUT TK_PARENTESISI TK_STRING error  TK_PUNTOCOMA {: errores.add("Se esperaba un \")\" "); :}
     | TK_PUT TK_PARENTESISI TK_STRING TK_PARENTESISD  error {: errores.add("Se esperaba un \";\" "); :}
 ;
 
-GET::= TK_GET TK_PARENTESISI TK_ID TK_PARENTESISD TK_PUNTOCOMA
+GET::= TK_GET:g TK_PARENTESISI TK_ID:d TK_PARENTESISD TK_PUNTOCOMA
+    {:
+        Nodo nodo = new Nodo (g.toString(),parser.cont);
+        parser.cont++;
+        nodo.addHijo(new Nodo(d.toString(),parser.cont));
+        parser.cont++;
+        RESULT = nodo;
+    :}
     | error TK_PARENTESISI TK_ID TK_PARENTESISD TK_PUNTOCOMA {: errores.add("Se esperaba un \"get\" "); :}
     | TK_GET error TK_ID TK_PARENTESISD TK_PUNTOCOMA {: errores.add("Se esperaba un \"(\" "); :}
     | TK_GET TK_PARENTESISI error TK_PARENTESISD TK_PUNTOCOMA {: errores.add("Se esperaba un identificador "); :}

@@ -32,7 +32,7 @@ IGUAL = :=
 PUNTOCOMA = ;
 PARENTESISI = "("
 PARENTESISD = ")"
-SALTOLINEA = \n|\r|\n\r|{ESPACIO}
+SALTOLINEA = \n|\r|\n\r|\t|{ESPACIO}
 AND = &
 OR = "|"
 OPREL = <|>|<=|>=|=
