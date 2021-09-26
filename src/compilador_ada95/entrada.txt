@@ -1,8 +1,7 @@
 
-procedure Hola (Valor: in INTEGER; 
-Valorcito: out FLOAT) is
+procedure Hola (Valor: in INTEGER;  Valorcito: out FLOAT) is
     numero,hola:INTEGER:=34;
-
+    float,cosa:FLOAT:=34.45;
 begin
   
 end CUENTA; 

@@ -12,11 +12,11 @@ parser code {:
     public int cont = 0;
 
 public void syntax_error (Symbol s){
-    System.out.println("-----------------------");
-    System.out.println("Error de sintaxis");
-    System.out.println("Linea " +s.left);
-    System.out.println("Columna " +s.right);
-    System.out.println("Valor " +s.value);
+  //  System.out.println("-----------------------");
+   // System.out.println("Error de sintaxis");
+   // System.out.println("Linea " +s.left);
+   // System.out.println("Columna " +s.right);
+   // System.out.println("Valor " +s.value);
     errores.add("Syntax error: " +  s.value + " Linea: " + (s.left) + " Columna: " + (s.right));
 }
 
@@ -30,10 +30,9 @@ terminal  TK_PARENTESISI, TK_PARENTESISD,TK_PUNTOCOMA, TK_COMA,TK_TRUE, TK_FALSE
 
 non terminal PROCEDURE;
 non terminal PROCEDURE_PRIME;
-non terminal Nodo PARAMETROS, PARAMETROS_PRIME;
+non terminal Nodo PARAMETROS, PARAMETROS_PRIME, DECLARACIONES, TIPOS, ID;
 non terminal WHILE, DECISION, DECISION_PRIME, ASIGNACIONES, LOOP;
-non terminal DECLARACIONES;
-non terminal FUNCTION, ID, EXPRESIONES, EP, TIPOS, PUT, GET;
+non terminal FUNCTION, EXPRESIONES, EP, PUT, GET;
 non terminal TIPOS_PARAMETROS, TIPOS_VARIABLES;
 
 precedence left TK_OPADICION;
@@ -42,16 +41,18 @@ precedence left TK_MULTI;
 start with PROCEDURE;
 
 
-PROCEDURE::= TK_PROCEDURE:proc TK_ID:id PARAMETROS:p TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_END TK_ID TK_PUNTOCOMA
+PROCEDURE::= TK_PROCEDURE:proc TK_ID:id PARAMETROS:p TK_IS DECLARACIONES:d TK_BEGIN PROCEDURE_PRIME TK_END TK_ID TK_PUNTOCOMA
             {:     
                 System.out.println("Esto es procedure");
                 Nodo node = new Nodo("INICIO",parser.cont);
                 parser.cont++;
-                node.addHijo( new Nodo("PROCEDURE",parser.cont));
+                Nodo nodo = new Nodo("PROCEDURE",parser.cont);
                 parser.cont++;
-                node.addHijo(new Nodo (id.toString(), parser.cont));
+                nodo.addHijo(new Nodo (id.toString(), parser.cont));
                 parser.cont++;
-                node.addHijo(p);
+                nodo.addHijo(p);
+                nodo.addHijo(d);
+                node.addHijo(nodo);
                 parser.raiz = node;
     
             :}
@@ -188,30 +189,110 @@ EP::= TK_ID TK_OPREL TK_ID
 
 //Gramática para declaraciones de variables
 
-DECLARACIONES::= ID 
-                | ID TK_PUNTOCOMA DECLARACIONES
-                | 
+DECLARACIONES::= ID:id
+                {:
+                  RESULT = id;
+                :}
+                | ID:id TK_PUNTOCOMA DECLARACIONES:d 
+                {:
+                    Nodo node = new Nodo("DECLARACIONES",parser.cont);
+                    parser.cont++;
+                    node.addHijo(id);
+                    node.addHijo(d);
+                    RESULT = node;
+
+                :}
+                | {:
+                    Nodo node = new Nodo("DECLARACIONES",parser.cont);
+                    parser.cont++;
+                    node.addHijo(new Nodo("VACIO",parser.cont++));
+                    parser.cont++;
+                    RESULT = node;
+                :}
+
 ;
 
-ID::= TK_ID TK_COMA ID
+ID::= TK_ID:id TK_COMA ID:d{:
+        Nodo nodo = new Nodo("ID",parser.cont);
+        parser.cont++;
+        nodo.addHijo(new Nodo(id.toString(),parser.cont));
+        parser.cont++;
+        d.addHijo(nodo);
+        RESULT = d;
+    :}
     | TK_ID error ID {: errores.add("Se esperaba un \",\" "); :}
-    | TK_ID TK_COLON TIPOS 
+    | TK_ID:id TK_COLON TIPOS:t  {:
+        Nodo nodo = new Nodo("Variables",parser.cont);
+        parser.cont++;
+        nodo.addHijo(t);
+        Nodo node = new Nodo("ID",parser.cont);
+        parser.cont++;
+        node.addHijo(new Nodo(id.toString(),parser.cont));
+        parser.cont++;
+        nodo.addHijo(node);
+        RESULT = nodo;
+    
+    :}
     | TK_ID error TIPOS {: errores.add("Se esperaba un \":\" "); :}
     
 ;
 
-TIPOS::= TK_BOOLEAN 
-        |TK_BOOLEAN TK_IGUAL TK_FALSE 
-        |TK_BOOLEAN TK_IGUAL TK_TRUE 
+TIPOS::= TK_BOOLEAN:t
+        {:
+            Nodo nodo= new Nodo (t.toString(),parser.cont);
+            parser.cont++;
+            RESULT = nodo;          
+        :}
+        |TK_BOOLEAN:t TK_IGUAL TK_FALSE:v
+        {:
+            Nodo nodo= new Nodo (t.toString(),parser.cont);
+            parser.cont++;
+            nodo.addHijo(new Nodo(v.toString(),parser.cont));
+            parser.cont++;
+            RESULT = nodo;          
+        :}
+        
+        |TK_BOOLEAN:t TK_IGUAL TK_TRUE:v
+        {:
+            Nodo nodo= new Nodo (t.toString(),parser.cont);
+            parser.cont++;
+            nodo.addHijo(new Nodo(v.toString(),parser.cont));
+            parser.cont++;
+            RESULT = nodo; 
+        :}
         |TK_BOOLEAN error TK_TRUE {: errores.add("Se esperaba un \":=\" "); :}
         |TK_BOOLEAN error TK_FALSE {: errores.add("Se esperaba un \":=\" "); :}
         |TK_BOOLEAN TK_IGUAL error {: errores.add("Se esperaba un true o false "); :}
-        |TK_INTEGER
-        |TK_INTEGER TK_IGUAL TK_DIGITO
+        |TK_INTEGER:t
+        {:
+            Nodo nodo= new Nodo (t.toString(),parser.cont);
+            parser.cont++;
+            RESULT = nodo;         
+        :}
+        |TK_INTEGER:t TK_IGUAL TK_DIGITO:d
+        {:
+            Nodo nodo= new Nodo (t.toString(),parser.cont);
+            parser.cont++;
+            nodo.addHijo(new Nodo(d.toString(),parser.cont));
+            parser.cont++;
+            RESULT = nodo; 
+        :}
         |TK_INTEGER error TK_DIGITO {: errores.add("Se esperaba un \":=\" "); :}
         |TK_INTEGER TK_IGUAL error {: errores.add("Se esperaba un numero "); :}
-        |TK_FLOAT
-        |TK_FLOAT TK_IGUAL TK_DIGITOFLOAT
+        |TK_FLOAT:t
+        {:
+            Nodo nodo= new Nodo (t.toString(),parser.cont);
+            parser.cont++;
+            RESULT = nodo;          
+        :}
+        |TK_FLOAT:t TK_IGUAL TK_DIGITOFLOAT:d
+        {:
+            Nodo nodo= new Nodo (t.toString(),parser.cont);
+            parser.cont++;
+            nodo.addHijo(new Nodo(d.toString(),parser.cont));
+            parser.cont++;
+            RESULT = nodo; 
+        :}
         |TK_FLOAT error TK_DIGITOFLOAT  {: errores.add("Se esperaba un \":=\" "); :}
         |TK_FLOAT TK_IGUAL error {: errores.add("Se esperaba un numero decimal "); :}
         |error {: errores.add("Los tipos de datos permitidos son INTEGER, FLOAT y BOOLEAN. "); :}

@@ -374,10 +374,10 @@ public class Principal extends javax.swing.JFrame {
     }
 
     public void DFS(Nodo node, ArrayList<String> recorrido) {
-        if (!node.getEtiqueta().equals("VACIO")) {
+        //if (!node.getEtiqueta().equals("VACIO")) {
             System.out.println(node.toString());
             recorrido.add(node.toString());
-        }
+        //}
         for (int i = 0; i < node.getHijos().size(); i++) {
             DFS(node.getHijos().get(i), recorrido);
         }
