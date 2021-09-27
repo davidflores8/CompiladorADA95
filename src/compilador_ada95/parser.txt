@@ -29,8 +29,7 @@ terminal  TK_PARENTESISI, TK_PARENTESISD,TK_PUNTOCOMA, TK_COMA,TK_TRUE, TK_FALSE
 non terminal PROCEDURE;
 non terminal Nodo PROCEDURE_PRIME, EXPRESIONES, EP, DECISION, DECISION_PRIME,WHILE;
 non terminal Nodo PARAMETROS, PARAMETROS_PRIME, DECLARACIONES, TIPOS, ID, PUT, GET;
-non terminal ASIGNACIONES, LOOP;
-non terminal FUNCTION;
+non terminal Nodo ASIGNACIONES, LOOP,FUNCTION;
 non terminal TIPOS_PARAMETROS, TIPOS_VARIABLES;
 
 precedence left TK_OPADICION;
@@ -79,7 +78,15 @@ PROCEDURE_PRIME::= DECISION:d PROCEDURE_PRIME:s
                     RESULT = nodo;
 
                 :}
-                | ASIGNACIONES PROCEDURE_PRIME
+                | ASIGNACIONES:a PROCEDURE_PRIME:s 
+                {:
+                    Nodo nodo = new Nodo("ESTRUCTURA",parser.cont);
+                    parser.cont++;
+                    nodo.addHijo(a);
+                    nodo.addHijo(s);
+                    RESULT = nodo;
+
+                :}
                 | PROCEDURE PROCEDURE_PRIME
                 | PUT:p PROCEDURE_PRIME:s
                 {:
@@ -97,11 +104,18 @@ PROCEDURE_PRIME::= DECISION:d PROCEDURE_PRIME:s
                     nodo.addHijo(s);
                     RESULT = nodo;
                 :}
-                | LOOP PROCEDURE_PRIME
+                | LOOP:l PROCEDURE_PRIME:s
+                {:
+                    Nodo nodo = new Nodo("ESTRUCTURA",parser.cont);
+                    parser.cont++;
+                    nodo.addHijo(l);
+                    nodo.addHijo(s);
+                    RESULT = nodo;
+                :}
                 | FUNCTION PROCEDURE_PRIME
                 | 
                 {:
-                    Nodo node = new Nodo("ESTRUCTURA",parser.cont);
+                    Nodo node = new Nodo("VACIO",parser.cont);
                     parser.cont++;
                     node.addHijo(new Nodo("VACIO",parser.cont++));
                     parser.cont++;
@@ -198,7 +212,18 @@ DECISION_PRIME ::= TK_ELSEIF TK_PARENTESISI EXPRESIONES TK_PARENTESISD TK_THEN P
 
 //Gramática para asignaciones
 
-ASIGNACIONES ::= TK_ID TK_IGUAL TK_ID TK_PUNTOCOMA
+ASIGNACIONES ::= TK_ID:id1 TK_IGUAL:i TK_ID:id2 TK_PUNTOCOMA
+                {:
+                    Nodo nodo = new Nodo("ASIGNACION",parser.cont);
+                    parser.cont++;
+                    Nodo igual = new Nodo(i.toString(),parser.cont);
+                    parser.cont++;
+                    igual.addHijo(new Nodo(id1.toString(),parser.cont));
+                    parser.cont++;
+                    igual.addHijo(new Nodo(id2.toString(),parser.cont));
+                    nodo.addHijo(igual);
+                    RESULT = nodo;
+                :}
                |TK_ID TK_IGUAL TK_ID TK_OPADICION TK_ID TK_PUNTOCOMA 
                |TK_ID TK_IGUAL TK_ID TK_OPADICION TK_DIGITO TK_PUNTOCOMA 
                |TK_ID TK_IGUAL TK_ID TK_OPADICION TK_DIGITOFLOAT TK_PUNTOCOMA 
@@ -468,7 +493,21 @@ GET::= TK_GET:g TK_PARENTESISI TK_ID:d TK_PARENTESISD TK_PUNTOCOMA
 
 //Gramática de loop
 
-LOOP ::= TK_ID TK_COLON TK_LOOP TK_EXIT TK_ID TK_WHEN EXPRESIONES TK_PUNTOCOMA PROCEDURE_PRIME TK_ENDLOOP TK_ID TK_PUNTOCOMA
+LOOP ::= TK_ID:id1 TK_COLON TK_LOOP TK_EXIT:exit TK_ID:id2 TK_WHEN EXPRESIONES:exp TK_PUNTOCOMA PROCEDURE_PRIME:p TK_ENDLOOP TK_ID TK_PUNTOCOMA 
+        {:
+            Nodo nodo = new Nodo("LOOP",parser.cont);
+            parser.cont++;
+            Nodo identificador = new Nodo(id1.toString(),parser.cont);
+            parser.cont++;
+            Nodo salida = new Nodo ("EXIT WHEN",parser.cont);
+            parser.cont++;
+            salida.addHijo(exp);
+            identificador.addHijo(salida);  
+            nodo.addHijo(identificador);
+            nodo.addHijo(p);
+            RESULT = nodo;
+            
+        :}
         |error TK_COLON TK_LOOP TK_EXIT TK_ID TK_WHEN EXPRESIONES TK_PUNTOCOMA PROCEDURE_PRIME TK_ENDLOOP TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un identificador "); :}
         |TK_ID error TK_LOOP TK_EXIT TK_ID TK_WHEN EXPRESIONES TK_PUNTOCOMA PROCEDURE_PRIME TK_ENDLOOP TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un \":\" "); :}
         |TK_ID TK_COLON error TK_EXIT TK_ID TK_WHEN EXPRESIONES TK_PUNTOCOMA PROCEDURE_PRIME TK_ENDLOOP TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un \"loop\" "); :}

@@ -778,7 +778,20 @@ class CUP$parser$actions {
           case 8: // PROCEDURE_PRIME ::= ASIGNACIONES PROCEDURE_PRIME 
             {
               Nodo RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		Nodo a = (Nodo)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		int sleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Nodo s = (Nodo)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		
+                    Nodo nodo = new Nodo("ESTRUCTURA",parser.cont);
+                    parser.cont++;
+                    nodo.addHijo(a);
+                    nodo.addHijo(s);
+                    RESULT = nodo;
 
+                
               CUP$parser$result = parser.getSymbolFactory().newSymbol("PROCEDURE_PRIME",1, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -838,7 +851,19 @@ class CUP$parser$actions {
           case 12: // PROCEDURE_PRIME ::= LOOP PROCEDURE_PRIME 
             {
               Nodo RESULT =null;
-
+		int lleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int lright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		Nodo l = (Nodo)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		int sleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Nodo s = (Nodo)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		
+                    Nodo nodo = new Nodo("ESTRUCTURA",parser.cont);
+                    parser.cont++;
+                    nodo.addHijo(l);
+                    nodo.addHijo(s);
+                    RESULT = nodo;
+                
               CUP$parser$result = parser.getSymbolFactory().newSymbol("PROCEDURE_PRIME",1, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -857,7 +882,7 @@ class CUP$parser$actions {
             {
               Nodo RESULT =null;
 		
-                    Nodo node = new Nodo("ESTRUCTURA",parser.cont);
+                    Nodo node = new Nodo("VACIO",parser.cont);
                     parser.cont++;
                     node.addHijo(new Nodo("VACIO",parser.cont++));
                     parser.cont++;
@@ -1129,8 +1154,27 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 33: // ASIGNACIONES ::= TK_ID TK_IGUAL TK_ID TK_PUNTOCOMA 
             {
-              Object RESULT =null;
-
+              Nodo RESULT =null;
+		int id1left = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
+		int id1right = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
+		Object id1 = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
+		int ileft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
+		int iright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
+		Object i = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+		int id2left = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int id2right = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		Object id2 = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		
+                    Nodo nodo = new Nodo("ASIGNACION",parser.cont);
+                    parser.cont++;
+                    Nodo igual = new Nodo(i.toString(),parser.cont);
+                    parser.cont++;
+                    igual.addHijo(new Nodo(id1.toString(),parser.cont));
+                    parser.cont++;
+                    igual.addHijo(new Nodo(id2.toString(),parser.cont));
+                    nodo.addHijo(igual);
+                    RESULT = nodo;
+                
               CUP$parser$result = parser.getSymbolFactory().newSymbol("ASIGNACIONES",14, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1138,7 +1182,7 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 34: // ASIGNACIONES ::= TK_ID TK_IGUAL TK_ID TK_OPADICION TK_ID TK_PUNTOCOMA 
             {
-              Object RESULT =null;
+              Nodo RESULT =null;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("ASIGNACIONES",14, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-5)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1147,7 +1191,7 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 35: // ASIGNACIONES ::= TK_ID TK_IGUAL TK_ID TK_OPADICION TK_DIGITO TK_PUNTOCOMA 
             {
-              Object RESULT =null;
+              Nodo RESULT =null;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("ASIGNACIONES",14, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-5)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1156,7 +1200,7 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 36: // ASIGNACIONES ::= TK_ID TK_IGUAL TK_ID TK_OPADICION TK_DIGITOFLOAT TK_PUNTOCOMA 
             {
-              Object RESULT =null;
+              Nodo RESULT =null;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("ASIGNACIONES",14, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-5)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1165,7 +1209,7 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 37: // ASIGNACIONES ::= TK_ID TK_IGUAL TK_ID TK_MULTI TK_ID TK_PUNTOCOMA 
             {
-              Object RESULT =null;
+              Nodo RESULT =null;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("ASIGNACIONES",14, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-5)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1174,7 +1218,7 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 38: // ASIGNACIONES ::= TK_ID TK_IGUAL TK_ID TK_MULTI TK_DIGITO TK_PUNTOCOMA 
             {
-              Object RESULT =null;
+              Nodo RESULT =null;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("ASIGNACIONES",14, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-5)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1183,7 +1227,7 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 39: // ASIGNACIONES ::= TK_ID TK_IGUAL TK_DIGITO TK_PUNTOCOMA 
             {
-              Object RESULT =null;
+              Nodo RESULT =null;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("ASIGNACIONES",14, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1192,7 +1236,7 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 40: // ASIGNACIONES ::= TK_ID TK_IGUAL TK_TRUE TK_PUNTOCOMA 
             {
-              Object RESULT =null;
+              Nodo RESULT =null;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("ASIGNACIONES",14, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1201,7 +1245,7 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 41: // ASIGNACIONES ::= TK_ID TK_IGUAL TK_FALSE TK_PUNTOCOMA 
             {
-              Object RESULT =null;
+              Nodo RESULT =null;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("ASIGNACIONES",14, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1930,8 +1974,36 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 87: // LOOP ::= TK_ID TK_COLON TK_LOOP TK_EXIT TK_ID TK_WHEN EXPRESIONES TK_PUNTOCOMA PROCEDURE_PRIME TK_ENDLOOP TK_ID TK_PUNTOCOMA 
             {
-              Object RESULT =null;
-
+              Nodo RESULT =null;
+		int id1left = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-11)).left;
+		int id1right = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-11)).right;
+		Object id1 = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-11)).value;
+		int exitleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-8)).left;
+		int exitright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-8)).right;
+		Object exit = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-8)).value;
+		int id2left = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-7)).left;
+		int id2right = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-7)).right;
+		Object id2 = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-7)).value;
+		int expleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-5)).left;
+		int expright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-5)).right;
+		Nodo exp = (Nodo)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-5)).value;
+		int pleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
+		int pright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
+		Nodo p = (Nodo)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
+		
+            Nodo nodo = new Nodo("LOOP",parser.cont);
+            parser.cont++;
+            Nodo identificador = new Nodo(id1.toString(),parser.cont);
+            parser.cont++;
+            Nodo salida = new Nodo ("EXIT WHEN",parser.cont);
+            parser.cont++;
+            salida.addHijo(exp);
+            identificador.addHijo(salida);  
+            nodo.addHijo(identificador);
+            nodo.addHijo(p);
+            RESULT = nodo;
+            
+        
               CUP$parser$result = parser.getSymbolFactory().newSymbol("LOOP",15, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-11)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1939,7 +2011,7 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 88: // LOOP ::= error TK_COLON TK_LOOP TK_EXIT TK_ID TK_WHEN EXPRESIONES TK_PUNTOCOMA PROCEDURE_PRIME TK_ENDLOOP TK_ID TK_PUNTOCOMA 
             {
-              Object RESULT =null;
+              Nodo RESULT =null;
 		 errores.add("Se esparaba un identificador "); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("LOOP",15, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-11)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1948,7 +2020,7 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 89: // LOOP ::= TK_ID error TK_LOOP TK_EXIT TK_ID TK_WHEN EXPRESIONES TK_PUNTOCOMA PROCEDURE_PRIME TK_ENDLOOP TK_ID TK_PUNTOCOMA 
             {
-              Object RESULT =null;
+              Nodo RESULT =null;
 		 errores.add("Se esparaba un \":\" "); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("LOOP",15, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-11)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1957,7 +2029,7 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 90: // LOOP ::= TK_ID TK_COLON error TK_EXIT TK_ID TK_WHEN EXPRESIONES TK_PUNTOCOMA PROCEDURE_PRIME TK_ENDLOOP TK_ID TK_PUNTOCOMA 
             {
-              Object RESULT =null;
+              Nodo RESULT =null;
 		 errores.add("Se esparaba un \"loop\" "); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("LOOP",15, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-11)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1966,7 +2038,7 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 91: // LOOP ::= TK_ID TK_COLON TK_LOOP error TK_ID TK_WHEN EXPRESIONES TK_PUNTOCOMA PROCEDURE_PRIME TK_ENDLOOP TK_ID TK_PUNTOCOMA 
             {
-              Object RESULT =null;
+              Nodo RESULT =null;
 		 errores.add("Se esparaba un \"exit\" "); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("LOOP",15, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-11)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1975,7 +2047,7 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 92: // LOOP ::= TK_ID TK_COLON TK_LOOP TK_EXIT error TK_WHEN EXPRESIONES TK_PUNTOCOMA PROCEDURE_PRIME TK_ENDLOOP TK_ID TK_PUNTOCOMA 
             {
-              Object RESULT =null;
+              Nodo RESULT =null;
 		 errores.add("Se esparaba un identificador "); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("LOOP",15, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-11)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1984,7 +2056,7 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 93: // LOOP ::= TK_ID TK_COLON TK_LOOP TK_EXIT TK_ID error EXPRESIONES TK_PUNTOCOMA PROCEDURE_PRIME TK_ENDLOOP TK_ID TK_PUNTOCOMA 
             {
-              Object RESULT =null;
+              Nodo RESULT =null;
 		 errores.add("Se esparaba un \"when\" "); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("LOOP",15, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-11)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1993,7 +2065,7 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 94: // LOOP ::= TK_ID TK_COLON TK_LOOP TK_EXIT TK_ID TK_WHEN EXPRESIONES TK_PUNTOCOMA PROCEDURE_PRIME TK_ENDLOOP error TK_PUNTOCOMA 
             {
-              Object RESULT =null;
+              Nodo RESULT =null;
 		 errores.add("Se esparaba un identificador "); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("LOOP",15, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-11)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -2002,7 +2074,7 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 95: // LOOP ::= TK_ID TK_COLON TK_LOOP TK_EXIT TK_ID TK_WHEN EXPRESIONES TK_PUNTOCOMA PROCEDURE_PRIME TK_ENDLOOP TK_ID error 
             {
-              Object RESULT =null;
+              Nodo RESULT =null;
 		 errores.add("Se esparaba un \";\" "); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("LOOP",15, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-11)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -2011,7 +2083,7 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 96: // FUNCTION ::= TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA 
             {
-              Object RESULT =null;
+              Nodo RESULT =null;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("FUNCTION",16, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-14)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -2020,7 +2092,7 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 97: // FUNCTION ::= error TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA 
             {
-              Object RESULT =null;
+              Nodo RESULT =null;
 		 errores.add("Se esparaba un \"function\" "); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("FUNCTION",16, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-14)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -2029,7 +2101,7 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 98: // FUNCTION ::= TK_FUNCTION error PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA 
             {
-              Object RESULT =null;
+              Nodo RESULT =null;
 		 errores.add("Se esparaba un identificador "); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("FUNCTION",16, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-14)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -2038,7 +2110,7 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 99: // FUNCTION ::= TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN error TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA 
             {
-              Object RESULT =null;
+              Nodo RESULT =null;
 		 errores.add("Se esparaba un identificador "); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("FUNCTION",16, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-14)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -2047,7 +2119,7 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 100: // FUNCTION ::= TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID error TK_END TK_ID TK_PUNTOCOMA 
             {
-              Object RESULT =null;
+              Nodo RESULT =null;
 		 errores.add("Se esparaba un \";\" "); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("FUNCTION",16, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-14)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -2056,7 +2128,7 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 101: // FUNCTION ::= TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA error TK_ID TK_PUNTOCOMA 
             {
-              Object RESULT =null;
+              Nodo RESULT =null;
 		 errores.add("Se esparaba un \"end\" "); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("FUNCTION",16, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-14)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -2065,7 +2137,7 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 102: // FUNCTION ::= TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END error TK_PUNTOCOMA 
             {
-              Object RESULT =null;
+              Nodo RESULT =null;
 		 errores.add("Se esparaba un identificador "); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("FUNCTION",16, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-14)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -2074,7 +2146,7 @@ class CUP$parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 103: // FUNCTION ::= TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID error 
             {
-              Object RESULT =null;
+              Nodo RESULT =null;
 		 errores.add("Se esparaba un \";\" "); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("FUNCTION",16, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-14)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }

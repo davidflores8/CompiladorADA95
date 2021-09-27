@@ -239,10 +239,6 @@ public class Principal extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "Código compilado sin ningún problema ","Información", JOptionPane.INFORMATION_MESSAGE);
                     String formato = "edge [color=blue];" + hacerDFS(p.raiz);
                     p.raiz.exportarArbol(formato, "AST");
-                    //System.out.println(p.raiz.toString());
-                    //for (int i = 0; i < p.raiz.getHijos().size(); i++) {
-                    //    System.out.println(p.raiz.getHijos().get(i).toString());
-                    //}
                     
                 }
                 else if (!lexer.erroresLexicos.isEmpty()){
