@@ -15,7 +15,7 @@ public void syntax_error (Symbol s){
     errores.add("Esta es Linea: " + (s.left) + " y Columna: " + (s.right));
 }
 public void unrecovered_syntax_error(Symbol s){
-        errores.add("Error desconocido, por favor revise la " +  s.value + " Linea: " + (s.left + 1) + " y Columna: " + (s.right + 1));
+        errores.add("Error desconocido, por favor revise la linea: " + (s.left + 1) + " y columna: " + (s.right + 1));
     }
 
 :} ;
@@ -35,6 +35,8 @@ non terminal TIPOS_PARAMETROS, TIPOS_VARIABLES;
 
 precedence left TK_OPADICION;
 precedence left TK_MULTI;
+precedence left TK_IGUAL;
+
 
 start with PROCEDURE;
 
@@ -223,12 +225,20 @@ DECISION ::=  TK_IF TK_PARENTESISI EXPRESIONES:e TK_PARENTESISD TK_THEN PROCEDUR
                 c.addHijo(e);
                 nodo.addHijo(c);
                 nodo.addHijo(p);
+                nodo.addHijo(dp);
                 RESULT = nodo;
             :}                
 ;
 
 DECISION_PRIME ::= TK_ELSEIF TK_PARENTESISI EXPRESIONES TK_PARENTESISD TK_THEN PROCEDURE_PRIME DECISION_PRIME
-                | TK_ELSE PROCEDURE_PRIME TK_ENDIF TK_PUNTOCOMA
+                | TK_ELSE:el PROCEDURE_PRIME:pr TK_ENDIF TK_PUNTOCOMA
+                {:
+                Nodo nodo = new Nodo("ELSE",parser.cont);
+                parser.cont++;
+                nodo.addHijo(pr);
+                RESULT = nodo;
+                :}
+                
                 | TK_ENDIF TK_PUNTOCOMA 
 
 ;

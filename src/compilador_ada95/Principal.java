@@ -206,7 +206,7 @@ public class Principal extends javax.swing.JFrame {
                 ta_errores.setText("");
                 if (p.errores.isEmpty() && lexer.erroresLexicos.isEmpty()){
                     JOptionPane.showMessageDialog(this, "Código compilado sin ningún problema ","Información", JOptionPane.INFORMATION_MESSAGE);
-                    String formato = "edge [color=blue];" + hacerDFS(p.raiz);
+                    String formato = "edge [color=red];" + hacerDFS(p.raiz);
                     p.raiz.exportarArbol(formato, "AST");
                     
                 }

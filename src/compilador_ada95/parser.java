@@ -706,7 +706,7 @@ public void syntax_error (Symbol s){
     errores.add("Esta es Linea: " + (s.left) + " y Columna: " + (s.right));
 }
 public void unrecovered_syntax_error(Symbol s){
-        errores.add("Error desconocido, por favor revise la " +  s.value + " Linea: " + (s.left + 1) + " y Columna: " + (s.right + 1));
+        errores.add("Error desconocido, por favor revise la linea: " + (s.left + 1) + " y columna: " + (s.right + 1));
     }
 
 
@@ -1255,6 +1255,7 @@ class CUP$parser$actions {
                 c.addHijo(e);
                 nodo.addHijo(c);
                 nodo.addHijo(p);
+                nodo.addHijo(dp);
                 RESULT = nodo;
             
               CUP$parser$result = parser.getSymbolFactory().newSymbol("DECISION",4, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-6)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1274,7 +1275,18 @@ class CUP$parser$actions {
           case 32: // DECISION_PRIME ::= TK_ELSE PROCEDURE_PRIME TK_ENDIF TK_PUNTOCOMA 
             {
               Nodo RESULT =null;
-
+		int elleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
+		int elright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
+		Object el = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
+		int prleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
+		int prright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
+		Nodo pr = (Nodo)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+		
+                Nodo nodo = new Nodo("ELSE",parser.cont);
+                parser.cont++;
+                nodo.addHijo(pr);
+                RESULT = nodo;
+                
               CUP$parser$result = parser.getSymbolFactory().newSymbol("DECISION_PRIME",5, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
