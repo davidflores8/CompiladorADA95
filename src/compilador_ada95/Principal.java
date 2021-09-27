@@ -52,16 +52,12 @@ public class Principal extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         textArea = new javax.swing.JTextArea();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         ta_errores = new javax.swing.JTextArea();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
 
         textAreaErroresLexicos.setEditable(false);
         textAreaErroresLexicos.setColumns(20);
@@ -121,13 +117,6 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Graficar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
         ta_errores.setColumns(20);
         ta_errores.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
         ta_errores.setRows(5);
@@ -139,14 +128,11 @@ public class Principal extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton2)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 519, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -154,17 +140,22 @@ public class Principal extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 369, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1)
-                            .addComponent(jButton2))))
-                .addContainerGap(27, Short.MAX_VALUE))
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 184, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton1)))
+                .addContainerGap())
         );
 
         jMenu1.setText("Archivo");
+        jMenu1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu1ActionPerformed(evt);
+            }
+        });
 
         jMenuItem3.setText("Cargar");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
@@ -174,30 +165,10 @@ public class Principal extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem3);
 
-        jMenuItem4.setText("Guardar");
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem4ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItem4);
+        jMenuItem1.setText("Guardar");
+        jMenu1.add(jMenuItem1);
 
         jMenuBar1.add(jMenu1);
-
-        jMenu2.setText("Análisis");
-
-        jMenuItem1.setText("Análisis léxico (revisar Tokens encontrados)");
-        jMenu2.add(jMenuItem1);
-
-        jMenuItem2.setText("Análisis sintáctico");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jMenuItem2);
-
-        jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
 
@@ -222,14 +193,12 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
+        try {
+            guardarDatos();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
         if(archivo!=null){
-            try {
-                // TODO add your handling code here:
-                guardarDatos();
-            } catch (IOException ex) {
-                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-            }
             try{
                 lexer  = new Yylex( new FileReader(archivo)); 
                 p = new parser(lexer);
@@ -263,17 +232,6 @@ public class Principal extends javax.swing.JFrame {
             }
         }
         
-        else if (!"".equals(textArea.getText())){
-            JFileChooser file=new JFileChooser();
-            file.setApproveButtonText("Guardar");
-            file.showSaveDialog(null);
-            archivo= new File(file.getSelectedFile()+".txt");
-            try {
-                guardarDatos();
-            } catch (IOException ex) {
-                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
         else{
             JOptionPane.showMessageDialog(this, "Todavía no ha escrito codigo","Información", JOptionPane.INFORMATION_MESSAGE);
         }
@@ -284,6 +242,9 @@ public class Principal extends javax.swing.JFrame {
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         // TODO add your handling code here:
         JFileChooser file=new JFileChooser();
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("ADA 95", "adb");
+        file.addChoosableFileFilter(filtro);
+        file.setAcceptAllFileFilterUsed(false);
         file.showOpenDialog(this);
         archivo=file.getSelectedFile();
         String aux="";
@@ -322,41 +283,20 @@ public class Principal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
-
-    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+    private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu1ActionPerformed
         try {
-            // TODO add your handling code here:
             guardarDatos();
         } catch (IOException ex) {
-            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
-    }//GEN-LAST:event_jMenuItem4ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_jMenu1ActionPerformed
 
     public void guardarDatos() throws IOException{
-        if(!"".equals(textArea.getText()) && archivo!=null){
-            FileWriter  save=new FileWriter(archivo);
-            save.write(textArea.getText());
-            save.close();
-        }
-        else{
-            try{
-                JOptionPane.showMessageDialog(null,
-             "No ha abierto ningún archivo para guardar su código",
-                 "Información",JOptionPane.INFORMATION_MESSAGE);
-            }
-            catch(Exception e){
-                
-            }
-        }
-        
+        FileWriter  save=new FileWriter(archivo);
+        save.write(textArea.getText());
+        save.close();
     }
+    
     
     public String hacerDFS(Nodo node) {
         ArrayList<String> recorrido = new ArrayList<>();
@@ -432,14 +372,10 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JDialog erroresLexicos;
     private javax.swing.JDialog erroresSintacticos;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -453,6 +389,7 @@ public class Principal extends javax.swing.JFrame {
     Yylex lexer;
     parser p;
     File archivo;
+
 
 }
 

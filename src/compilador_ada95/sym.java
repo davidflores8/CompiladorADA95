@@ -11,6 +11,7 @@ public class sym {
   public static final int TK_INOUT = 28;
   public static final int TK_OUT = 27;
   public static final int TK_ENDLOOP = 10;
+  public static final int TK_FOR = 43;
   public static final int TK_IS = 20;
   public static final int TK_IGUAL = 2;
   public static final int TK_AND = 41;
@@ -94,7 +95,8 @@ public class sym {
   "TK_FALSE",
   "TK_COLON",
   "TK_AND",
-  "TK_OR"
+  "TK_OR",
+  "TK_FOR"
   };
 }
 

@@ -66,6 +66,7 @@ GET = get
 IN = in
 OUT = out 
 INOUT = inout
+FOR = for
 %%
 
 <YYINITIAL>{
@@ -83,6 +84,7 @@ INOUT = inout
 {COLON}       {return new Symbol (sym.TK_COLON, yyline + 1, yycolumn +1 , yytext() ) ; }
 {AND}         {return new Symbol (sym.TK_AND, yyline + 1, yycolumn +1 , yytext() ) ; }
 {OR}          {return new Symbol (sym.TK_OR, yyline + 1, yycolumn +1 , yytext() ) ; }
+{FOR}         {return new Symbol (sym.TK_FOR, yyline + 1, yycolumn +1 , yytext() ) ; }
 {TRUE}        {return new Symbol (sym.TK_TRUE, yyline + 1, yycolumn +1 , yytext() ) ; }
 {FALSE}       {return new Symbol (sym.TK_FALSE, yyline + 1, yycolumn +1 , yytext() ) ; }
 {PARENTESISD} {return new Symbol (sym.TK_PARENTESISD, yyline + 1, yycolumn +1 , yytext() ) ; }

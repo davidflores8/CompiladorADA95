@@ -12,10 +12,10 @@ parser code {:
     public int cont = 0;
 
 public void syntax_error (Symbol s){
-    errores.add("Esta es Linea: " + (s.left) + " Columna: " + (s.right));
+    errores.add("Esta es Linea: " + (s.left) + " y Columna: " + (s.right));
 }
 public void unrecovered_syntax_error(Symbol s){
-        errores.add("Error desconocido: " +  s.value + " Linea: " + (s.left + 1) + " Columna: " + (s.right + 1));
+        errores.add("Error desconocido, por favor revise la " +  s.value + " Linea: " + (s.left + 1) + " y Columna: " + (s.right + 1));
     }
 
 :} ;
@@ -24,12 +24,13 @@ terminal  TK_IGUAL, TK_INTEGER, TK_BOOLEAN, TK_FLOAT, TK_IF, TK_ELSE, TK_ELSEIF;
 terminal  TK_LOOP, TK_ENDLOOP, TK_WHILE, TK_OPADICION, TK_MULTI, TK_ID, TK_OPREL, TK_DIGITO, TK_THEN, TK_ENDIF;
 terminal  TK_PROCEDURE, TK_IS, TK_BEGIN, TK_END, TK_PUT, TK_GET;
 terminal  TK_DIGITOFLOAT, TK_IN, TK_OUT, TK_INOUT, TK_EXIT, TK_WHEN, TK_FUNCTION, TK_RETURN, TK_STRING;
-terminal  TK_PARENTESISI, TK_PARENTESISD,TK_PUNTOCOMA, TK_COMA,TK_TRUE, TK_FALSE, TK_COLON, TK_AND, TK_OR;
+terminal  TK_PARENTESISI, TK_PARENTESISD,TK_PUNTOCOMA, TK_COMA,TK_TRUE, TK_FALSE, TK_COLON, TK_AND, TK_OR, TK_FOR;
 
-non terminal PROCEDURE;
+non terminal Nodo PROCEDURE;
 non terminal Nodo PROCEDURE_PRIME, EXPRESIONES, EP, DECISION, DECISION_PRIME,WHILE;
 non terminal Nodo PARAMETROS, PARAMETROS_PRIME, DECLARACIONES, TIPOS, ID, PUT, GET;
 non terminal Nodo ASIGNACIONES, LOOP,FUNCTION;
+non terminal Nodo FOR;
 non terminal TIPOS_PARAMETROS, TIPOS_VARIABLES;
 
 precedence left TK_OPADICION;
@@ -87,7 +88,14 @@ PROCEDURE_PRIME::= DECISION:d PROCEDURE_PRIME:s
                     RESULT = nodo;
 
                 :}
-                | PROCEDURE PROCEDURE_PRIME
+                | PROCEDURE:proc PROCEDURE_PRIME:s
+                {:
+                    Nodo nodo = new Nodo("ESTRUCTURA",parser.cont);
+                    parser.cont++;
+                    nodo.addHijo(proc);
+                    nodo.addHijo(s);
+                    RESULT = nodo;
+                :}
                 | PUT:p PROCEDURE_PRIME:s
                 {:
                     Nodo nodo = new Nodo("ESTRUCTURA",parser.cont);
@@ -112,7 +120,22 @@ PROCEDURE_PRIME::= DECISION:d PROCEDURE_PRIME:s
                     nodo.addHijo(s);
                     RESULT = nodo;
                 :}
-                | FUNCTION PROCEDURE_PRIME
+                | FUNCTION:f PROCEDURE_PRIME:s
+                {:
+                    Nodo nodo = new Nodo("ESTRUCTURA",parser.cont);
+                    parser.cont++;
+                    nodo.addHijo(f);
+                    nodo.addHijo(s);
+                    RESULT = nodo;
+                :}
+                | FOR:fr PROCEDURE_PRIME:s
+                {:
+                    Nodo nodo = new Nodo("ESTRUCTURA",parser.cont);
+                    parser.cont++;
+                    nodo.addHijo(fr);
+                    nodo.addHijo(s);
+                    RESULT = nodo;
+                :}
                 | 
                 {:
                     Nodo node = new Nodo("VACIO",parser.cont);
@@ -359,7 +382,7 @@ DECLARACIONES::= ID:id
 
                 :}
                 | {:
-                    Nodo node = new Nodo("DECLARACIONES",parser.cont);
+                        Nodo node = new Nodo("VACIO",parser.cont);
                     parser.cont++;
                     node.addHijo(new Nodo("VACIO",parser.cont++));
                     parser.cont++;
@@ -469,7 +492,7 @@ PUT::= TK_PUT:p TK_PARENTESISI TK_STRING:s TK_PARENTESISD  TK_PUNTOCOMA
     | error TK_PARENTESISI TK_STRING TK_PARENTESISD  TK_PUNTOCOMA {: errores.add("Se esperaba un \"put o un if\" "); :}
     | TK_PUT error TK_STRING TK_PARENTESISD  TK_PUNTOCOMA {: errores.add("Se esperaba un \"(\" "); :}
     | TK_PUT TK_PARENTESISI error TK_PARENTESISD  TK_PUNTOCOMA {: errores.add("Se esperaba una cadena "); :}
-    | TK_PUT TK_PARENTESISI TK_STRING error  TK_PUNTOCOMA {: errores.add("Se esperaba un \")\" "); :}
+    | TK_PUT TK_PARENTESISI TK_STRING error  TK_PUNTOCOMA {: errores.add("Se esperaba un en el put \")\" "); :}
     | TK_PUT TK_PARENTESISI TK_STRING TK_PARENTESISD  error {: errores.add("Se esperaba un \";\" "); :}
 ;
 
@@ -521,13 +544,79 @@ LOOP ::= TK_ID:id1 TK_COLON TK_LOOP TK_EXIT:exit TK_ID:id2 TK_WHEN EXPRESIONES:e
 
 //Gramática de functions
 
-FUNCTION ::= TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA
+FUNCTION ::= TK_FUNCTION TK_ID:id PARAMETROS:par TK_RETURN TIPOS_VARIABLES:tv TK_IS DECLARACIONES:dec TK_BEGIN PROCEDURE_PRIME:proc TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA 
+            {:
+                Nodo nodo = new Nodo("FUNCION",parser.cont);
+                parser.cont++;
+                nodo.addHijo(par);
+                Nodo retorno = new Nodo("RETURN",parser.cont);
+                parser.cont++;
+                retorno.addHijo(new Nodo(tv.toString(),parser.cont));
+                parser.cont++;
+                nodo.addHijo(retorno);
+                nodo.addHijo(dec);
+                nodo.addHijo(proc);
+                RESULT = nodo;
+            :}
             | error TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un \"function\" "); :}
-            | TK_FUNCTION error PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un identificador "); :}
-            | TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN error TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un identificador "); :}
+            | TK_FUNCTION error PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un identificador, begin o return"); :}
+            | TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN error TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un identificador"); :}
             | TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID error TK_END TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un \";\" "); :}
             | TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA error TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un \"end\" "); :}
             | TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END error TK_PUNTOCOMA {: errores.add("Se esparaba un identificador "); :}
             | TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN PROCEDURE_PRIME TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID error {: errores.add("Se esparaba un \";\" "); :}
+
+;
+
+
+//Gramatica del For 
+
+FOR::= TK_FOR  TK_ID:id1 TK_IN TK_ID:id2 TK_LOOP PROCEDURE_PRIME:p TK_ENDLOOP TK_PUNTOCOMA
+        {:
+            Nodo nodo = new Nodo("FOR LOOP",parser.cont);
+            parser.cont++;
+            Nodo in = new Nodo("IN",parser.cont);
+            parser.cont++;
+            in.addHijo(new Nodo(id1.toString(),parser.cont));
+            parser.cont++;
+            in.addHijo(new Nodo(id2.toString(),parser.cont));
+            parser.cont++;
+            nodo.addHijo(in);
+            nodo.addHijo(p);
+            RESULT = nodo;
+        :}
+        |TK_FOR  TK_DIGITO:d1 TK_IN TK_ID:id2 TK_LOOP PROCEDURE_PRIME:p TK_ENDLOOP TK_PUNTOCOMA
+        {:
+            Nodo nodo = new Nodo("FOR LOOP",parser.cont);
+            parser.cont++;
+            Nodo in = new Nodo("IN",parser.cont);
+            parser.cont++;
+            in.addHijo(new Nodo(d1.toString(),parser.cont));
+            parser.cont++;
+            in.addHijo(new Nodo(id2.toString(),parser.cont));
+            parser.cont++;
+            nodo.addHijo(in);
+            nodo.addHijo(p);
+            RESULT = nodo;
+        :}
+        |TK_FOR  TK_ID:id1 TK_IN TK_DIGITO:d2 TK_LOOP PROCEDURE_PRIME:p TK_ENDLOOP TK_PUNTOCOMA
+        {:
+            Nodo nodo = new Nodo("FOR LOOP",parser.cont);
+            parser.cont++;
+            Nodo in = new Nodo("IN",parser.cont);
+            parser.cont++;
+            in.addHijo(new Nodo(id1.toString(),parser.cont));
+            parser.cont++;
+            in.addHijo(new Nodo(d2.toString(),parser.cont));
+            parser.cont++;
+            nodo.addHijo(in);
+            nodo.addHijo(p);
+            RESULT = nodo;
+        :}
+        | error TK_ID TK_IN TK_DIGITO TK_LOOP PROCEDURE_PRIME TK_ENDLOOP TK_PUNTOCOMA {: errores.add("Se esparaba un \"for\" "); :}
+        | TK_FOR error TK_IN TK_DIGITO TK_LOOP PROCEDURE_PRIME TK_ENDLOOP TK_PUNTOCOMA {: errores.add("Se esparaba un \"numero o un identificador\" "); :}
+        | TK_FOR TK_ID TK_IN error TK_LOOP PROCEDURE_PRIME TK_ENDLOOP TK_PUNTOCOMA {: errores.add("Se esparaba un \"numero o un identificador\" "); :}
+        | TK_FOR TK_ID TK_IN TK_DIGITO error PROCEDURE_PRIME TK_ENDLOOP TK_PUNTOCOMA {: errores.add("Se esparaba un \"loop\" "); :}
+
 
 ;
