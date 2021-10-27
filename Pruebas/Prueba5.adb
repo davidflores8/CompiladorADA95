@@ -14,5 +14,5 @@ put("A continuacion viene un loop")
 	loop
 		exit ciclo when numero>34;
 		put ("Hola");
-	end loop ciclopequeno; 
+	end loop ceiiclopequeno; 
 end ; 
