@@ -16,9 +16,36 @@ public class Nodo {
     private String etiqueta;
     private ArrayList<Nodo> hijos = new ArrayList<>();
     private int idNodo;
+    private String tipo=" ";
+    private int offset=1000;
 
     public Nodo() {
     }
+
+    public Nodo(String etiqueta, int idNodo, String tipo, int offset) {
+        this.etiqueta = etiqueta;
+        this.idNodo = idNodo;
+        this.tipo = tipo;
+        this.offset = offset;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+    
+    
 
     public Nodo(String _etiqueta, int _idNodo) {
         this.etiqueta = _etiqueta;
@@ -43,7 +70,7 @@ public class Nodo {
 
     @Override
     public String toString() {
-        return idNodo + " [label=\"" + etiqueta + "\"];";
+        return idNodo + " [label=\"" + etiqueta + ": " +tipo+" id- "+idNodo+"\"];";
     }
 
     public void addHijo(Nodo hijo) {

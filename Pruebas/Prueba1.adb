@@ -1,12 +1,17 @@
-procedure Hola (Valor: in Integer;  Valorcito: out Float) is
-    numero,principal:Integer:=34;
-    principal,secundario:Float:=34.45;
+procedure AP1 (Valor: in Integer) is
+    primero,segundo:Integer:=34;
+	procedure AP2 (Valor: in Float; Valor: in Integer) is
+    		tercero,cuarto:Integer:=34;
+	begin
+		put("Felicidades hola");
+	end CUENTA; 
+	quinto,sexto:Integer:=23;
+	procedure AP3 (Valor: in Float) is
+    		septimo,octavo:Integer:=34;
+	begin
+		put("Felicidades hola");
+	end CUENTA; 
+	final:Integer:=0;
 begin
-
-	for i in principal loop
-		put("Ingrese un numero" );
-		get(numero);
-	end loop;
-
-put("Felicidades, el numero fue ingresado exitosamente");
+	put("Felicidades hola");
 end CUENTA; 
