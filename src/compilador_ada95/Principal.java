@@ -207,8 +207,8 @@ public class Principal extends javax.swing.JFrame {
                 if (p.errores.isEmpty() && lexer.erroresLexicos.isEmpty()){
                     JOptionPane.showMessageDialog(this, "Código compilado sin ningún problema ","Información", JOptionPane.INFORMATION_MESSAGE);
                     String formato = "edge [color=red];" + hacerDFS(p.raiz);
-                    p.raiz.exportarArbol(formato, "AST");
-                    
+                    p.raiz.exportarArbol(formato, "AST"); 
+
                 }
                 else if (!lexer.erroresLexicos.isEmpty()){
                     JOptionPane.showMessageDialog(this, "Se han encontrado errores léxicos  ","Información", JOptionPane.INFORMATION_MESSAGE);

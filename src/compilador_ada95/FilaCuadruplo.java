@@ -1,6 +1,5 @@
 package compilador_ada95;
-
-public class FilaCuadruplo{
+public class FilaCuadruplo {
 
     private String operacion;
     private String arg1;
@@ -27,8 +26,6 @@ public class FilaCuadruplo{
         this.arg2 = "";
         this.destino = "";
     }
-
-    //setters & getters
 
     public void setArg1(String _arg1){
         this.arg1 = _arg1;
@@ -62,8 +59,6 @@ public class FilaCuadruplo{
         this.destino = _destino;
     }
 
-    //otros metodos
-
     public boolean hayArg1(){
         if (arg1.equals("")){
             return false;
@@ -71,6 +66,7 @@ public class FilaCuadruplo{
             return true;
         }
     }
+
 
     public String toString() {
         if (this.arg2.equals("") && this.destino.equals("")){
