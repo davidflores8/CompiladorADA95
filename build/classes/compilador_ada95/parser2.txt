@@ -1,0 +1,373 @@
+package compilador_ada95;
+import java_cup.runtime.Symbol;
+import java.util.ArrayList;
+import java.util.*;
+import java.io.*;
+
+
+class parser2;
+
+parser code {:
+
+    ArrayList errores = new ArrayList();
+    Nodo arbol;
+    Cuadruplo cuadruplos = new Cuadruplo();
+    public int cantTemp = 0;
+
+
+    public void setErrores(ArrayList errores){
+        this.errores = errores;
+    }
+
+
+    public void setArbol(Nodo arbol){
+        this.arbol = arbol;
+    }
+
+    public String nuevoTemp(){
+        String temp = "t"+ Integer.toString(cantTemp);
+        cantTemp++;
+        return temp;
+    }   
+
+    public ArrayList<Integer> creaLista(int indice){
+        ArrayList<Integer> retVal = new ArrayList<>();
+        retVal.add(indice);
+        return retVal;
+    }
+
+    public ArrayList<Integer> fusiona(ArrayList<Integer> lista1, ArrayList<Integer> lista2){
+        ArrayList<Integer> retVal = new ArrayList<>();
+        if (lista1 != null){
+            for(int i = 0; i < lista1.size();i++){
+                retVal.add(lista1.get(i));
+            }
+        }       
+        if (lista2 != null){
+            for(int i = 0; i < lista2.size();i++){
+                retVal.add(lista2.get(i));
+            }
+        }         
+        return retVal;
+    }
+
+
+:} ;
+
+terminal  String TK_IGUAL, TK_INTEGER, TK_BOOLEAN, TK_FLOAT, TK_IF, TK_ELSE, TK_ELSEIF;
+terminal  String TK_LOOP, TK_ENDLOOP, TK_WHILE, TK_OPADICION, TK_MULTI, TK_ID, TK_OPREL, TK_DIGITO, TK_THEN, TK_ENDIF;
+terminal  String TK_PROCEDURE, TK_IS, TK_BEGIN, TK_END, TK_PUT, TK_GET;
+terminal  String TK_DIGITOFLOAT, TK_IN, TK_OUT, TK_INOUT, TK_EXIT, TK_WHEN, TK_FUNCTION, TK_RETURN, TK_STRING;
+terminal  String TK_PARENTESISI, TK_PARENTESISD,TK_PUNTOCOMA, TK_COMA,TK_TRUE, TK_FALSE, TK_COLON, TK_AND, TK_OR, TK_FOR;
+
+non terminal Nodo PROCEDURE, ASIGNACIONES, FOR, DECLARACIONES, TIPOS, PUT, GET, WHILE;
+non terminal Nodo ID, LOOP,FUNCTION, PARAMETROS, PARAMETROS_PRIME, PROCEDURE_P, TIPOS_PARAMETROS, TIPOS_VARIABLES;
+non terminal Marcador M;
+non terminal ArrayList<Integer> N, DECISION, DECISION_PRIME, STATEMENTS;
+non terminal Condiciones CONDICION, CONDICIONP;
+non terminal String OPCONDICION;
+non terminal Objeto2 VALOR, OPARIT;
+
+
+
+precedence left TK_OPADICION;
+precedence left TK_MULTI;
+precedence left TK_IGUAL;
+
+
+start with PROCEDURE;
+
+
+PROCEDURE::= TK_PROCEDURE TK_ID PARAMETROS TK_IS DECLARACIONES TK_BEGIN STATEMENTS TK_END TK_ID TK_PUNTOCOMA 
+            {:
+                System.out.println("---------------Cuadruplos----------------");           
+                cuadruplos.imprimirCuadruplos();
+            :}
+
+;
+            
+PROCEDURE_P::= TK_PROCEDURE TK_ID PARAMETROS TK_IS DECLARACIONES TK_BEGIN STATEMENTS TK_END TK_ID TK_PUNTOCOMA
+            
+;
+
+STATEMENTS::= DECISION:d M:m STATEMENTS:s {: 
+                    cuadruplos.completa(d,m.getNum());
+                    RESULT = d; 
+                :}
+                | WHILE STATEMENTS 
+                | ASIGNACIONES STATEMENTS {: RESULT = null; :}
+                | PUT STATEMENTS {: RESULT = null; :}
+                | GET STATEMENTS {: RESULT = null; :}
+                | LOOP STATEMENTS
+                | FOR STATEMENTS
+                | {: :}
+;
+
+//Gramática de parámetros
+
+TIPOS_VARIABLES::= TK_INTEGER
+                | TK_FLOAT
+                | TK_BOOLEAN
+                
+;
+
+TIPOS_PARAMETROS::= TK_IN
+                | TK_OUT
+                | TK_INOUT
+;
+
+PARAMETROS::= TK_PARENTESISI PARAMETROS_PRIME        
+             
+;
+
+PARAMETROS_PRIME::= TK_ID TK_COLON TIPOS_PARAMETROS TIPOS_VARIABLES TK_PUNTOCOMA PARAMETROS_PRIME
+                    | TK_ID TK_COLON TIPOS_PARAMETROS TIPOS_VARIABLES TK_PARENTESISD 
+                    | TK_PARENTESISD 
+                        
+;
+
+
+//Condiciones
+
+CONDICION ::= CONDICIONP:c TK_AND M:m CONDICION:c1
+              {:
+              
+                Condiciones retorno = null;
+                if (c != null && c1 != null){
+                    cuadruplos.completa(c.getListaVerdadera(),m.getNum());
+                    ArrayList<Integer> listaFalsa = fusiona(c.getListaFalsa(),c1.getListaFalsa());                    
+                    retorno = new Condiciones(c1.getListaVerdadera(),listaFalsa);
+                }
+                RESULT = retorno;                    
+            :}
+                
+            | CONDICIONP:c TK_OR M:m CONDICION:c1
+            {: 
+                Condiciones retorno = null;
+                if (c != null && c1 != null){
+                    cuadruplos.completa(c.getListaFalsa(),m.getNum());
+                    ArrayList<Integer> listaVerdadera = fusiona(c.getListaVerdadera(),c1.getListaVerdadera());
+                    retorno = new Condiciones(listaVerdadera,c1.getListaFalsa());
+                }                                       
+                RESULT = retorno;
+            :}
+            
+            | CONDICIONP:c 
+            {:
+                RESULT = c;
+            :}
+
+;
+
+CONDICIONP::= VALOR:v OPCONDICION:o VALOR:v2
+                {:
+                    Condiciones e;
+                    if (o.equals("=")){
+                        //cuadruplos
+                        e = new Condiciones(creaLista(cuadruplos.siguienteCuad()), creaLista(cuadruplos.siguienteCuad() + 1));
+                        cuadruplos.addCuadruplo("IF=",v.getValor(),v2.getValor(),"");
+                        cuadruplos.addCuadruplo("GOTO","");
+                     
+                    } else {
+                        //cuadruplos
+                        e = new Condiciones(creaLista(cuadruplos.siguienteCuad()), creaLista(cuadruplos.siguienteCuad() + 1));
+                        cuadruplos.addCuadruplo("IF"+o,v.getValor(),v2.getValor(),"");
+                        cuadruplos.addCuadruplo("GOTO","");                           
+                    }
+                    RESULT = e;
+                :}
+;
+
+
+OPCONDICION::= TK_OPREL {: RESULT="o"; :}
+                | TK_IGUAL {: RESULT="="; :}
+;
+
+
+VALOR::= TK_DIGITO:i 
+        {:
+            RESULT = new Objeto2("INTEGER",i);
+        :}
+        | TK_TRUE 
+        {:
+            RESULT = new Objeto2("BOOLEAN","TRUE");
+        :}
+        | TK_FALSE
+        {:
+            RESULT = new Objeto2("BOOLEAN","FALSE");
+        :}
+        | TK_ID:d
+        {:
+            RESULT = new Objeto2("INTEGER",d);
+        :}
+        | OPARIT:o
+        {:
+            RESULT = o;
+        :}
+
+;
+
+
+//Gramática para decisiones
+
+DECISION ::=  TK_IF TK_PARENTESISI CONDICION:c TK_PARENTESISD TK_THEN M:m STATEMENTS:s N:n M:m2 DECISION_PRIME:s2  {:
+                  
+                ArrayList<Integer> retorno = null;
+                if (c != null){
+                    ArrayList<Integer> siguiente = new ArrayList<>();                     
+                    cuadruplos.completa(c.getListaVerdadera(), m.getNum());
+                    if (s2 != null){
+                        cuadruplos.completa(c.getListaFalsa(),m2.getNum());
+                        siguiente = fusiona(n,fusiona(s,s2));
+                    } else {
+                        cuadruplos.eliminarUltimo();
+                        siguiente = fusiona(c.getListaFalsa(),s);
+                    }
+                    retorno = siguiente;
+                }
+                RESULT = retorno;                        
+
+            :}           
+;
+
+DECISION_PRIME ::= TK_ELSEIF TK_PARENTESISI CONDICION:c TK_PARENTESISD TK_THEN M:m STATEMENTS:s N:n M:m2 DECISION_PRIME:s2 
+                    {:
+                    
+                        ArrayList<Integer> retorno = null;
+                        if (c != null){
+                            ArrayList<Integer> siguiente = new ArrayList<>();                     
+                            cuadruplos.completa(c.getListaVerdadera(), m.getNum());                    
+                            if (s2 != null){                        
+                                cuadruplos.completa(c.getListaFalsa(),m2.getNum());
+                                siguiente = fusiona(n,fusiona(s,s2));
+                            } else {
+                                cuadruplos.eliminarUltimo();
+                                siguiente = fusiona(c.getListaFalsa(),s);
+                            }
+                            retorno = siguiente;
+                        }                    
+                        RESULT = retorno;
+
+                    :}
+                | TK_ELSE STATEMENTS:s TK_ENDIF TK_PUNTOCOMA 
+                    {:
+                        RESULT= s; 
+                    :}   
+                | TK_ENDIF TK_PUNTOCOMA 
+                    {:
+                        RESULT= null; 
+                    :}
+;
+
+//Gramatica de asignaciones 
+
+ASIGNACIONES::= TK_ID TK_IGUAL VALOR TK_PUNTOCOMA;
+
+
+
+
+//Gramática para operaciones aritmeticas
+
+OPARIT ::= OPARIT:o TK_OPADICION:oPa VALOR:v
+            {:
+                String tipo = "INTEGER";
+                String temp = nuevoTemp();
+                cuadruplos.addCuadruplo(oPa,v.getValor(),o.getValor(),temp);
+                RESULT = new Objeto2(tipo,temp);
+            :} 
+        
+        | OPARIT:o TK_MULTI:oM VALOR:v
+            {:
+                String tipo;
+                String temp = nuevoTemp();
+                tipo = "INTEGER";
+                cuadruplos.addCuadruplo(oM,v.getValor(),o.getValor(),temp);
+                RESULT = new Objeto2(tipo,temp);
+            :}
+        | TK_PARENTESISI OPARIT:o TK_PARENTESISD
+            {:
+                RESULT = o;
+            :}
+        | VALOR:v TK_OPADICION:oPa VALOR:v2
+            {:
+               String tipo;
+               String temp = nuevoTemp();
+               tipo = "INTEGER";                       
+               cuadruplos.addCuadruplo(oPa,v.getValor(),v2.getValor(),temp);
+               RESULT = new Objeto2(tipo,temp);
+            :}
+        | VALOR:v TK_MULTI:oM VALOR:v2
+            {:
+               String tipo;
+               String temp = nuevoTemp();
+               tipo = "INTEGER";                       
+               cuadruplos.addCuadruplo(oM,v.getValor(),v2.getValor(),temp);
+               RESULT = new Objeto2(tipo,temp);
+            :}
+                           
+;
+
+//Gramática para ciclo while
+
+    WHILE ::= TK_WHILE TK_PARENTESISI CONDICION TK_PARENTESISD TK_LOOP STATEMENTS TK_ENDLOOP TK_PUNTOCOMA
+;
+
+
+//Gramática para declaraciones de variables
+
+DECLARACIONES::= ID
+                | ID TK_PUNTOCOMA DECLARACIONES 
+                | FUNCTION DECLARACIONES
+                | PROCEDURE_P DECLARACIONES
+                | 
+
+;
+
+ID::= TK_ID TK_COMA ID
+        | TK_ID TK_COLON TIPOS
+    
+;
+
+TIPOS::= TK_BOOLEAN
+        |TK_BOOLEAN TK_IGUAL TK_FALSE        
+        |TK_BOOLEAN TK_IGUAL TK_TRUE
+        |TK_INTEGER
+        |TK_INTEGER TK_IGUAL TK_DIGITO
+        |TK_FLOAT
+        |TK_FLOAT TK_IGUAL TK_DIGITOFLOAT
+
+;
+                
+//Gramática de Put y Get
+
+PUT::= TK_PUT TK_PARENTESISI TK_STRING TK_PARENTESISD  TK_PUNTOCOMA
+
+;
+
+GET::= TK_GET TK_PARENTESISI TK_ID TK_PARENTESISD TK_PUNTOCOMA
+    
+;
+//Gramática de loop
+
+LOOP ::= TK_ID TK_COLON TK_LOOP TK_EXIT TK_ID TK_WHEN CONDICION TK_PUNTOCOMA STATEMENTS TK_ENDLOOP TK_ID TK_PUNTOCOMA 
+        
+;
+//Gramática de functions
+
+FUNCTION ::= TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN STATEMENTS TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA 
+            
+;
+//Gramatica del For 
+
+FOR::= TK_FOR  TK_ID TK_IN TK_ID TK_LOOP STATEMENTS TK_ENDLOOP TK_PUNTOCOMA
+        
+;
+
+
+M           ::= {: RESULT = new Marcador(cuadruplos.siguienteCuad(),0); :}
+;
+
+N           ::= {:  ArrayList<Integer> retVal = creaLista(cuadruplos.siguienteCuad());  
+                    cuadruplos.addCuadruplo("GOTO","");
+                    RESULT = retVal; 
+                :};

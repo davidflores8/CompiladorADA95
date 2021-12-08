@@ -210,6 +210,11 @@ public class Principal extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "Código compilado sin ningún problema ","Información", JOptionPane.INFORMATION_MESSAGE);
                     String formato = "edge [color=red];" + hacerDFS(p.raiz);
                     p.raiz.exportarArbol(formato, "AST"); 
+                    parser2 p2 = new parser2(new Yylex(new FileReader(archivo)));
+                    p2.setArbol(p.raiz);
+                    p2.setErrores(p.errores);
+                    p2.parse();
+                    JOptionPane.showMessageDialog(this, "No hay problema en el segundo parser");
 
                 }
                 else if (!lexer.erroresLexicos.isEmpty()){
