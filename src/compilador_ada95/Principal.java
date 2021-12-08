@@ -200,6 +200,8 @@ public class Principal extends javax.swing.JFrame {
         }
         if(archivo!=null){
             try{
+                Yylex lexer;
+                parser p;
                 lexer  = new Yylex( new FileReader(archivo)); 
                 p = new parser(lexer);
                 p.parse();
@@ -386,9 +388,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTextArea textAreaErroresLexicos;
     private javax.swing.JTextArea textAreaErroresSintacticos;
     // End of variables declaration//GEN-END:variables
-    Yylex lexer;
-    parser p;
-    File archivo;
+File archivo;
 
 
 }

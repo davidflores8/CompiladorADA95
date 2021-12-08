@@ -31,10 +31,10 @@ terminal  TK_PROCEDURE, TK_IS, TK_BEGIN, TK_END, TK_PUT, TK_GET;
 terminal  TK_DIGITOFLOAT, TK_IN, TK_OUT, TK_INOUT, TK_EXIT, TK_WHEN, TK_FUNCTION, TK_RETURN, TK_STRING;
 terminal  TK_PARENTESISI, TK_PARENTESISD,TK_PUNTOCOMA, TK_COMA,TK_TRUE, TK_FALSE, TK_COLON, TK_AND, TK_OR, TK_FOR;
 
-non terminal Nodo PROCEDURE;
+non terminal Nodo PROCEDURE, ASIGNACIONES;
 non terminal Nodo STATEMENTS, DECISION, DECISION_PRIME,WHILE;
 non terminal Nodo PARAMETROS, PARAMETROS_PRIME, TIPOS, PUT, GET;
-non terminal Nodo ASIGNACIONES, LOOP,FUNCTION;
+non terminal Nodo OPARIT, LOOP,FUNCTION;
 non terminal Nodo FOR, DECLARACIONES;
 non terminal Nodo PROCEDURE_P;
 non terminal ArrayList<Nodo> ID;
@@ -164,10 +164,11 @@ OPCONDICION::= TK_OPREL
 ;
 
 
-VALOR::= TK_DIGITO
+VALOR::= TK_DIGITO 
                 | TK_TRUE 
                 | TK_FALSE
                 | TK_ID
+                | OPARIT
 
 ;
 
@@ -182,17 +183,21 @@ DECISION_PRIME ::= TK_ELSEIF TK_PARENTESISI CONDICION TK_PARENTESISD TK_THEN STA
                 | TK_ENDIF TK_PUNTOCOMA 
 ;
 
-//Gramática para asignaciones
+//Gramatica de asignaciones 
 
-ASIGNACIONES ::= TK_ID TK_IGUAL TK_ID TK_PUNTOCOMA
-               |TK_ID TK_IGUAL TK_ID TK_OPADICION TK_ID TK_PUNTOCOMA 
-               |TK_ID TK_IGUAL TK_ID TK_OPADICION TK_DIGITO TK_PUNTOCOMA 
-               |TK_ID TK_IGUAL TK_ID TK_OPADICION TK_DIGITOFLOAT TK_PUNTOCOMA 
-               |TK_ID TK_IGUAL TK_ID TK_MULTI TK_ID TK_PUNTOCOMA 
-               |TK_ID TK_IGUAL TK_ID TK_MULTI TK_DIGITO TK_PUNTOCOMA
-               |TK_ID TK_IGUAL TK_DIGITO TK_PUNTOCOMA
-               |TK_ID TK_IGUAL TK_TRUE TK_PUNTOCOMA
-               |TK_ID TK_IGUAL TK_FALSE TK_PUNTOCOMA
+ASIGNACIONES::= TK_ID TK_IGUAL VALOR TK_PUNTOCOMA;
+
+
+
+
+//Gramática para operaciones aritmeticas
+
+OPARIT ::= OPARIT TK_OPADICION VALOR
+                | OPARIT TK_MULTI VALOR
+                | TK_PARENTESISI OPARIT TK_PARENTESISD
+                | VALOR TK_OPADICION VALOR
+                | VALOR TK_MULTI VALOR
+                
 ;
 
 //Gramática para ciclo while
