@@ -70,7 +70,7 @@ public class Nodo {
 
     @Override
     public String toString() {
-        return idNodo + " [label=\"" + etiqueta + ": " +tipo+" id- "+idNodo+"\"];";
+        return idNodo + " [label=\"" + etiqueta + "  ID: "+ idNodo+"\"];";
     }
 
     public void addHijo(Nodo hijo) {
