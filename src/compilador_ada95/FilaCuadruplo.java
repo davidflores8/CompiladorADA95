@@ -70,11 +70,11 @@ public class FilaCuadruplo {
 
     public String toString() {
         if (this.arg2.equals("") && this.destino.equals("")){
-            return this.operacion + " " + this.arg1;
+            return this.operacion + " - " + this.arg1;
         }
         if (this.arg2.equals("")) {
-            return this.operacion + " " + this.arg1 + " " + this.destino;
+            return this.operacion + " - " + this.arg1 + " - " + this.destino;
         }        
-        return this.operacion + " " + this.arg1 + " " + this.arg2 + " " + this.destino;
+        return this.operacion + " - " + this.arg1 + " - " + this.arg2 + " - " + this.destino;
     }
 }

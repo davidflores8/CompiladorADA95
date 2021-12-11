@@ -44,6 +44,7 @@ public class Cuadruplo {
     public void completa(ArrayList<Integer> lista, int indice){
         if (lista != null){
             for(int i = 0; i < lista.size(); i++){
+                System.out.println("El que viene es en completa");
                 System.out.println((tablaCuadruplos.get(lista.get(i))));
                 if (tablaCuadruplos.get(lista.get(i)).hayArg1()){
                     if (!tablaCuadruplos.get(lista.get(i)).getArg1().equals(Integer.toString(indice))){

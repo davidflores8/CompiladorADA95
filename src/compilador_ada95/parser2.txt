@@ -47,8 +47,10 @@ parser code {:
             for(int i = 0; i < lista2.size();i++){
                 retVal.add(lista2.get(i));
             }
-        }         
+        }   
+     
         return retVal;
+        
     }
 
 
@@ -179,7 +181,7 @@ CONDICIONP::= VALOR:v OPCONDICION:o VALOR:v2
 ;
 
 
-OPCONDICION::= TK_OPREL {: RESULT="o"; :}
+OPCONDICION::= TK_OPREL:o {: RESULT=o.toString(); :}
                 | TK_IGUAL {: RESULT="="; :}
 ;
 
@@ -217,14 +219,14 @@ DECISION ::=  TK_IF TK_PARENTESISI CONDICION:c TK_PARENTESISD TK_THEN M:m STATEM
                     ArrayList<Integer> siguiente = new ArrayList<>();                     
                     cuadruplos.completa(c.getListaVerdadera(), m.getNum());
                     if (s2 != null){
-                        cuadruplos.completa(c.getListaFalsa(),m2.getNum());
+                        cuadruplos.completa(c.getListaFalsa(), m2.getNum());
                         siguiente = fusiona(n,fusiona(s,s2));
                     } else {
-                        cuadruplos.eliminarUltimo();
+                        
                         siguiente = fusiona(c.getListaFalsa(),s);
                     }
-                    retorno = siguiente;
-                }
+                    retorno = siguiente;                   
+                }            
                 RESULT = retorno;                        
 
             :}           
@@ -238,18 +240,19 @@ DECISION_PRIME ::= TK_ELSEIF TK_PARENTESISI CONDICION:c TK_PARENTESISD TK_THEN M
                             ArrayList<Integer> siguiente = new ArrayList<>();                     
                             cuadruplos.completa(c.getListaVerdadera(), m.getNum());                    
                             if (s2 != null){                        
-                                cuadruplos.completa(c.getListaFalsa(),m2.getNum());
+                                //cuadruplos.completa(c.getListaFalsa(), m2.getNum());
                                 siguiente = fusiona(n,fusiona(s,s2));
                             } else {
-                                cuadruplos.eliminarUltimo();
+                                
                                 siguiente = fusiona(c.getListaFalsa(),s);
                             }
                             retorno = siguiente;
+                            
                         }                    
                         RESULT = retorno;
 
                     :}
-                | TK_ELSE STATEMENTS:s TK_ENDIF TK_PUNTOCOMA 
+                | TK_ELSE M:m STATEMENTS:s DECISION_PRIME
                     {:
                         RESULT= s; 
                     :}   
@@ -340,7 +343,15 @@ TIPOS::= TK_BOOLEAN
                 
 //Gramática de Put y Get
 
-PUT::= TK_PUT TK_PARENTESISI TK_STRING TK_PARENTESISD  TK_PUNTOCOMA
+PUT::= TK_PUT TK_PARENTESISI TK_STRING:s TK_PARENTESISD  TK_PUNTOCOMA
+        {:
+            cuadruplos.addCuadruplo("write","STRING",s);
+        :}
+    | TK_PUT:p TK_PARENTESISI TK_ID:id TK_PARENTESISD  TK_PUNTOCOMA
+        {:
+            cuadruplos.addCuadruplo("write","ID", id.toString());
+        :}
+        
 
 ;
 

@@ -329,6 +329,7 @@ TIPOS::= TK_BOOLEAN:t
 //Gramática de Put y Get
 
 PUT::= TK_PUT:p TK_PARENTESISI TK_STRING:s TK_PARENTESISD  TK_PUNTOCOMA
+    | TK_PUT:p TK_PARENTESISI TK_ID TK_PARENTESISD  TK_PUNTOCOMA
     | error TK_PARENTESISI TK_STRING TK_PARENTESISD  TK_PUNTOCOMA {: errores.add("Se esperaba un \"put o un if\" "); :}
     | TK_PUT error TK_STRING TK_PARENTESISD  TK_PUNTOCOMA {: errores.add("Se esperaba un \"(\" "); :}
     | TK_PUT TK_PARENTESISI error TK_PARENTESISD  TK_PUNTOCOMA {: errores.add("Se esperaba una cadena "); :}
