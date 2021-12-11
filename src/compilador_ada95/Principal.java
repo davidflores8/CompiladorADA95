@@ -202,7 +202,7 @@ public class Principal extends javax.swing.JFrame {
             try{
                 Yylex lexer;
                 parser p;
-                lexer  = new Yylex( new FileReader(archivo)); 
+                lexer  = new Yylex(new FileReader(archivo)); 
                 p = new parser(lexer);
                 p.parse();
                 ta_errores.setText("");
@@ -248,7 +248,23 @@ public class Principal extends javax.swing.JFrame {
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         // TODO add your handling code here:
-        JFileChooser file=new JFileChooser();
+        File archivo = new File("C:\\Users\\mejia\\Desktop\\C\\Pruebas\\Prueba2.adb") ;
+        textArea.setText("procedure Hola () is\n" +
+                            "begin	\n" +
+                            "	if(numero>67) then\n" +
+                            "		put(\"Dentro del if\");\n" +
+                            "		numero:=numero+1;\n" +
+                            "		holis:=hola+2;\n" +
+                            "	else\n" +
+                            "		put(\"Dentro del else\");	\n" +
+                            "		num:=n+3;\n" +
+                            "	end if;\n" +
+                            "\n" +
+                            "	put(\"Fuera de todo\");\n" +
+                            "	nada:=numero+1+3+4;\n" +
+                            "\n" +
+                            "end CUENTA; ");
+       /* JFileChooser file=new JFileChooser();
         FileNameExtensionFilter filtro = new FileNameExtensionFilter("ADA 95", "adb");
         file.addChoosableFileFilter(filtro);
         file.setAcceptAllFileFilterUsed(false);
@@ -287,7 +303,7 @@ public class Principal extends javax.swing.JFrame {
             }
         else{
             //JOptionPane.showMessageDialog(null,""+"\nNo se ha encontrado el archivo", "Advertencia",JOptionPane.WARNING_MESSAGE);
-        }
+        }*/
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu1ActionPerformed
@@ -393,8 +409,13 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTextArea textAreaErroresLexicos;
     private javax.swing.JTextArea textAreaErroresSintacticos;
     // End of variables declaration//GEN-END:variables
-File archivo;
+File archivo = new File("C:\\Users\\mejia\\Desktop\\C\\Pruebas\\Prueba2.adb") ;
 
+
+        
+
+
+            
 
 }
 

@@ -82,7 +82,7 @@ start with PROCEDURE;
 
 PROCEDURE::= TK_PROCEDURE TK_ID PARAMETROS TK_IS DECLARACIONES TK_BEGIN STATEMENTS TK_END TK_ID TK_PUNTOCOMA 
             {:
-                System.out.println("---------------Cuadruplos----------------");           
+                System.out.println("-------Cuadruplos---------");           
                 cuadruplos.imprimirCuadruplos();
             :}
 
@@ -222,7 +222,6 @@ DECISION ::=  TK_IF TK_PARENTESISI CONDICION:c TK_PARENTESISD TK_THEN M:m STATEM
                         cuadruplos.completa(c.getListaFalsa(), m2.getNum());
                         siguiente = fusiona(n,fusiona(s,s2));
                     } else {
-                        
                         siguiente = fusiona(c.getListaFalsa(),s);
                     }
                     retorno = siguiente;                   
@@ -238,9 +237,10 @@ DECISION_PRIME ::= TK_ELSEIF TK_PARENTESISI CONDICION:c TK_PARENTESISD TK_THEN M
                         ArrayList<Integer> retorno = null;
                         if (c != null){
                             ArrayList<Integer> siguiente = new ArrayList<>();                     
-                            cuadruplos.completa(c.getListaVerdadera(), m.getNum());                    
+                            cuadruplos.completa(c.getListaVerdadera(), m.getNum());  
+                            System.out.println();
                             if (s2 != null){                        
-                                //cuadruplos.completa(c.getListaFalsa(), m2.getNum());
+                                cuadruplos.completa(c.getListaFalsa(), m2.getNum());
                                 siguiente = fusiona(n,fusiona(s,s2));
                             } else {
                                 
@@ -252,9 +252,11 @@ DECISION_PRIME ::= TK_ELSEIF TK_PARENTESISI CONDICION:c TK_PARENTESISD TK_THEN M
                         RESULT = retorno;
 
                     :}
-                | TK_ELSE M:m STATEMENTS:s DECISION_PRIME
+                | TK_ELSE M:m STATEMENTS:s DECISION_PRIME:s2
                     {:
-                        RESULT= s; 
+                        ArrayList<Integer> siguiente = new ArrayList<>(); 
+                        siguiente = fusiona(s,s2);
+                        RESULT = siguiente;
                     :}   
                 | TK_ENDIF TK_PUNTOCOMA 
                     {:
@@ -345,11 +347,11 @@ TIPOS::= TK_BOOLEAN
 
 PUT::= TK_PUT TK_PARENTESISI TK_STRING:s TK_PARENTESISD  TK_PUNTOCOMA
         {:
-            cuadruplos.addCuadruplo("write","STRING",s);
+            cuadruplos.addCuadruplo("PUT","STRING",s);
         :}
     | TK_PUT:p TK_PARENTESISI TK_ID:id TK_PARENTESISD  TK_PUNTOCOMA
         {:
-            cuadruplos.addCuadruplo("write","ID", id.toString());
+            cuadruplos.addCuadruplo("PUT","ID", id.toString());
         :}
         
 

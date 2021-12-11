@@ -465,7 +465,7 @@ class CUP$parser2$actions {
             {
               Nodo RESULT =null;
 		
-                System.out.println("---------------Cuadruplos----------------");           
+                System.out.println("-------Cuadruplos---------");           
                 cuadruplos.imprimirCuadruplos();
             
               CUP$parser2$result = parser.getSymbolFactory().newSymbol("PROCEDURE",0, ((java_cup.runtime.Symbol)CUP$parser2$stack.elementAt(CUP$parser2$top-9)), ((java_cup.runtime.Symbol)CUP$parser2$stack.peek()), RESULT);
@@ -872,7 +872,6 @@ class CUP$parser2$actions {
                         cuadruplos.completa(c.getListaFalsa(), m2.getNum());
                         siguiente = fusiona(n,fusiona(s,s2));
                     } else {
-                        
                         siguiente = fusiona(c.getListaFalsa(),s);
                     }
                     retorno = siguiente;                   
@@ -911,9 +910,10 @@ class CUP$parser2$actions {
                         ArrayList<Integer> retorno = null;
                         if (c != null){
                             ArrayList<Integer> siguiente = new ArrayList<>();                     
-                            cuadruplos.completa(c.getListaVerdadera(), m.getNum());                    
+                            cuadruplos.completa(c.getListaVerdadera(), m.getNum());  
+                            System.out.println();
                             if (s2 != null){                        
-                                //cuadruplos.completa(c.getListaFalsa(), m2.getNum());
+                                cuadruplos.completa(c.getListaFalsa(), m2.getNum());
                                 siguiente = fusiona(n,fusiona(s,s2));
                             } else {
                                 
@@ -939,8 +939,13 @@ class CUP$parser2$actions {
 		int sleft = ((java_cup.runtime.Symbol)CUP$parser2$stack.elementAt(CUP$parser2$top-1)).left;
 		int sright = ((java_cup.runtime.Symbol)CUP$parser2$stack.elementAt(CUP$parser2$top-1)).right;
 		ArrayList<Integer> s = (ArrayList<Integer>)((java_cup.runtime.Symbol) CUP$parser2$stack.elementAt(CUP$parser2$top-1)).value;
+		int s2left = ((java_cup.runtime.Symbol)CUP$parser2$stack.peek()).left;
+		int s2right = ((java_cup.runtime.Symbol)CUP$parser2$stack.peek()).right;
+		ArrayList<Integer> s2 = (ArrayList<Integer>)((java_cup.runtime.Symbol) CUP$parser2$stack.peek()).value;
 		
-                        RESULT= s; 
+                        ArrayList<Integer> siguiente = new ArrayList<>(); 
+                        siguiente = fusiona(s,s2);
+                        RESULT = siguiente;
                     
               CUP$parser2$result = parser.getSymbolFactory().newSymbol("DECISION_PRIME",19, ((java_cup.runtime.Symbol)CUP$parser2$stack.elementAt(CUP$parser2$top-3)), ((java_cup.runtime.Symbol)CUP$parser2$stack.peek()), RESULT);
             }
@@ -1218,7 +1223,7 @@ class CUP$parser2$actions {
 		int sright = ((java_cup.runtime.Symbol)CUP$parser2$stack.elementAt(CUP$parser2$top-2)).right;
 		String s = (String)((java_cup.runtime.Symbol) CUP$parser2$stack.elementAt(CUP$parser2$top-2)).value;
 		
-            cuadruplos.addCuadruplo("write","STRING",s);
+            cuadruplos.addCuadruplo("PUT","STRING",s);
         
               CUP$parser2$result = parser.getSymbolFactory().newSymbol("PUT",5, ((java_cup.runtime.Symbol)CUP$parser2$stack.elementAt(CUP$parser2$top-4)), ((java_cup.runtime.Symbol)CUP$parser2$stack.peek()), RESULT);
             }
@@ -1235,7 +1240,7 @@ class CUP$parser2$actions {
 		int idright = ((java_cup.runtime.Symbol)CUP$parser2$stack.elementAt(CUP$parser2$top-2)).right;
 		String id = (String)((java_cup.runtime.Symbol) CUP$parser2$stack.elementAt(CUP$parser2$top-2)).value;
 		
-            cuadruplos.addCuadruplo("write","ID", id.toString());
+            cuadruplos.addCuadruplo("PUT","ID", id.toString());
         
               CUP$parser2$result = parser.getSymbolFactory().newSymbol("PUT",5, ((java_cup.runtime.Symbol)CUP$parser2$stack.elementAt(CUP$parser2$top-4)), ((java_cup.runtime.Symbol)CUP$parser2$stack.peek()), RESULT);
             }
