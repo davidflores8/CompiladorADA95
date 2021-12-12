@@ -54,6 +54,7 @@ public class Principal extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         ta_errores = new javax.swing.JTextArea();
+        jLabel1 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
@@ -122,6 +123,8 @@ public class Principal extends javax.swing.JFrame {
         ta_errores.setRows(5);
         jScrollPane4.setViewportView(ta_errores);
 
+        jLabel1.setText("Errores:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -131,22 +134,30 @@ public class Principal extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jButton1)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 519, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 519, Short.MAX_VALUE)
+                        .addGap(2, 2, 2))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 184, Short.MAX_VALUE))
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
+                        .addGap(20, 20, 20)
+                        .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1)))
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addComponent(jButton1)
                 .addContainerGap())
         );
 
@@ -207,14 +218,14 @@ public class Principal extends javax.swing.JFrame {
                 p.parse();
                 ta_errores.setText("");
                 if (p.errores.isEmpty() && lexer.erroresLexicos.isEmpty()){
-                    JOptionPane.showMessageDialog(this, "Código compilado sin ningún problema ","Información", JOptionPane.INFORMATION_MESSAGE);
+                    //JOptionPane.showMessageDialog(this, "Código compilado sin ningún problema ","Información", JOptionPane.INFORMATION_MESSAGE);
                     String formato = "edge [color=red];" + hacerDFS(p.raiz);
                     p.raiz.exportarArbol(formato, "AST"); 
                     parser2 p2 = new parser2(new Yylex(new FileReader(archivo)));
                     p2.setArbol(p.raiz);
                     p2.setErrores(p.errores);
                     p2.parse();
-                    JOptionPane.showMessageDialog(this, "No hay problema en el segundo parser");
+                    JOptionPane.showMessageDialog(this, "Código compilado");
 
                 }
                 else if (!lexer.erroresLexicos.isEmpty()){
@@ -248,7 +259,7 @@ public class Principal extends javax.swing.JFrame {
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         // TODO add your handling code here:
-        File archivo = new File("C:\\Users\\mejia\\Desktop\\C\\Pruebas\\Prueba2.adb") ;
+       /* File archivo = new File("C:\\Users\\mejia\\Desktop\\C\\Pruebas\\Prueba2.adb") ;
         textArea.setText("procedure Hola () is\n" +
                             "begin	\n" +
                             "	if(numero>67) then\n" +
@@ -263,8 +274,8 @@ public class Principal extends javax.swing.JFrame {
                             "	put(\"Fuera de todo\");\n" +
                             "	nada:=numero+1+3+4;\n" +
                             "\n" +
-                            "end CUENTA; ");
-       /* JFileChooser file=new JFileChooser();
+                            "end CUENTA; "); */
+        JFileChooser file=new JFileChooser();
         FileNameExtensionFilter filtro = new FileNameExtensionFilter("ADA 95", "adb");
         file.addChoosableFileFilter(filtro);
         file.setAcceptAllFileFilterUsed(false);
@@ -303,7 +314,7 @@ public class Principal extends javax.swing.JFrame {
             }
         else{
             //JOptionPane.showMessageDialog(null,""+"\nNo se ha encontrado el archivo", "Advertencia",JOptionPane.WARNING_MESSAGE);
-        }*/
+        }
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu1ActionPerformed
@@ -395,6 +406,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JDialog erroresLexicos;
     private javax.swing.JDialog erroresSintacticos;
     private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;

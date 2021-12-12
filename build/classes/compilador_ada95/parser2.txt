@@ -62,10 +62,10 @@ terminal  String TK_PROCEDURE, TK_IS, TK_BEGIN, TK_END, TK_PUT, TK_GET;
 terminal  String TK_DIGITOFLOAT, TK_IN, TK_OUT, TK_INOUT, TK_EXIT, TK_WHEN, TK_FUNCTION, TK_RETURN, TK_STRING;
 terminal  String TK_PARENTESISI, TK_PARENTESISD,TK_PUNTOCOMA, TK_COMA,TK_TRUE, TK_FALSE, TK_COLON, TK_AND, TK_OR, TK_FOR;
 
-non terminal Nodo PROCEDURE, ASIGNACIONES, FOR, DECLARACIONES, TIPOS, PUT, GET, WHILE;
-non terminal Nodo ID, LOOP,FUNCTION, PARAMETROS, PARAMETROS_PRIME, PROCEDURE_P, TIPOS_PARAMETROS, TIPOS_VARIABLES;
+non terminal Nodo PROCEDURE, ASIGNACIONES, FOR, DECLARACIONES, TIPOS, PUT, GET;
+non terminal Nodo ID, FUNCTION, PARAMETROS, PARAMETROS_PRIME, PROCEDURE_P, TIPOS_PARAMETROS, TIPOS_VARIABLES;
 non terminal Marcador M;
-non terminal ArrayList<Integer> N, DECISION, DECISION_PRIME, STATEMENTS;
+non terminal ArrayList<Integer> N, DECISION, DECISION_PRIME, STATEMENTS, WHILE, LOOP;
 non terminal Condiciones CONDICION, CONDICIONP;
 non terminal String OPCONDICION;
 non terminal Objeto2 VALOR, OPARIT;
@@ -96,11 +96,18 @@ STATEMENTS::= DECISION:d M:m STATEMENTS:s {:
                     cuadruplos.completa(d,m.getNum());
                     RESULT = d; 
                 :}
-                | WHILE STATEMENTS 
+                | WHILE:w M:m STATEMENTS:s 
+                {: 
+                    cuadruplos.completa(w,m.getNum());
+                    RESULT = w; 
+                :}
                 | ASIGNACIONES STATEMENTS {: RESULT = null; :}
                 | PUT STATEMENTS {: RESULT = null; :}
                 | GET STATEMENTS {: RESULT = null; :}
-                | LOOP STATEMENTS
+                | LOOP:l M:m STATEMENTS:s {:                 
+                        cuadruplos.completa(l,m.getNum());
+                        RESULT = l;  
+                :}
                 | FOR STATEMENTS
                 | {: :}
 ;
@@ -314,7 +321,22 @@ OPARIT ::= OPARIT:o TK_OPADICION:oPa VALOR:v
 
 //Gramática para ciclo while
 
-    WHILE ::= TK_WHILE TK_PARENTESISI CONDICION TK_PARENTESISD TK_LOOP STATEMENTS TK_ENDLOOP TK_PUNTOCOMA
+    WHILE ::= TK_WHILE TK_PARENTESISI M:m1 CONDICION:c TK_PARENTESISD TK_LOOP M:m2 STATEMENTS:s TK_ENDLOOP TK_PUNTOCOMA 
+        {:
+            ArrayList<Integer> retorno = null;
+             if (c != null){
+                ArrayList<Integer> siguiente = new ArrayList<>();                     
+                cuadruplos.completa(c.getListaVerdadera(), m2.getNum());  
+                siguiente = c.getListaFalsa();
+                String num = Integer.toString(m1.getNum());
+                cuadruplos.addCuadruplo("GOTO",num);
+                cuadruplos.completa(s,m1.getNum());
+                retorno = siguiente;                   
+        }              
+            RESULT  = retorno;
+        :}
+
+
 ;
 
 
@@ -362,7 +384,19 @@ GET::= TK_GET TK_PARENTESISI TK_ID TK_PARENTESISD TK_PUNTOCOMA
 ;
 //Gramática de loop
 
-LOOP ::= TK_ID TK_COLON TK_LOOP TK_EXIT TK_ID TK_WHEN CONDICION TK_PUNTOCOMA STATEMENTS TK_ENDLOOP TK_ID TK_PUNTOCOMA 
+LOOP ::=  TK_LOOP M:m1 STATEMENTS:s TK_EXIT TK_WHEN M:m2 CONDICION:c TK_PUNTOCOMA  TK_ENDLOOP TK_PUNTOCOMA
+
+        {:       
+            ArrayList<Integer> retorno = null;
+             if (c != null){
+                ArrayList<Integer> siguiente = new ArrayList<>();                     
+                cuadruplos.completa(c.getListaFalsa(), m1.getNum());  
+                siguiente = c.getListaVerdadera();
+                cuadruplos.completa(c.getListaVerdadera(),m2.getNum());
+                retorno = siguiente;   
+            }
+            RESULT = retorno;
+        :}
         
 ;
 //Gramática de functions

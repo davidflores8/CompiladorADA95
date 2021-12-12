@@ -1,17 +1,12 @@
 procedure Hola () is
 begin	
-	if(numero>67) then
-		put("Dentro del if");
-
-	elseif (numero<67) then
-
-		put("Dentro del elseif");	
-	else 
-
-		put("Dentro del else");
-	end if;
+	loop
+		put("Dentro del loop");
+		put("Todavia dentro del loop");
+	exit when numero>56;
+	end loop;
 
 	put("Fuera de todo");
-	
+	put("Otra vez fuera de todo");
 
 end CUENTA; 
