@@ -33,6 +33,7 @@ public class Nodo {
         return tipo;
     }
 
+     
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }

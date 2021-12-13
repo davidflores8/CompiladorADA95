@@ -53,6 +53,40 @@ parser code {:
         
     }
 
+    public boolean existe(Nodo nodo, String nombre, Boolean estado){
+    
+        for (int i = 0; i <nodo.getHijos().size(); i++) {
+            existe(nodo.getHijos().get(i), nombre, estado);
+            if(nodo.getHijos().get(i).getEtiqueta().equals(nombre)){
+                estado=true;
+            }
+        }
+        return estado;
+    }
+
+     public boolean tipoAdecuado(Nodo nodo, String nombre, Boolean estado){
+    
+        for (int i = 0; i <nodo.getHijos().size(); i++) {
+            existe(nodo.getHijos().get(i), nombre, estado);
+            if(nodo.getHijos().get(i).getEtiqueta().equals(nombre) && nodo.getHijos().get(i).getTipo().equals("Integer") ){
+                estado=true;
+            }
+        }
+        return estado;
+    }
+
+
+     public int existe(Nodo nodo, String nombre, int contador){
+    
+        for (int i = 0; i <nodo.getHijos().size(); i++) {
+            existe(nodo.getHijos().get(i), nombre, contador);
+            if(nodo.getHijos().get(i).getEtiqueta().equals(nombre)){
+                contador++;
+            }
+        }
+        return contador;
+    }
+
 
 :} ;
 
@@ -84,6 +118,7 @@ PROCEDURE::= TK_PROCEDURE TK_ID PARAMETROS TK_IS DECLARACIONES TK_BEGIN STATEMEN
             {:
                 System.out.println("-------Cuadruplos---------");           
                 cuadruplos.imprimirCuadruplos();
+                
             :}
 
 ;
@@ -208,6 +243,10 @@ VALOR::= TK_DIGITO:i
         | TK_ID:d
         {:
             RESULT = new Objeto2("INTEGER",d);
+        :}
+        | TK_STRING:s
+        {:
+            RESULT = new Objeto2("STRING",s);
         :}
         | OPARIT:o
         {:
@@ -406,7 +445,7 @@ FUNCTION ::= TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLAR
 ;
 //Gramatica del For 
 
-FOR::= TK_FOR  TK_ID TK_IN TK_ID TK_LOOP STATEMENTS TK_ENDLOOP TK_PUNTOCOMA
+FOR::= TK_FOR TK_PARENTESISI CONDICION TK_PARENTESISD TK_LOOP STATEMENTS TK_ENDLOOP TK_PUNTOCOMA
         
 ;
 

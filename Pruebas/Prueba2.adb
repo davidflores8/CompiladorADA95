@@ -1,4 +1,6 @@
 procedure Hola () is
+	numero:Float:=23.34;
+	numero:Float:=23.34;
 begin	
 	loop
 		put("Dentro del loop");
