@@ -16,17 +16,25 @@ public class Nodo {
     private String etiqueta;
     private ArrayList<Nodo> hijos = new ArrayList<>();
     private int idNodo;
+    private String Ambito="";
     private String tipo=" ";
     private int offset=1000;
 
     public Nodo() {
     }
 
-    public Nodo(String etiqueta, int idNodo, String tipo, int offset) {
+    public Nodo(String etiqueta, int idNodo, String tipo, int offset, String Ambito) {
         this.etiqueta = etiqueta;
         this.idNodo = idNodo;
         this.tipo = tipo;
         this.offset = offset;
+        this.Ambito=Ambito;
+    }
+    
+    public Nodo(String _etiqueta, int _idNodo, String Ambito) {
+        this.etiqueta = _etiqueta;
+        this.idNodo = _idNodo;
+        this.Ambito = Ambito;
     }
 
     public String getTipo() {
@@ -45,13 +53,19 @@ public class Nodo {
     public void setOffset(int offset) {
         this.offset = offset;
     }
+
+    public String getAmbito() {
+        return Ambito;
+    }
+
+    public void setAmbito(String Ambito) {
+        this.Ambito = Ambito;
+    }
+    
     
     
 
-    public Nodo(String _etiqueta, int _idNodo) {
-        this.etiqueta = _etiqueta;
-        this.idNodo = _idNodo;
-    }
+    
 
     public void exportarArbol(String dotFormat, String fileName) {
         GraphViz gv = new GraphViz();
@@ -71,7 +85,7 @@ public class Nodo {
 
     @Override
     public String toString() {
-        return idNodo + " [label=\"" + etiqueta + "  ID: "+ idNodo+"\"];";
+        return idNodo + " [label=\"" + etiqueta + "  ID: "+ idNodo+ " Ambito: "+ Ambito+"\"];";
     }
 
     public void addHijo(Nodo hijo) {

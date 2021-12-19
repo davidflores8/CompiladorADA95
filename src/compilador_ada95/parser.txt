@@ -9,14 +9,22 @@ parser code {:
 // AST
     ArrayList errores = new ArrayList();
     public Nodo raiz;
-    public String AmbitoActual ="";
+    public String AmbitoActual ="Global";
     public int cont = 0;
     String tipoActual = " ";
     int offsetActual = 0;
     ArrayList <String> identificadores = new ArrayList();
     String tipoPrincipal=" ";
-    
 
+    public void agregarAmbito(Nodo nodo, String ambito){
+
+        for (int i = 0; i <nodo.getHijos().size(); i++) {
+            agregarAmbito(nodo.getHijos().get(i), ambito);
+            nodo.getHijos().get(i).setAmbito(ambito); 
+        }
+
+
+    }
 public void syntax_error (Symbol s){
     errores.add("Esta es Linea: " + (s.left) + " y Columna: " + (s.right));
 }
@@ -47,8 +55,8 @@ start with PROCEDURE;
 
 PROCEDURE::= TK_PROCEDURE:proc TK_ID:id PARAMETROS {: tipoPrincipal = tipoActual + " -> void"; tipoActual =" "; :} TK_IS DECLARACIONES:d TK_BEGIN STATEMENTS TK_END TK_ID TK_PUNTOCOMA
             {:  
-  
-                Nodo nodo = new Nodo(id.toString(),0, tipoPrincipal,offsetActual);
+                AmbitoActual = "Global";
+                Nodo nodo = new Nodo(id.toString(),0, tipoPrincipal,offsetActual, AmbitoActual);
                 tipoActual = " ";
                 offsetActual = offsetActual +4;
                 parser.cont++;
@@ -61,12 +69,15 @@ PROCEDURE::= TK_PROCEDURE:proc TK_ID:id PARAMETROS {: tipoPrincipal = tipoActual
 PROCEDURE_P::= TK_PROCEDURE TK_ID:id PARAMETROS:p TK_IS DECLARACIONES:d TK_BEGIN STATEMENTS TK_END TK_ID TK_PUNTOCOMA
             {:  
                 tipoActual = tipoActual + " -> void"; 
+                AmbitoActual = id.toString();
+                agregarAmbito(d, AmbitoActual);
                 d.setEtiqueta(id.toString());
-                Nodo nodo = new Nodo(id.toString(),parser.cont, tipoActual,offsetActual);
+                Nodo nodo = new Nodo(id.toString(),parser.cont, tipoActual,offsetActual,AmbitoActual);
                 tipoActual = " ";
                 offsetActual = offsetActual +4;
                 parser.cont++;
                 nodo.addHijo(d);
+                AmbitoActual = "Global";
                 RESULT = nodo;
             :}
             | error TK_ID PARAMETROS TK_IS DECLARACIONES TK_BEGIN STATEMENTS TK_END TK_ID TK_PUNTOCOMA {: errores.add("Se esperaba un \"procedure\" "); :}
@@ -208,13 +219,15 @@ OPARIT ::= OPARIT TK_OPADICION VALOR
 
 DECLARACIONES::= ID:id
                 {:
+                   AmbitoActual = "Global";
                    Nodo nodo = new Nodo();
                    nodo.setHijos(id);
                    RESULT = nodo;
                 :}
                 | ID:id TK_PUNTOCOMA DECLARACIONES:d 
                 {:
-                    Nodo node = new Nodo("DECLARACION",parser.cont);
+                    AmbitoActual = "Global";
+                    Nodo node = new Nodo("DECLARACION",parser.cont, AmbitoActual);
                     node.setHijos(id);
                     for(int i=0; i<d.getHijos().size();i++){
                         node.addHijo(d.getHijos().get(i));
@@ -222,7 +235,7 @@ DECLARACIONES::= ID:id
                     RESULT = node;
 
                 :}
-                | FUNCTION:f {: Nodo nodoActual = f; :} DECLARACIONES:d
+                | FUNCTION:f {: Nodo nodoActual = f;  :} DECLARACIONES:d
                 {:
                     
                     Nodo hijos = d;
@@ -230,6 +243,7 @@ DECLARACIONES::= ID:id
                     {
                           f.addHijo(hijos.getHijos().get(i));
                     }
+                    AmbitoActual = "Global";
                     RESULT = f;
                 :}
                 | PROCEDURE_P:p {: Nodo nodoActual = p; :} DECLARACIONES:d
@@ -239,10 +253,11 @@ DECLARACIONES::= ID:id
                     {
                           p.addHijo(hijos.getHijos().get(i));
                     }
+                    AmbitoActual = "Global";
                     RESULT = p;
                 :}
                 | {:
-                    Nodo node = new Nodo("VACIO",parser.cont);
+                    Nodo node = new Nodo("VACIO",parser.cont, AmbitoActual);
                     parser.cont++;
                     RESULT = node;
                 :}
@@ -256,12 +271,13 @@ ID::= TK_ID:id
         | TK_ID error ID {: errores.add("Se esperaba un \",\" "); :}
         | TK_ID:id TK_COLON TIPOS:t  
         {:
-            Nodo nodo = new Nodo("Variables",parser.cont);
+            AmbitoActual = "Global";
+            Nodo nodo = new Nodo("Variables",parser.cont,AmbitoActual);
             parser.cont++;
             identificadores.add(id.toString());
             for(int i =0; i<identificadores.size();i++)
             {
-                nodo.getHijos().add(new Nodo(identificadores.get(i),parser.cont++,t.getEtiqueta(),offsetActual));
+                nodo.getHijos().add(new Nodo(identificadores.get(i),parser.cont++,t.getEtiqueta(),offsetActual,AmbitoActual));
                 parser.cont++;
             }
             identificadores.clear();
@@ -273,53 +289,53 @@ ID::= TK_ID:id
 ;
 
 TIPOS::= 
-        |TK_BOOLEAN error TK_TRUE {: errores.add("Se esperaba un \":=\" "); RESULT = new Nodo("ERROR", parser.cont); :}
-        |TK_BOOLEAN error TK_FALSE {: errores.add("Se esperaba un \":=\" "); RESULT = new Nodo("ERROR", parser.cont); :}
-        |TK_BOOLEAN TK_IGUAL error {: errores.add("Se esperaba un true o false "); RESULT = new Nodo("ERROR", parser.cont);:}
-        |TK_INTEGER error TK_DIGITO {: errores.add("Se esperaba un \":=\" "); RESULT = new Nodo("ERROR", parser.cont);:}
-        |TK_INTEGER TK_IGUAL error {: errores.add("Se esperaba un numero "); RESULT = new Nodo("ERROR", parser.cont);:}
-        |TK_FLOAT error TK_DIGITOFLOAT  {: errores.add("Se esperaba un \":=\" "); RESULT = new Nodo("ERROR", parser.cont);:}
-        |TK_FLOAT TK_IGUAL error {: errores.add("Se esperaba un numero decimal "); RESULT = new Nodo("ERROR", parser.cont);:}
+        |TK_BOOLEAN error TK_TRUE {: errores.add("Se esperaba un \":=\" "); RESULT = new Nodo("ERROR", parser.cont,AmbitoActual); :}
+        |TK_BOOLEAN error TK_FALSE {: errores.add("Se esperaba un \":=\" "); RESULT = new Nodo("ERROR", parser.cont,AmbitoActual); :}
+        |TK_BOOLEAN TK_IGUAL error {: errores.add("Se esperaba un true o false "); RESULT = new Nodo("ERROR", parser.cont,AmbitoActual);:}
+        |TK_INTEGER error TK_DIGITO {: errores.add("Se esperaba un \":=\" "); RESULT = new Nodo("ERROR", parser.cont,AmbitoActual);:}
+        |TK_INTEGER TK_IGUAL error {: errores.add("Se esperaba un numero "); RESULT = new Nodo("ERROR", parser.cont,AmbitoActual);:}
+        |TK_FLOAT error TK_DIGITOFLOAT  {: errores.add("Se esperaba un \":=\" "); RESULT = new Nodo("ERROR", parser.cont,AmbitoActual);:}
+        |TK_FLOAT TK_IGUAL error {: errores.add("Se esperaba un numero decimal "); RESULT = new Nodo("ERROR", parser.cont,AmbitoActual);:}
         | TK_BOOLEAN:t
         {:
-            Nodo nodo= new Nodo (t.toString(),parser.cont);
+            Nodo nodo= new Nodo (t.toString(),parser.cont,AmbitoActual);
             parser.cont++;
             RESULT = nodo;          
         :}
         |TK_BOOLEAN:t TK_IGUAL TK_FALSE:v
         {:
-            Nodo nodo= new Nodo (t.toString(),parser.cont);
+            Nodo nodo= new Nodo (t.toString(),parser.cont,AmbitoActual);
             parser.cont++;
             RESULT = nodo;          
         :}
         
         |TK_BOOLEAN:t TK_IGUAL TK_TRUE:v
         {:
-            Nodo nodo= new Nodo (t.toString(),parser.cont);
+            Nodo nodo= new Nodo (t.toString(),parser.cont,AmbitoActual);
             parser.cont++;
             RESULT = nodo; 
         :}
         |TK_FLOAT:t
         {:
-            Nodo nodo= new Nodo (t.toString(),parser.cont);
+            Nodo nodo= new Nodo (t.toString(),parser.cont,AmbitoActual);
             parser.cont++;
             RESULT = nodo;          
         :}
         |TK_FLOAT:t TK_IGUAL TK_DIGITOFLOAT
         {:
-            Nodo nodo= new Nodo (t.toString(),parser.cont);
+            Nodo nodo= new Nodo (t.toString(),parser.cont,AmbitoActual);
             parser.cont++;
             RESULT = nodo; 
         :}
         |TK_INTEGER:t
         {:
-            Nodo nodo= new Nodo (t.toString(),parser.cont);
+            Nodo nodo= new Nodo (t.toString(),parser.cont,AmbitoActual);
             parser.cont++;
             RESULT = nodo;         
         :}
         |TK_INTEGER:t TK_IGUAL TK_DIGITO
         {:
-            Nodo nodo= new Nodo (t.toString(),parser.cont);
+            Nodo nodo= new Nodo (t.toString(),parser.cont,AmbitoActual);
             parser.cont++;
             RESULT = nodo; 
         :}
@@ -364,11 +380,13 @@ FUNCTION ::= TK_FUNCTION TK_ID:id PARAMETROS:par TK_RETURN:r TIPOS_VARIABLES:tv 
             {:
                 tipoActual = tipoActual + " -> "+r.toString(); 
                 d.setEtiqueta(tipoActual);
-                Nodo nodo = new Nodo(id.toString(),parser.cont, tipoActual,offsetActual);
+                AmbitoActual = id.toString();
+                Nodo nodo = new Nodo(id.toString(),parser.cont, tipoActual,offsetActual,AmbitoActual);
                 tipoActual = " ";
                 offsetActual = offsetActual +4;
                 parser.cont++;
                 nodo.addHijo(d);
+                AmbitoActual = "Global";
                 RESULT = nodo;
             :}
             | error TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLARACIONES TK_BEGIN STATEMENTS TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA {: errores.add("Se esparaba un \"function\" "); :}

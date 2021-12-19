@@ -696,14 +696,23 @@ public class parser extends java_cup.runtime.lr_parser {
 
 // AST
     ArrayList errores = new ArrayList();
-    public Nodo raiz;    
+    public Nodo raiz;
+    public String AmbitoActual ="Global";
     public int cont = 0;
     String tipoActual = " ";
     int offsetActual = 0;
     ArrayList <String> identificadores = new ArrayList();
     String tipoPrincipal=" ";
-    
 
+    public void agregarAmbito(Nodo nodo, String ambito){
+
+        for (int i = 0; i <nodo.getHijos().size(); i++) {
+            agregarAmbito(nodo.getHijos().get(i), ambito);
+            nodo.getHijos().get(i).setAmbito(ambito); 
+        }
+
+
+    }
 public void syntax_error (Symbol s){
     errores.add("Esta es Linea: " + (s.left) + " y Columna: " + (s.right));
 }
@@ -782,8 +791,8 @@ class CUP$parser$actions {
 		int dright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-5)).right;
 		Nodo d = (Nodo)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-5)).value;
 		  
-  
-                Nodo nodo = new Nodo(id.toString(),0, tipoPrincipal,offsetActual);
+                AmbitoActual = "Global";
+                Nodo nodo = new Nodo(id.toString(),0, tipoPrincipal,offsetActual, AmbitoActual);
                 tipoActual = " ";
                 offsetActual = offsetActual +4;
                 parser.cont++;
@@ -809,12 +818,15 @@ class CUP$parser$actions {
 		Nodo d = (Nodo)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-5)).value;
 		  
                 tipoActual = tipoActual + " -> void"; 
+                AmbitoActual = id.toString();
+                agregarAmbito(d, AmbitoActual);
                 d.setEtiqueta(id.toString());
-                Nodo nodo = new Nodo(id.toString(),parser.cont, tipoActual,offsetActual);
+                Nodo nodo = new Nodo(id.toString(),parser.cont, tipoActual,offsetActual,AmbitoActual);
                 tipoActual = " ";
                 offsetActual = offsetActual +4;
                 parser.cont++;
                 nodo.addHijo(d);
+                AmbitoActual = "Global";
                 RESULT = nodo;
             
               CUP$parser$result = parser.getSymbolFactory().newSymbol("PROCEDURE_P",16, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-9)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1328,6 +1340,7 @@ class CUP$parser$actions {
 		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		ArrayList<Nodo> id = (ArrayList<Nodo>)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
+                   AmbitoActual = "Global";
                    Nodo nodo = new Nodo();
                    nodo.setHijos(id);
                    RESULT = nodo;
@@ -1347,7 +1360,8 @@ class CUP$parser$actions {
 		int dright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Nodo d = (Nodo)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-                    Nodo node = new Nodo("DECLARACION",parser.cont);
+                    AmbitoActual = "Global";
+                    Nodo node = new Nodo("DECLARACION",parser.cont, AmbitoActual);
                     node.setHijos(id);
                     for(int i=0; i<d.getHijos().size();i++){
                         node.addHijo(d.getHijos().get(i));
@@ -1366,7 +1380,7 @@ class CUP$parser$actions {
 		int fleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int fright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Nodo f = (Nodo)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
- Nodo nodoActual = f; 
+ Nodo nodoActual = f;  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("NT$1",25, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1390,6 +1404,7 @@ class CUP$parser$actions {
                     {
                           f.addHijo(hijos.getHijos().get(i));
                     }
+                    AmbitoActual = "Global";
                     RESULT = f;
                 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("DECLARACIONES",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1426,6 +1441,7 @@ class CUP$parser$actions {
                     {
                           p.addHijo(hijos.getHijos().get(i));
                     }
+                    AmbitoActual = "Global";
                     RESULT = p;
                 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("DECLARACIONES",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1437,7 +1453,7 @@ class CUP$parser$actions {
             {
               Nodo RESULT =null;
 		
-                    Nodo node = new Nodo("VACIO",parser.cont);
+                    Nodo node = new Nodo("VACIO",parser.cont, AmbitoActual);
                     parser.cont++;
                     RESULT = node;
                 
@@ -1496,12 +1512,13 @@ class CUP$parser$actions {
 		int tright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Nodo t = (Nodo)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-            Nodo nodo = new Nodo("Variables",parser.cont);
+            AmbitoActual = "Global";
+            Nodo nodo = new Nodo("Variables",parser.cont,AmbitoActual);
             parser.cont++;
             identificadores.add(id.toString());
             for(int i =0; i<identificadores.size();i++)
             {
-                nodo.getHijos().add(new Nodo(identificadores.get(i),parser.cont++,t.getEtiqueta(),offsetActual));
+                nodo.getHijos().add(new Nodo(identificadores.get(i),parser.cont++,t.getEtiqueta(),offsetActual,AmbitoActual));
                 parser.cont++;
             }
             identificadores.clear();
@@ -1534,7 +1551,7 @@ class CUP$parser$actions {
           case 65: // TIPOS ::= TK_BOOLEAN error TK_TRUE 
             {
               Nodo RESULT =null;
-		 errores.add("Se esperaba un \":=\" "); RESULT = new Nodo("ERROR", parser.cont); 
+		 errores.add("Se esperaba un \":=\" "); RESULT = new Nodo("ERROR", parser.cont,AmbitoActual); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("TIPOS",4, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1543,7 +1560,7 @@ class CUP$parser$actions {
           case 66: // TIPOS ::= TK_BOOLEAN error TK_FALSE 
             {
               Nodo RESULT =null;
-		 errores.add("Se esperaba un \":=\" "); RESULT = new Nodo("ERROR", parser.cont); 
+		 errores.add("Se esperaba un \":=\" "); RESULT = new Nodo("ERROR", parser.cont,AmbitoActual); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("TIPOS",4, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1552,7 +1569,7 @@ class CUP$parser$actions {
           case 67: // TIPOS ::= TK_BOOLEAN TK_IGUAL error 
             {
               Nodo RESULT =null;
-		 errores.add("Se esperaba un true o false "); RESULT = new Nodo("ERROR", parser.cont);
+		 errores.add("Se esperaba un true o false "); RESULT = new Nodo("ERROR", parser.cont,AmbitoActual);
               CUP$parser$result = parser.getSymbolFactory().newSymbol("TIPOS",4, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1561,7 +1578,7 @@ class CUP$parser$actions {
           case 68: // TIPOS ::= TK_INTEGER error TK_DIGITO 
             {
               Nodo RESULT =null;
-		 errores.add("Se esperaba un \":=\" "); RESULT = new Nodo("ERROR", parser.cont);
+		 errores.add("Se esperaba un \":=\" "); RESULT = new Nodo("ERROR", parser.cont,AmbitoActual);
               CUP$parser$result = parser.getSymbolFactory().newSymbol("TIPOS",4, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1570,7 +1587,7 @@ class CUP$parser$actions {
           case 69: // TIPOS ::= TK_INTEGER TK_IGUAL error 
             {
               Nodo RESULT =null;
-		 errores.add("Se esperaba un numero "); RESULT = new Nodo("ERROR", parser.cont);
+		 errores.add("Se esperaba un numero "); RESULT = new Nodo("ERROR", parser.cont,AmbitoActual);
               CUP$parser$result = parser.getSymbolFactory().newSymbol("TIPOS",4, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1579,7 +1596,7 @@ class CUP$parser$actions {
           case 70: // TIPOS ::= TK_FLOAT error TK_DIGITOFLOAT 
             {
               Nodo RESULT =null;
-		 errores.add("Se esperaba un \":=\" "); RESULT = new Nodo("ERROR", parser.cont);
+		 errores.add("Se esperaba un \":=\" "); RESULT = new Nodo("ERROR", parser.cont,AmbitoActual);
               CUP$parser$result = parser.getSymbolFactory().newSymbol("TIPOS",4, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1588,7 +1605,7 @@ class CUP$parser$actions {
           case 71: // TIPOS ::= TK_FLOAT TK_IGUAL error 
             {
               Nodo RESULT =null;
-		 errores.add("Se esperaba un numero decimal "); RESULT = new Nodo("ERROR", parser.cont);
+		 errores.add("Se esperaba un numero decimal "); RESULT = new Nodo("ERROR", parser.cont,AmbitoActual);
               CUP$parser$result = parser.getSymbolFactory().newSymbol("TIPOS",4, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1601,7 +1618,7 @@ class CUP$parser$actions {
 		int tright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object t = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-            Nodo nodo= new Nodo (t.toString(),parser.cont);
+            Nodo nodo= new Nodo (t.toString(),parser.cont,AmbitoActual);
             parser.cont++;
             RESULT = nodo;          
         
@@ -1620,7 +1637,7 @@ class CUP$parser$actions {
 		int vright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object v = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-            Nodo nodo= new Nodo (t.toString(),parser.cont);
+            Nodo nodo= new Nodo (t.toString(),parser.cont,AmbitoActual);
             parser.cont++;
             RESULT = nodo;          
         
@@ -1639,7 +1656,7 @@ class CUP$parser$actions {
 		int vright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object v = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-            Nodo nodo= new Nodo (t.toString(),parser.cont);
+            Nodo nodo= new Nodo (t.toString(),parser.cont,AmbitoActual);
             parser.cont++;
             RESULT = nodo; 
         
@@ -1655,7 +1672,7 @@ class CUP$parser$actions {
 		int tright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object t = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-            Nodo nodo= new Nodo (t.toString(),parser.cont);
+            Nodo nodo= new Nodo (t.toString(),parser.cont,AmbitoActual);
             parser.cont++;
             RESULT = nodo;          
         
@@ -1671,7 +1688,7 @@ class CUP$parser$actions {
 		int tright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
 		Object t = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
 		
-            Nodo nodo= new Nodo (t.toString(),parser.cont);
+            Nodo nodo= new Nodo (t.toString(),parser.cont,AmbitoActual);
             parser.cont++;
             RESULT = nodo; 
         
@@ -1687,7 +1704,7 @@ class CUP$parser$actions {
 		int tright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object t = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-            Nodo nodo= new Nodo (t.toString(),parser.cont);
+            Nodo nodo= new Nodo (t.toString(),parser.cont,AmbitoActual);
             parser.cont++;
             RESULT = nodo;         
         
@@ -1703,7 +1720,7 @@ class CUP$parser$actions {
 		int tright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
 		Object t = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
 		
-            Nodo nodo= new Nodo (t.toString(),parser.cont);
+            Nodo nodo= new Nodo (t.toString(),parser.cont,AmbitoActual);
             parser.cont++;
             RESULT = nodo; 
         
@@ -1964,11 +1981,13 @@ class CUP$parser$actions {
 		
                 tipoActual = tipoActual + " -> "+r.toString(); 
                 d.setEtiqueta(tipoActual);
-                Nodo nodo = new Nodo(id.toString(),parser.cont, tipoActual,offsetActual);
+                AmbitoActual = id.toString();
+                Nodo nodo = new Nodo(id.toString(),parser.cont, tipoActual,offsetActual,AmbitoActual);
                 tipoActual = " ";
                 offsetActual = offsetActual +4;
                 parser.cont++;
                 nodo.addHijo(d);
+                AmbitoActual = "Global";
                 RESULT = nodo;
             
               CUP$parser$result = parser.getSymbolFactory().newSymbol("FUNCTION",13, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-14)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);

@@ -3,9 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/mejia/Desktop/Compilador/src/compilador_ada95/FilaCuadruplo.java</file>
-            <file>file:/C:/Users/mejia/Desktop/Compilador/src/compilador_ada95/CodigoFinal.java</file>
+            <file>file:/C:/Users/mejia/Desktop/Compilador/src/compilador_ada95/parser.java</file>
+            <file>file:/C:/Users/mejia/Desktop/Compilador/src/compilador_ada95/Nodo.java</file>
+            <file>file:/C:/Users/mejia/Desktop/Compilador/src/compilador_ada95/parser.txt</file>
             <file>file:/C:/Users/mejia/Desktop/Compilador/src/compilador_ada95/Principal.java</file>
+            <file>file:/C:/Users/mejia/Desktop/Compilador/src/compilador_ada95/parser2.txt</file>
         </group>
     </open-files>
 </project-private>
