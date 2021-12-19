@@ -61,7 +61,6 @@ public class CodigoFinal {
                     i=i+2;
                 }
                 else if(operacion.contains("PUT")){
-                    //System.out.println("I en cuadruplos - "+i);
                     genPut();
                 }
                 else if(operacion.contains("GOTO") && arg1.equals("-")){
@@ -86,15 +85,15 @@ public class CodigoFinal {
                 operacion = tablaCuadruplos.getListaCuadruplo().get(i).getOp();
                 arg1 = tablaCuadruplos.getListaCuadruplo().get(i).getArg1();
                 arg2 = tablaCuadruplos.getListaCuadruplo().get(i).getArg2();
-                if(operacion.equalsIgnoreCase("put")){
-                    //System.out.println("I en generar etiqueta - "+i);
-                    //genPut();
-                }
-                else if (operacion.equals("GOTO") && arg1.equals('-') ){
+                if (operacion.equals("GOTO") && arg1.equals('-') ){
                     System.out.println("Entra a la condicion");
-                   genMips("\n");
+                    genMips("\n");
                     i=2000;
                 }
+                if(operacion.equalsIgnoreCase("put")){
+                    genPut();
+                }
+                
             }
         
     }
