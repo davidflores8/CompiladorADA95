@@ -15,8 +15,14 @@ li $v0 4
 la $a0 _msg1
 syscall
 
+li $v0 5
+syscall
+
 li $v0 4
 la $a0 _msg2
+syscall
+
+li $v0 5
 syscall
 
 lw $t0, _primero
@@ -25,13 +31,17 @@ bgt $t0, $t1, _etiq6
 b _etiq8
 
 _etiq6:
-_etiq8:
 li $v0 4
 la $a0 _msg3
 syscall
 
+_etiq8:
 li $v0 4
 la $a0 _msg4
+syscall
+
+li $v0 4
+la $a0 _msg5
 syscall
 
 li $v0 10
