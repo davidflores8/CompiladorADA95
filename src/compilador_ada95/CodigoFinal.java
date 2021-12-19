@@ -13,7 +13,7 @@ public class CodigoFinal {
     private Nodo arbol;
     private File archivo;
     private FileWriter fw;
-    
+
     //
     int contMsg = 1;
 
@@ -39,7 +39,7 @@ public class CodigoFinal {
             genMips("   .text");
             genMips("   .globl Main");
             fw.write("\n");
-            for (int i=0; i<tablaCuadruplos.getListaCuadruplo().size();i++) {
+            for (int i = 0; i < tablaCuadruplos.getListaCuadruplo().size(); i++) {
                 String operacion, arg1, arg2, destino, linea;
                 destino = tablaCuadruplos.getListaCuadruplo().get(i).getDestino();
                 operacion = tablaCuadruplos.getListaCuadruplo().get(i).getOp();
@@ -47,64 +47,62 @@ public class CodigoFinal {
                 arg2 = tablaCuadruplos.getListaCuadruplo().get(i).getArg2();
                 if (operacion.contains("IF")) {
                     genIf(operacion, arg1, arg2, destino);
-                    String op, a1,a2,dest,lin;
-                    dest = tablaCuadruplos.getListaCuadruplo().get(i+1).getDestino();
-                    op = tablaCuadruplos.getListaCuadruplo().get(i+1).getOp();
-                    a1 = tablaCuadruplos.getListaCuadruplo().get(i+1).getArg1();
-                    a2 = tablaCuadruplos.getListaCuadruplo().get(i+1).getArg2();
-                    genGoto(op,a1,a2,dest);
+                    String op, a1, a2, dest, lin;
+                    dest = tablaCuadruplos.getListaCuadruplo().get(i + 1).getDestino();
+                    op = tablaCuadruplos.getListaCuadruplo().get(i + 1).getOp();
+                    a1 = tablaCuadruplos.getListaCuadruplo().get(i + 1).getArg1();
+                    a2 = tablaCuadruplos.getListaCuadruplo().get(i + 1).getArg2();
+                    genGoto(op, a1, a2, dest);
                     genMips("");
                     System.out.println("Etiqueta 1");
-                    genEtiqueta("_etiq"+destino, destino);
+                    genEtiqueta("_etiq" + destino, destino);
                     System.out.println("Etiqueta 2");
-                    genEtiqueta("_etiq"+a1, a1);   
-                    i=i+2;
-                }
-                else if(operacion.contains("PUT")){
-                    //System.out.println("I en cuadruplos - "+i);
+                    int j = genEtiqueta("_etiq" + a1, a1);
+                    i = i + 2 + j;
+                } else if (operacion.contains("PUT")) {
+                    // System.out.println("I en cuadruplos - "+i);
                     genPut();
-                }
-                else if(operacion.contains("GOTO") && arg1.equals("-")){
-                    
+                } else if (operacion.contains("GOTO") && arg1.equals("-")) {
+
                 }
             }
-            String linea="li $v0 10\n syscall";
+            String linea = "li $v0 10\n syscall";
             genMips(linea);
             fw.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
-    public void genEtiqueta(String nombre, String etiqueta){
-        
-            genMips(nombre+":");
-            int dest = Integer.parseInt(etiqueta);
-            for (int i = dest; i <tablaCuadruplos.getListaCuadruplo().size(); i++) {
-                String operacion, arg1, arg2, destino, linea;
-                destino = tablaCuadruplos.getListaCuadruplo().get(i).getDestino();
-                operacion = tablaCuadruplos.getListaCuadruplo().get(i).getOp();
-                arg1 = tablaCuadruplos.getListaCuadruplo().get(i).getArg1();
-                arg2 = tablaCuadruplos.getListaCuadruplo().get(i).getArg2();
-                if(operacion.equalsIgnoreCase("put")){
-                    //System.out.println("I en generar etiqueta - "+i);
-                    //genPut();
-                }
-                else if (operacion.equals("GOTO") && arg1.equals('-') ){
-                    System.out.println("Entra a la condicion");
-                   genMips("\n");
-                    i=2000;
-                }
+
+    public int genEtiqueta(String nombre, String etiqueta) {
+        int j = 0;
+        genMips(nombre + ":");
+        int dest = Integer.parseInt(etiqueta);
+        for (int i = dest; i < tablaCuadruplos.getListaCuadruplo().size(); i++) {
+            String operacion, arg1, arg2, destino, linea;
+            destino = tablaCuadruplos.getListaCuadruplo().get(i).getDestino();
+            operacion = tablaCuadruplos.getListaCuadruplo().get(i).getOp();
+            arg1 = tablaCuadruplos.getListaCuadruplo().get(i).getArg1();
+            arg2 = tablaCuadruplos.getListaCuadruplo().get(i).getArg2();
+            if (operacion.equalsIgnoreCase("put")) {
+                // System.out.println("I en generar etiqueta - "+i);
+                genPut();
+                j++;
+            } else if (operacion.equals("GOTO") && arg1.equals('-')) {
+                System.out.println("Entra a la condicion");
+                genMips("\n");
+                i = 2000;
             }
-        
+        }
+        return j;
     }
-    
-    public void genPut(){
-        String linea="";
-        linea+="li $v0 4\n";
-        linea+="la $a0 "+"_msg"+contMsg+"\n";
-        linea+="syscall\n";
-        genMips(linea);  
+
+    public void genPut() {
+        String linea = "";
+        linea += "li $v0 4\n";
+        linea += "la $a0 " + "_msg" + contMsg + "\n";
+        linea += "syscall\n";
+        genMips(linea);
         contMsg++;
     }
 
