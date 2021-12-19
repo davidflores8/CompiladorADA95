@@ -16,8 +16,15 @@ public class CodigoFinal {
 
     //
     int contMsg = 1;
+    
+    
+    //
+    TablaRegistros tablaRegistro = new TablaRegistros();
+    
+    
 
     CodigoFinal(Cuadruplo tablaCuadruplos, Nodo arbol, String nombreArchivo) {
+        tablaRegistro.llenar();
         this.tablaCuadruplos = tablaCuadruplos;
         this.arbol = arbol;
         try {
@@ -26,6 +33,9 @@ public class CodigoFinal {
         } catch (Exception e) {
             System.out.println("Error: " + e);
         }
+        System.out.println("Tabla de registros");
+        System.out.println(tablaRegistro.toString());
+        
     }
 
     public void genArchivo() {
@@ -63,6 +73,10 @@ public class CodigoFinal {
                 } else if (operacion.contains("GOTO") || arg1.equals("-")) {
 
                 }
+                else if (operacion.contains("GET")){
+                    genGet(destino);
+                    
+                }
             }
             String linea = "li $v0 10\n syscall";
             genMips(linea);
@@ -82,11 +96,12 @@ public class CodigoFinal {
             arg1 = tablaCuadruplos.getListaCuadruplo().get(i).getArg1();
             arg2 = tablaCuadruplos.getListaCuadruplo().get(i).getArg2();
             if (operacion.equalsIgnoreCase("put")) {
-                System.out.println("Destino "+destino);
                 genPut();
             } else if (operacion.equals("GOTO") || arg1.equals('-')) {
-                System.out.println("Entra a la condicion");
                 i=2000;
+            }
+            else if (operacion.equalsIgnoreCase("get")){
+                genGet(destino);
             }
         }
 
@@ -94,11 +109,21 @@ public class CodigoFinal {
 
     public void genPut() {
         String linea = "";
-        linea += "li $v0 4\n";
-        linea += "la $a0 " + "_msg" + contMsg + "\n";
+        linea += "li $v0, 4\n";
+        linea += "la $a0, " + "_msg" + contMsg + "\n";
         linea += "syscall\n";
         genMips(linea);
         contMsg++;
+    }
+    
+    public void genGet(String destino){
+        String linea = "";
+        linea += "li $v0, 5\n";
+        linea += "syscall\n";
+        
+        linea += "sw $v0, ";
+        genMips(linea);
+        
     }
 
     public void genIf(String op, String a1, String a2, String des) {
@@ -173,5 +198,13 @@ public class CodigoFinal {
         } catch (Exception e) {
             System.out.println("Error: " + e);
         }
+    }
+    
+    public void llenar(ArrayList<Registro> lista){
+        for (int i = 0; i < 9; i++) {
+            Registro registro = new Registro("$t"+i, " ");
+            lista.add(registro);
+        }
+        
     }
 }

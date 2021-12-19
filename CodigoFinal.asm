@@ -15,8 +15,14 @@ li $v0 4
 la $a0 _msg1
 syscall
 
+li $v0 5
+syscall
+
 li $v0 4
 la $a0 _msg2
+syscall
+
+li $v0 5
 syscall
 
 lw $t0, _primero
