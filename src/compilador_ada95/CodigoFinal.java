@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CodigoFinal {
 
@@ -34,21 +36,67 @@ public class CodigoFinal {
             genMips("   .text");
             genMips("   .globl Main");
             fw.write("\n");
-            for (FilaCuadruplo filaCu : tablaCuadruplos.getListaCuadruplo()) {
+            for (int i=0; i<tablaCuadruplos.getListaCuadruplo().size();i++) {
                 String operacion, arg1, arg2, destino, linea;
-                destino = filaCu.getDestino();
-                operacion = filaCu.getOp();
-                arg1 = filaCu.getArg1();
-                arg2 = filaCu.getArg2();
+                destino = tablaCuadruplos.getListaCuadruplo().get(i).getDestino();
+                operacion = tablaCuadruplos.getListaCuadruplo().get(i).getOp();
+                arg1 = tablaCuadruplos.getListaCuadruplo().get(i).getArg1();
+                arg2 = tablaCuadruplos.getListaCuadruplo().get(i).getArg2();
                 if (operacion.contains("IF")) {
                     genIf(operacion, arg1, arg2, destino);
-                }else if(operacion.equals("GOTO")){
-                    genGoto(operacion, arg1, arg2, destino);
+                    String op, a1,a2,dest,lin;
+                    dest = tablaCuadruplos.getListaCuadruplo().get(i+1).getDestino();
+                    op = tablaCuadruplos.getListaCuadruplo().get(i+1).getOp();
+                    a1 = tablaCuadruplos.getListaCuadruplo().get(i+1).getArg1();
+                    a2 = tablaCuadruplos.getListaCuadruplo().get(i+1).getArg2();
+                    if(!a1.equals("-")){
+                        genGoto(op,a1,a2,dest);
+                        genMips("");
+                        genMips("");
+                        genEtiqueta("_etiq"+destino, destino);
+                        genEtiqueta("_etiq"+a1, a1);   
+                    }
+                    i=i+2;
+                    
+                }
+                else if(operacion.contains("PUT")){
+                    genPut();
                 }
             }
             fw.close();
         } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
+    
+    public void genEtiqueta(String nombre, String etiqueta){
+        
+            genMips(nombre+":");
+            int dest = Integer.parseInt(etiqueta);
+            for (int i = dest; i < tablaCuadruplos.getListaCuadruplo().size()-dest; i++) {
+                String operacion, arg1, arg2, destino, linea;
+                destino = tablaCuadruplos.getListaCuadruplo().get(i).getDestino();
+                operacion = tablaCuadruplos.getListaCuadruplo().get(i).getOp();
+                arg1 = tablaCuadruplos.getListaCuadruplo().get(i).getArg1();
+                arg2 = tablaCuadruplos.getListaCuadruplo().get(i).getArg2();
+                if(operacion.equalsIgnoreCase("put")){
+                    System.out.println(destino);
+                    genPut();
+                }
+                else if(operacion.equalsIgnoreCase("GOTO") && arg1.equals("-")){
+                    genMips("\n");
+                    break;
+                }
+            }
+        
+    }
+    
+    public void genPut(){
+        String linea="";
+        linea+="li $v0 4\n";
+        linea+="la $a0 "+"_msg1\n";
+        linea+="syscall\n";
+        genMips(linea);  
     }
 
     public void genIf(String op, String a1, String a2, String des) {
@@ -56,16 +104,16 @@ public class CodigoFinal {
         linea += "lw $t0, _" + a1 + "\n";
         linea += "lw $t1, _" + a2 + "\n";
         if (op.contains(">")) {
-            linea += "bgt $t0, $t1, _" + des;
+            linea += "bgt $t0, $t1, _etiq" + des;
             genMips(linea);
         } else if (op.contains("<")) {
-            linea += "blt $t0, $t1, _" + des;
+            linea += "blt $t0, $t1, _etiq" + des;
             genMips(linea);
         }
     }
 
     public void genGoto(String op, String a1, String a2, String des) {
-        String linea = "b _" + a1;
+        String linea = "b _etiq" + a1;
         genMips(linea);
     }
 

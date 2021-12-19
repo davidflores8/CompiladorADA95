@@ -486,6 +486,6 @@ M           ::= {: RESULT = new Marcador(cuadruplos.siguienteCuad(),0); :}
 ;
 
 N           ::= {:  ArrayList<Integer> retVal = creaLista(cuadruplos.siguienteCuad());  
-                    cuadruplos.addCuadruplo("GOTO","");
+                    cuadruplos.addCuadruplo("GOTO","-");
                     RESULT = retVal; 
                 :};

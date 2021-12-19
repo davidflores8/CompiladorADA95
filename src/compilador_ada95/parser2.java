@@ -533,11 +533,7 @@ class CUP$parser2$actions {
           case 1: // PROCEDURE ::= TK_PROCEDURE TK_ID PARAMETROS TK_IS DECLARACIONES TK_BEGIN STATEMENTS TK_END TK_ID TK_PUNTOCOMA 
             {
               Nodo RESULT =null;
-		
-
-                
-
-                
+		 
                 System.out.println("-------Cuadruplos---------");           
                 cuadruplos.imprimirCuadruplos();
                 
@@ -1064,7 +1060,6 @@ class CUP$parser2$actions {
                                 cuadruplos.completa(c.getListaFalsa(), m2.getNum());
                                 siguiente = fusiona(n,fusiona(s,s2));
                             } else {
-                                
                                 siguiente = fusiona(c.getListaFalsa(),s);
                             }
                             retorno = siguiente;
@@ -1496,7 +1491,7 @@ class CUP$parser2$actions {
             {
               ArrayList<Integer> RESULT =null;
 		  ArrayList<Integer> retVal = creaLista(cuadruplos.siguienteCuad());  
-                    cuadruplos.addCuadruplo("GOTO","");
+                    cuadruplos.addCuadruplo("GOTO","-");
                     RESULT = retVal; 
                 
               CUP$parser2$result = parser.getSymbolFactory().newSymbol("N",15, ((java_cup.runtime.Symbol)CUP$parser2$stack.peek()), RESULT);
