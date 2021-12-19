@@ -13,6 +13,9 @@ public class CodigoFinal {
     private Nodo arbol;
     private File archivo;
     private FileWriter fw;
+    
+    //
+    int contMsg = 1;
 
     CodigoFinal(Cuadruplo tablaCuadruplos, Nodo arbol, String nombreArchivo) {
         this.tablaCuadruplos = tablaCuadruplos;
@@ -49,20 +52,24 @@ public class CodigoFinal {
                     op = tablaCuadruplos.getListaCuadruplo().get(i+1).getOp();
                     a1 = tablaCuadruplos.getListaCuadruplo().get(i+1).getArg1();
                     a2 = tablaCuadruplos.getListaCuadruplo().get(i+1).getArg2();
-                    if(!a1.equals("-")){
-                        genGoto(op,a1,a2,dest);
-                        genMips("");
-                        genMips("");
-                        genEtiqueta("_etiq"+destino, destino);
-                        genEtiqueta("_etiq"+a1, a1);   
-                    }
+                    genGoto(op,a1,a2,dest);
+                    genMips("");
+                    System.out.println("Etiqueta 1");
+                    genEtiqueta("_etiq"+destino, destino);
+                    System.out.println("Etiqueta 2");
+                    genEtiqueta("_etiq"+a1, a1);   
                     i=i+2;
-                    
                 }
                 else if(operacion.contains("PUT")){
+                    //System.out.println("I en cuadruplos - "+i);
                     genPut();
                 }
+                else if(operacion.contains("GOTO") && arg1.equals("-")){
+                    
+                }
             }
+            String linea="li $v0 10\n syscall";
+            genMips(linea);
             fw.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,19 +80,20 @@ public class CodigoFinal {
         
             genMips(nombre+":");
             int dest = Integer.parseInt(etiqueta);
-            for (int i = dest; i < tablaCuadruplos.getListaCuadruplo().size()-dest; i++) {
+            for (int i = dest; i <tablaCuadruplos.getListaCuadruplo().size(); i++) {
                 String operacion, arg1, arg2, destino, linea;
                 destino = tablaCuadruplos.getListaCuadruplo().get(i).getDestino();
                 operacion = tablaCuadruplos.getListaCuadruplo().get(i).getOp();
                 arg1 = tablaCuadruplos.getListaCuadruplo().get(i).getArg1();
                 arg2 = tablaCuadruplos.getListaCuadruplo().get(i).getArg2();
                 if(operacion.equalsIgnoreCase("put")){
-                    System.out.println(destino);
-                    genPut();
+                    //System.out.println("I en generar etiqueta - "+i);
+                    //genPut();
                 }
-                else if(operacion.equalsIgnoreCase("GOTO") && arg1.equals("-")){
-                    genMips("\n");
-                    break;
+                else if (operacion.equals("GOTO") && arg1.equals('-') ){
+                    System.out.println("Entra a la condicion");
+                   genMips("\n");
+                    i=2000;
                 }
             }
         
@@ -94,9 +102,10 @@ public class CodigoFinal {
     public void genPut(){
         String linea="";
         linea+="li $v0 4\n";
-        linea+="la $a0 "+"_msg1\n";
+        linea+="la $a0 "+"_msg"+contMsg+"\n";
         linea+="syscall\n";
         genMips(linea);  
+        contMsg++;
     }
 
     public void genIf(String op, String a1, String a2, String des) {

@@ -1,13 +1,14 @@
 procedure Hola () is
-	primero,segundo:INTEGER:=23;
+	primero,segundo:INTEGER;
 begin	
-	put("Esta a punto de entrar en un if");
+	put("Ingrese el primer numero");
+	get(primero);
+	put("Ingrese el segundo numero: ");
+	get(segundo);
 	if(primero>segundo) then
-		put("Dentro del if");
+		put("Primero es mayor");
 	end if;
-
-	put("Fuera de todo");
-	put("Otra vez fuera de todo");
-	put("Fuera");
+	put("Buen dia");
+	put("Este es el fin del programa");
 
 end CUENTA; 

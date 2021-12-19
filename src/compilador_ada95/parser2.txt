@@ -448,8 +448,7 @@ PUT::= TK_PUT TK_PARENTESISI TK_STRING:s TK_PARENTESISD  TK_PUNTOCOMA
 ;
 
 GET::= TK_GET TK_PARENTESISI TK_ID:d TK_PARENTESISD TK_PUNTOCOMA{:
-            
-    
+            cuadruplos.addCuadruplo("GET","ID", d.toString());
         :}
     
 ;

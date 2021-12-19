@@ -1421,8 +1421,7 @@ class CUP$parser2$actions {
 		int dright = ((java_cup.runtime.Symbol)CUP$parser2$stack.elementAt(CUP$parser2$top-2)).right;
 		String d = (String)((java_cup.runtime.Symbol) CUP$parser2$stack.elementAt(CUP$parser2$top-2)).value;
 		
-            
-    
+            cuadruplos.addCuadruplo("GET","ID", d.toString());
         
               CUP$parser2$result = parser.getSymbolFactory().newSymbol("GET",6, ((java_cup.runtime.Symbol)CUP$parser2$stack.elementAt(CUP$parser2$top-4)), ((java_cup.runtime.Symbol)CUP$parser2$stack.peek()), RESULT);
             }
