@@ -225,6 +225,9 @@ public class Principal extends javax.swing.JFrame {
                     p2.setArbol(p.raiz);
                     p2.setErrores(p.errores);
                     p2.parse();
+                    System.out.println("Este es el codigo final");
+                    CodigoFinal cf = new CodigoFinal(p2.cuadruplos, p2.arbol, "CodigoFinal.asm");
+                    cf.genArchivo();
                     if (!p2.errores.isEmpty()){
                         JOptionPane.showMessageDialog(this, "Se han encontrado errores semánticos ","Información", JOptionPane.INFORMATION_MESSAGE);
                         ta_errores.setText("ERRORES SEMÁNTICOS: \n");

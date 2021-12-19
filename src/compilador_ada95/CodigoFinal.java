@@ -51,11 +51,11 @@ public class CodigoFinal {
     public void buscarWrites(Cuadruplo tablaCuadruplos) {
         int count = 1;
         for (FilaCuadruplo filaCu : this.tablaCuadruplos.getListaCuadruplo()) {
-            String operacion, arg1, linea, nuevoArg2;
+            String operacion, destino, linea, nuevoArg2;
             operacion = filaCu.getOp();
-            arg1 = filaCu.getArg1();
+            destino = filaCu.getDestino();
             if (operacion.equals("PUT")) {
-                linea = "_msg" + count + ": .asciiz " + "\"" + arg1 + "\"";
+                linea = "_msg" + count + ": .asciiz " + "\"" + destino + "\"";
                 nuevoArg2 = "_msg" + count;
                 genMips(linea);
                 filaCu.setArg2(nuevoArg2);
