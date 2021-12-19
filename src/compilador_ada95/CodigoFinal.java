@@ -26,10 +26,13 @@ public class CodigoFinal {
 
         try {
             genMips("   .data");
-            //buscarVarGlob(arbol);
+            buscarVarGlob(arbol);
+            fw.write("\n");
             buscarWrites(tablaCuadruplos);
+            fw.write("\n");
             genMips("   .text");
             genMips("   .globl Main");
+            fw.write("\n");
             for (FilaCuadruplo filaCu : tablaCuadruplos.getListaCuadruplo()) {
                 String destino, operacion, arg1, arg2, linea;
                 destino = filaCu.getDestino();
@@ -63,6 +66,19 @@ public class CodigoFinal {
             }
         }
     }
+    
+    public void buscarVarGlob(Nodo nodo){
+    for (int i = 0; i <nodo.getHijos().size(); i++) {
+            buscarVarGlob(nodo.getHijos().get(i));
+            if(nodo.getHijos().get(i).getTipo().equals("INTEGER") && !nodo.getHijos().get(i).getTipo().contains("->") && 
+                    nodo.getHijos().get(i).getAmbito().equalsIgnoreCase("Global")){
+                        String nombre = nodo.getHijos().get(i).getEtiqueta();
+                        String tipo = nodo.getHijos().get(i).getTipo();
+                        String linea = "_" + nombre + "    .word 0";
+                        genMips(linea);
+            }   
+        }
+    }
 
     /* public void buscarVarGlob(Nodo arbol) {
         for (Simbolo simbolo : this.tablaSimbolos.getTabla()) {
@@ -82,6 +98,7 @@ public class CodigoFinal {
     public void genMips(String linea) {
         try {
             fw.write(linea + "\n");
+            
         } catch (Exception e) {
             System.out.println("Error: " + e);
         }
