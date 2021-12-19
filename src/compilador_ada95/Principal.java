@@ -225,9 +225,18 @@ public class Principal extends javax.swing.JFrame {
                     p2.setArbol(p.raiz);
                     p2.setErrores(p.errores);
                     p2.parse();
-                    CodigoFinal codigoF = new CodigoFinal(p2.cuadruplos,p2.arbol,"Codigo Final"); 
-                    codigoF.genArchivo();
-                    JOptionPane.showMessageDialog(this, "Código compilado");
+                    if (!p2.errores.isEmpty()){
+                        JOptionPane.showMessageDialog(this, "Se han encontrado errores semánticos ","Información", JOptionPane.INFORMATION_MESSAGE);
+                        ta_errores.setText("ERRORES SEMÁNTICOS: \n");
+                        for (int i = 0; i < p2.errores.size(); i++) {
+                            ta_errores.setText(ta_errores.getText()+p2.errores.get(i)+"\n");
+                        }
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(this, "Código compilado");
+                    }
+                    
+
                 }
                 else if (!lexer.erroresLexicos.isEmpty()){
                     JOptionPane.showMessageDialog(this, "Se han encontrado errores léxicos  ","Información", JOptionPane.INFORMATION_MESSAGE);
@@ -422,7 +431,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTextArea textAreaErroresLexicos;
     private javax.swing.JTextArea textAreaErroresSintacticos;
     // End of variables declaration//GEN-END:variables
-    File archivo = new File("C:\\Users\\mejia\\Desktop\\C\\Pruebas\\Prueba2.adb") ;
+File archivo = new File("C:\\Users\\mejia\\Desktop\\C\\Pruebas\\Prueba2.adb") ;
 
 
         

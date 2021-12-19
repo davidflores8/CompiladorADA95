@@ -8,7 +8,8 @@ parser code {:
 
 // AST
     ArrayList errores = new ArrayList();
-    public Nodo raiz;    
+    public Nodo raiz;
+    public String AmbitoActual ="";
     public int cont = 0;
     String tipoActual = " ";
     int offsetActual = 0;
@@ -145,8 +146,8 @@ PARAMETROS_PRIME::= TK_ID TK_COLON TIPOS_PARAMETROS TIPOS_VARIABLES TK_PUNTOCOMA
 
 //Condiciones
 
-CONDICION ::= CONDICIONP TK_AND CONDICION:c1
-            | CONDICIONP TK_OR CONDICION:c1
+CONDICION ::= CONDICIONP TK_AND CONDICION
+            | CONDICIONP TK_OR CONDICION
             | CONDICIONP
 ;
 
@@ -271,7 +272,15 @@ ID::= TK_ID:id
     
 ;
 
-TIPOS::= TK_BOOLEAN:t
+TIPOS::= 
+        |TK_BOOLEAN error TK_TRUE {: errores.add("Se esperaba un \":=\" "); RESULT = new Nodo("ERROR", parser.cont); :}
+        |TK_BOOLEAN error TK_FALSE {: errores.add("Se esperaba un \":=\" "); RESULT = new Nodo("ERROR", parser.cont); :}
+        |TK_BOOLEAN TK_IGUAL error {: errores.add("Se esperaba un true o false "); RESULT = new Nodo("ERROR", parser.cont);:}
+        |TK_INTEGER error TK_DIGITO {: errores.add("Se esperaba un \":=\" "); RESULT = new Nodo("ERROR", parser.cont);:}
+        |TK_INTEGER TK_IGUAL error {: errores.add("Se esperaba un numero "); RESULT = new Nodo("ERROR", parser.cont);:}
+        |TK_FLOAT error TK_DIGITOFLOAT  {: errores.add("Se esperaba un \":=\" "); RESULT = new Nodo("ERROR", parser.cont);:}
+        |TK_FLOAT TK_IGUAL error {: errores.add("Se esperaba un numero decimal "); RESULT = new Nodo("ERROR", parser.cont);:}
+        | TK_BOOLEAN:t
         {:
             Nodo nodo= new Nodo (t.toString(),parser.cont);
             parser.cont++;
@@ -290,23 +299,6 @@ TIPOS::= TK_BOOLEAN:t
             parser.cont++;
             RESULT = nodo; 
         :}
-        |TK_BOOLEAN error TK_TRUE {: errores.add("Se esperaba un \":=\" "); :}
-        |TK_BOOLEAN error TK_FALSE {: errores.add("Se esperaba un \":=\" "); :}
-        |TK_BOOLEAN TK_IGUAL error {: errores.add("Se esperaba un true o false "); :}
-        |TK_INTEGER:t
-        {:
-            Nodo nodo= new Nodo (t.toString(),parser.cont);
-            parser.cont++;
-            RESULT = nodo;         
-        :}
-        |TK_INTEGER:t TK_IGUAL TK_DIGITO
-        {:
-            Nodo nodo= new Nodo (t.toString(),parser.cont);
-            parser.cont++;
-            RESULT = nodo; 
-        :}
-        |TK_INTEGER error TK_DIGITO {: errores.add("Se esperaba un \":=\" "); :}
-        |TK_INTEGER TK_IGUAL error {: errores.add("Se esperaba un numero "); :}
         |TK_FLOAT:t
         {:
             Nodo nodo= new Nodo (t.toString(),parser.cont);
@@ -319,8 +311,18 @@ TIPOS::= TK_BOOLEAN:t
             parser.cont++;
             RESULT = nodo; 
         :}
-        |TK_FLOAT error TK_DIGITOFLOAT  {: errores.add("Se esperaba un \":=\" "); :}
-        |TK_FLOAT TK_IGUAL error {: errores.add("Se esperaba un numero decimal "); :}
+        |TK_INTEGER:t
+        {:
+            Nodo nodo= new Nodo (t.toString(),parser.cont);
+            parser.cont++;
+            RESULT = nodo;         
+        :}
+        |TK_INTEGER:t TK_IGUAL TK_DIGITO
+        {:
+            Nodo nodo= new Nodo (t.toString(),parser.cont);
+            parser.cont++;
+            RESULT = nodo; 
+        :}
         |error {: errores.add("Los tipos de datos permitidos son INTEGER, FLOAT y BOOLEAN. "); :}
 
 

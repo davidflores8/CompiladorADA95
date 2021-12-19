@@ -1,10 +1,12 @@
-procedure Hola (Valor: in Integer;  Valor2: out Float) is
-    primero,segundo:Integer:=34;
-    principal,secundario:Float:=34.45;
+procedure CUENTA () is
+    primero:INTEGER:=0;
+    segundo:INTEGER:=34;
+    tercero:INTEGER:=34;
+    
 begin	
-	put("Hola");
-	primero:=false;
-
-
+	while(primero<tercero) loop
+		put("Dentro del while");
+	end loop;
+	put(primero);
 	
 end CUENTA; 

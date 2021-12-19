@@ -53,39 +53,43 @@ parser code {:
         
     }
 
-    public boolean existe(Nodo nodo, String nombre, Boolean estado){
+    public boolean evaluarExiste(Nodo nodo, String nombre){
     
         for (int i = 0; i <nodo.getHijos().size(); i++) {
-            existe(nodo.getHijos().get(i), nombre, estado);
+            evaluarExiste(nodo.getHijos().get(i), nombre);
             if(nodo.getHijos().get(i).getEtiqueta().equals(nombre)){
-                estado=true;
+                return true;
             }
+            
         }
-        return estado;
+        return false;
+       
     }
 
-     public boolean tipoAdecuado(Nodo nodo, String nombre, Boolean estado){
+     public boolean evaluarTipo(Nodo nodo, String nombre, String tipo){
     
         for (int i = 0; i <nodo.getHijos().size(); i++) {
-            existe(nodo.getHijos().get(i), nombre, estado);
-            if(nodo.getHijos().get(i).getEtiqueta().equals(nombre) && nodo.getHijos().get(i).getTipo().equals("Integer") ){
-                estado=true;
+            evaluarTipo(nodo.getHijos().get(i), nombre, tipo);
+            if(nodo.getHijos().get(i).getTipo().equals(tipo) && nodo.getHijos().get(i).getEtiqueta().equals(nombre)){
+                return true;
             }
         }
-        return estado;
+        return false;
+        
     }
 
 
-     public int existe(Nodo nodo, String nombre, int contador){
+     public int cantidadVecesExiste(Nodo nodo, String nombre, int contador){
     
         for (int i = 0; i <nodo.getHijos().size(); i++) {
-            existe(nodo.getHijos().get(i), nombre, contador);
+            cantidadVecesExiste(nodo.getHijos().get(i), nombre, contador);
             if(nodo.getHijos().get(i).getEtiqueta().equals(nombre)){
                 contador++;
             }
         }
         return contador;
     }
+
 
 
 :} ;
@@ -115,7 +119,7 @@ start with PROCEDURE;
 
 
 PROCEDURE::= TK_PROCEDURE TK_ID PARAMETROS TK_IS DECLARACIONES TK_BEGIN STATEMENTS TK_END TK_ID TK_PUNTOCOMA 
-            {:
+            {: 
                 System.out.println("-------Cuadruplos---------");           
                 cuadruplos.imprimirCuadruplos();
                 
@@ -174,8 +178,7 @@ PARAMETROS_PRIME::= TK_ID TK_COLON TIPOS_PARAMETROS TIPOS_VARIABLES TK_PUNTOCOMA
 //Condiciones
 
 CONDICION ::= CONDICIONP:c TK_AND M:m CONDICION:c1
-              {:
-              
+              {:         
                 Condiciones retorno = null;
                 if (c != null && c1 != null){
                     cuadruplos.completa(c.getListaVerdadera(),m.getNum());
@@ -207,24 +210,40 @@ CONDICIONP::= VALOR:v OPCONDICION:o VALOR:v2
                 {:
                     Condiciones e;
                     if (o.equals("=")){
-                        //cuadruplos
-                        e = new Condiciones(creaLista(cuadruplos.siguienteCuad()), creaLista(cuadruplos.siguienteCuad() + 1));
-                        cuadruplos.addCuadruplo("IF=",v.getValor(),v2.getValor(),"");
-                        cuadruplos.addCuadruplo("GOTO","");
+                        if(v.getTipo().equals(v2.getTipo())){
+                            //cuadruplos
+                            e = new Condiciones(creaLista(cuadruplos.siguienteCuad()), creaLista(cuadruplos.siguienteCuad() + 1));
+                            cuadruplos.addCuadruplo("IF=",v.getValor(),v2.getValor(),"");
+                            cuadruplos.addCuadruplo("GOTO","");
+                        }
+                        else{
+                             e = null;
+                            errores.add("Error: Linea: "+ (vleft + 1) + " Columna: " + (vright + 1) + " " + v.getTipo() + " no es del mismo tipo que " + v2.getTipo());
+                        }
                      
                     } else {
-                        //cuadruplos
-                        e = new Condiciones(creaLista(cuadruplos.siguienteCuad()), creaLista(cuadruplos.siguienteCuad() + 1));
-                        cuadruplos.addCuadruplo("IF"+o,v.getValor(),v2.getValor(),"");
-                        cuadruplos.addCuadruplo("GOTO","");                           
+                        if (v.getTipo().equals("INTEGER") && v2.getTipo().equals("INTEGER")){
+                            //cuadruplos
+                            e = new Condiciones(creaLista(cuadruplos.siguienteCuad()), creaLista(cuadruplos.siguienteCuad() + 1));
+                            cuadruplos.addCuadruplo("IF"+o,v.getValor(),v2.getValor(),"");
+                            cuadruplos.addCuadruplo("GOTO","");
+                        } else {
+                            e = null;
+                            if (!v.getTipo().equals("INTEGER")){
+                                errores.add("Error: Linea: "+ (vleft + 1) + " Columna: " + (vright + 1) + " " + v.getValor() + " no es INTEGER");
+                            }
+                            if (!v2.getTipo().equals("INTEGER")){
+                                errores.add("Error: Linea: "+ (v2left + 1) + " Columna: " + (v2right + 1) + " " + v2.getValor() + " no es INTEGER");
+                            }
+                        }                          
                     }
                     RESULT = e;
                 :}
 ;
 
 
-OPCONDICION::= TK_OPREL:o {: RESULT=o.toString(); :}
-                | TK_IGUAL {: RESULT="="; :}
+OPCONDICION::= TK_OPREL:o {: RESULT = o.toString(); :}
+                | TK_IGUAL {: RESULT= "="; :}
 ;
 
 
@@ -236,13 +255,24 @@ VALOR::= TK_DIGITO:i
         {:
             RESULT = new Objeto2("BOOLEAN","TRUE");
         :}
+        | TK_DIGITOFLOAT:dig
+        {:
+            RESULT = new Objeto2("FLOAT",dig);
+        :}
         | TK_FALSE
         {:
             RESULT = new Objeto2("BOOLEAN","FALSE");
         :}
         | TK_ID:d
         {:
-            RESULT = new Objeto2("INTEGER",d);
+            Boolean existe = evaluarTipo(arbol, d.toString(), "INTEGER");
+            if(existe){
+                RESULT = new Objeto2("INTEGER",d.toString());
+            }
+            else{
+                errores.add("Error: Linea: "+ (dleft + 1) + " Columna: " + (dright + 1) + " no existe "+ d + " con el tipo deseado");
+                RESULT = new Objeto2("ERROR", d.toString());
+            }
         :}
         | TK_STRING:s
         {:
@@ -289,7 +319,6 @@ DECISION_PRIME ::= TK_ELSEIF TK_PARENTESISI CONDICION:c TK_PARENTESISD TK_THEN M
                                 cuadruplos.completa(c.getListaFalsa(), m2.getNum());
                                 siguiente = fusiona(n,fusiona(s,s2));
                             } else {
-                                
                                 siguiente = fusiona(c.getListaFalsa(),s);
                             }
                             retorno = siguiente;
@@ -418,7 +447,10 @@ PUT::= TK_PUT TK_PARENTESISI TK_STRING:s TK_PARENTESISD  TK_PUNTOCOMA
 
 ;
 
-GET::= TK_GET TK_PARENTESISI TK_ID TK_PARENTESISD TK_PUNTOCOMA
+GET::= TK_GET TK_PARENTESISI TK_ID:d TK_PARENTESISD TK_PUNTOCOMA{:
+            
+    
+        :}
     
 ;
 //Gramática de loop

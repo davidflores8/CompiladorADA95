@@ -1,12 +1,9 @@
 procedure Hola () is
-	numero:Float:=23.34;
-	numero:Float:=23.34;
+	primero,segundo:INTEGER:=23;
 begin	
-	loop
-		put("Dentro del loop");
-		put("Todavia dentro del loop");
-	exit when numero>56;
-	end loop;
+	if(primero>segundo) then
+		put("Dentro del if");
+	end if;
 
 	put("Fuera de todo");
 	put("Otra vez fuera de todo");
