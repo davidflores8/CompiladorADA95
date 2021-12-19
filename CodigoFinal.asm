@@ -29,29 +29,13 @@ li $v0 4
 la $a0 _msg3
 syscall
 
+_etiq8:
 li $v0 4
 la $a0 _msg4
 syscall
 
 li $v0 4
 la $a0 _msg5
-syscall
-
-_etiq8:
-li $v0 4
-la $a0 _msg6
-syscall
-
-li $v0 4
-la $a0 _msg7
-syscall
-
-li $v0 4
-la $a0 _msg8
-syscall
-
-li $v0 4
-la $a0 _msg9
 syscall
 
 li $v0 10
