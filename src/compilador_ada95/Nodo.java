@@ -85,7 +85,7 @@ public class Nodo {
 
     @Override
     public String toString() {
-        return idNodo + " [label=\"" + etiqueta + "  ID: "+ idNodo+ " Ambito: "+ Ambito+"\"];";
+        return idNodo + " [label=\"" + etiqueta + " Tipo: "+tipo+"\"];";
     }
 
     public void addHijo(Nodo hijo) {

@@ -105,15 +105,15 @@ public class Yylex implements java_cup.runtime.Scanner {
 
   private static final String ZZ_ACTION_PACKED_0 =
     "\3\0\1\1\2\2\1\3\1\4\1\5\1\6\1\7"+
-    "\1\10\1\11\1\10\1\1\1\12\1\13\1\14\2\15"+
-    "\4\16\1\1\13\16\1\17\1\20\2\21\1\22\1\23"+
-    "\1\24\1\25\1\0\1\26\13\16\1\27\1\30\1\31"+
-    "\15\16\1\32\2\16\1\33\1\16\1\34\2\16\1\35"+
-    "\1\16\1\36\11\16\1\37\1\0\1\40\3\16\1\41"+
-    "\2\16\1\42\1\43\1\44\2\16\1\45\1\16\1\46"+
-    "\1\16\2\0\1\47\1\16\1\50\2\16\1\51\2\16"+
-    "\1\52\1\53\1\0\2\16\1\54\1\55\1\56\1\0"+
-    "\2\16\1\57\1\60\1\16\1\61";
+    "\1\10\1\11\1\10\1\12\1\13\1\14\1\15\2\16"+
+    "\4\17\1\1\13\17\1\20\1\21\2\22\1\23\1\24"+
+    "\1\25\1\26\1\0\1\27\13\17\1\30\1\31\1\32"+
+    "\15\17\1\33\2\17\1\34\1\17\1\35\2\17\1\36"+
+    "\1\17\1\37\11\17\1\40\1\0\1\41\3\17\1\42"+
+    "\2\17\1\43\1\44\1\45\2\17\1\46\1\17\1\47"+
+    "\1\17\2\0\1\50\1\17\1\51\2\17\1\52\2\17"+
+    "\1\53\1\54\1\0\2\17\1\55\1\56\1\57\1\0"+
+    "\2\17\1\60\1\61\1\17\1\62";
 
   private static int [] zzUnpackAction() {
     int [] result = new int[136];
@@ -796,247 +796,252 @@ public class Yylex implements java_cup.runtime.Scanner {
             { erroresLexicos.add("Error lexico en linea "+yyline+" y columna "+yycolumn+" y en el texto: "+yytext());
             }
             // fall through
-          case 50: break;
+          case 51: break;
           case 2:
             { 
             }
             // fall through
-          case 51: break;
+          case 52: break;
           case 3:
             { yybegin(STRING);
             }
             // fall through
-          case 52: break;
+          case 53: break;
           case 4:
             { return new Symbol (sym.TK_AND, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
-          case 53: break;
+          case 54: break;
           case 5:
             { return new Symbol (sym.TK_PARENTESISI, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
-          case 54: break;
+          case 55: break;
           case 6:
             { return new Symbol (sym.TK_PARENTESISD, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
-          case 55: break;
+          case 56: break;
           case 7:
             { return new Symbol (sym.TK_MULTI, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
-          case 56: break;
+          case 57: break;
           case 8:
             { return new Symbol (sym.TK_OPADICION, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
-          case 57: break;
+          case 58: break;
           case 9:
             { return new Symbol (sym.TK_COMA, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
-          case 58: break;
-          case 10:
-            { return new Symbol (sym.TK_DIGITO, yyline + 1, yycolumn +1 , yytext() ) ;
-            }
-            // fall through
           case 59: break;
-          case 11:
-            { return new Symbol (sym.TK_COLON, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 10:
+            { return new Symbol (sym.TK_PUNTO, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 60: break;
-          case 12:
-            { return new Symbol (sym.TK_PUNTOCOMA, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 11:
+            { return new Symbol (sym.TK_DIGITO, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 61: break;
-          case 13:
-            { return new Symbol (sym.TK_OPREL, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 12:
+            { return new Symbol (sym.TK_COLON, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 62: break;
-          case 14:
-            { return new Symbol (sym.TK_ID, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 13:
+            { return new Symbol (sym.TK_PUNTOCOMA, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 63: break;
-          case 15:
-            { return new Symbol (sym.TK_OR, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 14:
+            { return new Symbol (sym.TK_OPREL, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 64: break;
-          case 16:
-            { comentario = comentario+yytext();
+          case 15:
+            { return new Symbol (sym.TK_ID, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 65: break;
-          case 17:
-            { System.out.println("Este es un comentario: "+comentario); comentario =" ";yybegin(YYINITIAL);
+          case 16:
+            { return new Symbol (sym.TK_OR, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 66: break;
-          case 18:
-            { cadena=cadena+yytext();
+          case 17:
+            { comentario = comentario+yytext();
             }
             // fall through
           case 67: break;
-          case 19:
-            { String temp = cadena; cadena=""; yybegin(YYINITIAL); return new Symbol(sym.TK_STRING, yyline + 1, yycolumn +1 , temp);
+          case 18:
+            { System.out.println("Este es un comentario: "+comentario); comentario =" ";yybegin(YYINITIAL);
             }
             // fall through
           case 68: break;
-          case 20:
-            { yybegin(COMENTARIOS);
+          case 19:
+            { cadena=cadena+yytext();
             }
             // fall through
           case 69: break;
-          case 21:
-            { return new Symbol (sym.TK_DIGITOFLOAT, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 20:
+            { String temp = cadena; cadena=""; yybegin(YYINITIAL); return new Symbol(sym.TK_STRING, yyline + 1, yycolumn +1 , temp);
             }
             // fall through
           case 70: break;
-          case 22:
-            { return new Symbol (sym.TK_IGUAL, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 21:
+            { yybegin(COMENTARIOS);
             }
             // fall through
           case 71: break;
-          case 23:
-            { return new Symbol (sym.TK_IF, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 22:
+            { return new Symbol (sym.TK_DIGITOFLOAT, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 72: break;
-          case 24:
-            { return new Symbol (sym.TK_IN, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 23:
+            { return new Symbol (sym.TK_IGUAL, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 73: break;
-          case 25:
-            { return new Symbol (sym.TK_IS, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 24:
+            { return new Symbol (sym.TK_IF, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 74: break;
-          case 26:
-            { return new Symbol (sym.TK_END, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 25:
+            { return new Symbol (sym.TK_IN, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 75: break;
-          case 27:
-            { return new Symbol (sym.TK_FOR, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 26:
+            { return new Symbol (sym.TK_IS, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 76: break;
-          case 28:
-            { return new Symbol (sym.TK_GET, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 27:
+            { return new Symbol (sym.TK_END, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 77: break;
-          case 29:
-            { return new Symbol (sym.TK_OUT, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 28:
+            { return new Symbol (sym.TK_FOR, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 78: break;
-          case 30:
-            { return new Symbol (sym.TK_PUT, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 29:
+            { return new Symbol (sym.TK_GET, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 79: break;
-          case 31:
-            { return new Symbol (sym.TK_ELSE, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 30:
+            { return new Symbol (sym.TK_OUT, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 80: break;
-          case 32:
-            { return new Symbol (sym.TK_EXIT, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 31:
+            { return new Symbol (sym.TK_PUT, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 81: break;
-          case 33:
-            { return new Symbol (sym.TK_LOOP, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 32:
+            { return new Symbol (sym.TK_ELSE, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 82: break;
-          case 34:
-            { return new Symbol (sym.TK_THEN, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 33:
+            { return new Symbol (sym.TK_EXIT, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 83: break;
-          case 35:
-            { return new Symbol (sym.TK_TRUE, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 34:
+            { return new Symbol (sym.TK_LOOP, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 84: break;
-          case 36:
-            { return new Symbol (sym.TK_WHEN, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 35:
+            { return new Symbol (sym.TK_THEN, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 85: break;
-          case 37:
-            { return new Symbol (sym.TK_FLOAT, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 36:
+            { return new Symbol (sym.TK_TRUE, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 86: break;
-          case 38:
-            { return new Symbol (sym.TK_BEGIN, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 37:
+            { return new Symbol (sym.TK_WHEN, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 87: break;
-          case 39:
-            { return new Symbol (sym.TK_FALSE, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 38:
+            { return new Symbol (sym.TK_FLOAT, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 88: break;
-          case 40:
-            { return new Symbol (sym.TK_INOUT, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 39:
+            { return new Symbol (sym.TK_BEGIN, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 89: break;
-          case 41:
-            { return new Symbol (sym.TK_WHILE, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 40:
+            { return new Symbol (sym.TK_FALSE, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 90: break;
-          case 42:
-            { return new Symbol (sym.TK_ELSEIF, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 41:
+            { return new Symbol (sym.TK_INOUT, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 91: break;
-          case 43:
-            { return new Symbol (sym.TK_ENDIF, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 42:
+            { return new Symbol (sym.TK_WHILE, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 92: break;
-          case 44:
-            { return new Symbol (sym.TK_RETURN, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 43:
+            { return new Symbol (sym.TK_ELSEIF, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 93: break;
-          case 45:
-            { return new Symbol (sym.TK_BOOLEAN, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 44:
+            { return new Symbol (sym.TK_ENDIF, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 94: break;
-          case 46:
-            { return new Symbol (sym.TK_INTEGER, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 45:
+            { return new Symbol (sym.TK_RETURN, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 95: break;
-          case 47:
-            { return new Symbol (sym.TK_ENDLOOP, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 46:
+            { return new Symbol (sym.TK_BOOLEAN, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 96: break;
-          case 48:
-            { return new Symbol (sym.TK_FUNCTION, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 47:
+            { return new Symbol (sym.TK_INTEGER, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 97: break;
-          case 49:
-            { return new Symbol (sym.TK_PROCEDURE, yyline + 1, yycolumn +1 , yytext() ) ;
+          case 48:
+            { return new Symbol (sym.TK_ENDLOOP, yyline + 1, yycolumn +1 , yytext() ) ;
             }
             // fall through
           case 98: break;
+          case 49:
+            { return new Symbol (sym.TK_FUNCTION, yyline + 1, yycolumn +1 , yytext() ) ;
+            }
+            // fall through
+          case 99: break;
+          case 50:
+            { return new Symbol (sym.TK_PROCEDURE, yyline + 1, yycolumn +1 , yytext() ) ;
+            }
+            // fall through
+          case 100: break;
           default:
             zzScanError(ZZ_NO_MATCH);
         }

@@ -2,11 +2,11 @@
 _primero:    .word 0
 _segundo:    .word 0
 
-_msg1: .asciiz "Ingrese el primer numero"
+_msg1: .asciiz "Ingrese el primer numero: "
 _msg2: .asciiz "Ingrese el segundo numero: "
 _msg3: .asciiz "Primero es mayor"
-_msg4: .asciiz "Buen dia"
-_msg5: .asciiz "Este es el fin del programa"
+_msg4: .asciiz "Segundo es mayor"
+_msg5: .asciiz "Fuera de todo"
 
    .text
    .globl main
@@ -37,6 +37,8 @@ _etiq6:
 li $v0, 4
 la $a0, _msg3
 syscall
+
+b _etiq8
 
 _etiq8:
 li $v0, 4

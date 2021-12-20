@@ -43,8 +43,19 @@ public class TablaRegistros {
             if(tablaRegistro.get(i).getVariable().equals(" ")){
                 tablaRegistro.get(i).setVariable(Variable);
                 registro = tablaRegistro.get(i);
+                break;
             }
         }
         return registro;
+    }
+    
+    public void liberarTemporal(String Variable){
+        for (int i = 0; i < tablaRegistro.size(); i++) {
+            if(tablaRegistro.get(i).getVariable().equals(Variable)){
+                tablaRegistro.get(i).setVariable(" ");
+                break;
+            }
+        }
+        
     }
 }

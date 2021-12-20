@@ -5,7 +5,12 @@ procedure AP1 (Valor: in INTEGER) is
 	begin
 		put("Felicidades hola");
 	end CUENTA; 
-
+	procedure AP2 (Valor: in FLOAT; Valor: in INTEGER) is
+    		tercero,cuarto:INTEGER:=34;
+	begin
+		put("Felicidades hola");
+	end CUENTA; 
+	
 	quinto,sexto:INTEGER:=23;
 
 	procedure AP3 (Valor: in FLOAT) is
@@ -16,6 +21,7 @@ procedure AP1 (Valor: in INTEGER) is
 			put("Felicidades hola");
 		end CUENTA; 
 	begin
+		
 		put("Felicidades hola");
 	end CUENTA; 
 

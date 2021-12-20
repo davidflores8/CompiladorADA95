@@ -39,10 +39,11 @@ terminal  TK_LOOP, TK_ENDLOOP, TK_WHILE, TK_OPADICION, TK_MULTI, TK_ID, TK_OPREL
 terminal  TK_PROCEDURE, TK_IS, TK_BEGIN, TK_END, TK_PUT, TK_GET;
 terminal  TK_DIGITOFLOAT, TK_IN, TK_OUT, TK_INOUT, TK_EXIT, TK_WHEN, TK_FUNCTION, TK_RETURN, TK_STRING;
 terminal  TK_PARENTESISI, TK_PARENTESISD,TK_PUNTOCOMA, TK_COMA,TK_TRUE, TK_FALSE, TK_COLON, TK_AND, TK_OR, TK_FOR;
+terminal  TK_PUNTO;
 
 non terminal Nodo PROCEDURE, ASIGNACIONES, FOR, DECLARACIONES, TIPOS, PUT, GET, DECISION, DECISION_PRIME,WHILE;
-non terminal Nodo STATEMENTS, OPARIT, LOOP,FUNCTION, PARAMETROS, PARAMETROS_PRIME, PROCEDURE_P;
-non terminal ArrayList<Nodo> ID;
+non terminal Nodo STATEMENTS, OPARIT, LOOP,FUNCTION, PARAMETROS, PARAMETROS_PRIME, PROCEDURE_P, CALL, LISTA_ARGS;
+non terminal ArrayList<Nodo> ID,CONDICION_FOR;
 non terminal TIPOS_PARAMETROS, TIPOS_VARIABLES, CONDICION, CONDICIONP, VALOR, OPCONDICION;
 
 precedence left TK_OPADICION;
@@ -93,6 +94,7 @@ STATEMENTS::= DECISION STATEMENTS:s
                 | GET STATEMENTS:s
                 | LOOP STATEMENTS:s
                 | FOR STATEMENTS:s
+                | CALL STATEMENTS:s
                 | 
 ;
 
@@ -177,6 +179,7 @@ VALOR::= TK_DIGITO
                 | TK_FALSE
                 | TK_ID
                 | OPARIT
+                | CALL
 
 ;
 
@@ -343,6 +346,15 @@ TIPOS::=
 
 
 ;
+
+CALL::= TK_ID:d TK_PARENTESISI LISTA_ARGS TK_PARENTESISD TK_PUNTOCOMA
+
+;
+
+LISTA_ARGS::= VALOR:v
+        | VALOR:v TK_COMA LISTA_ARGS
+        |  
+;
                 
 //Gramática de Put y Get
 
@@ -378,7 +390,7 @@ LOOP ::= TK_LOOP STATEMENTS:s TK_EXIT TK_WHEN CONDICION:c TK_PUNTOCOMA TK_ENDLOO
 
 FUNCTION ::= TK_FUNCTION TK_ID:id PARAMETROS:par TK_RETURN:r TIPOS_VARIABLES:tv TK_IS DECLARACIONES:d TK_BEGIN STATEMENTS:proc TK_RETURN TK_ID TK_PUNTOCOMA TK_END TK_ID TK_PUNTOCOMA 
             {:
-                tipoActual = tipoActual + " -> "+r.toString(); 
+                tipoActual = tipoActual + " -> "+tv.toString(); 
                 d.setEtiqueta(tipoActual);
                 AmbitoActual = id.toString();
                 Nodo nodo = new Nodo(id.toString(),parser.cont, tipoActual,offsetActual,AmbitoActual);
@@ -400,13 +412,11 @@ FUNCTION ::= TK_FUNCTION TK_ID:id PARAMETROS:par TK_RETURN:r TIPOS_VARIABLES:tv 
 ;
 //Gramatica del For 
 
-FOR::= TK_FOR  TK_ID:id1 TK_IN TK_ID:id2 TK_LOOP STATEMENTS:p TK_ENDLOOP TK_PUNTOCOMA
-        |TK_FOR  TK_DIGITO:d1 TK_IN TK_ID:id2 TK_LOOP STATEMENTS:p TK_ENDLOOP TK_PUNTOCOMA
-        |TK_FOR  TK_ID:id1 TK_IN TK_DIGITO:d2 TK_LOOP STATEMENTS:p TK_ENDLOOP TK_PUNTOCOMA
-        | error TK_ID TK_IN TK_DIGITO TK_LOOP STATEMENTS TK_ENDLOOP TK_PUNTOCOMA {: errores.add("Se esparaba un \"for\" "); :}
-        | TK_FOR error TK_IN TK_DIGITO TK_LOOP STATEMENTS TK_ENDLOOP TK_PUNTOCOMA {: errores.add("Se esparaba un \"numero o un identificador\" "); :}
-        | TK_FOR TK_ID TK_IN error TK_LOOP STATEMENTS TK_ENDLOOP TK_PUNTOCOMA {: errores.add("Se esparaba un \"numero o un identificador\" "); :}
-        | TK_FOR TK_ID TK_IN TK_DIGITO error STATEMENTS TK_ENDLOOP TK_PUNTOCOMA {: errores.add("Se esparaba un \"loop\" "); :}
-
+FOR::= TK_FOR  CONDICION_FOR:c TK_LOOP STATEMENTS:p TK_ENDLOOP TK_PUNTOCOMA
 
 ;
+
+CONDICION_FOR::= TK_ID:id1 TK_IN TK_ID:id2 TK_PUNTO TK_PUNTO TK_DIGITO:d
+;
+
+

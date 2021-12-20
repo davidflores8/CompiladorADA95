@@ -14,6 +14,10 @@ parser code {:
     Cuadruplo cuadruplos = new Cuadruplo();
     public int cantTemp = 0;
 
+    String tipoCall="";
+
+
+    String id_for="";
 
     public void setErrores(ArrayList errores){
         this.errores = errores;
@@ -90,6 +94,19 @@ parser code {:
         return contador;
     }
 
+    public String obtenerTipo(Nodo nodo, String nombre){
+        
+        String tipo= "";
+        for (int i = 0; i <nodo.getHijos().size(); i++) {
+            evaluarTipo(nodo.getHijos().get(i), nombre, tipo);
+            if(nodo.getHijos().get(i).getEtiqueta().equalsIgnoreCase(nombre)){
+                tipo =  nodo.getHijos().get(i).getTipo();
+            }
+        }
+        return tipo;
+        
+    }
+
 
 
 :} ;
@@ -99,14 +116,15 @@ terminal  String TK_LOOP, TK_ENDLOOP, TK_WHILE, TK_OPADICION, TK_MULTI, TK_ID, T
 terminal  String TK_PROCEDURE, TK_IS, TK_BEGIN, TK_END, TK_PUT, TK_GET;
 terminal  String TK_DIGITOFLOAT, TK_IN, TK_OUT, TK_INOUT, TK_EXIT, TK_WHEN, TK_FUNCTION, TK_RETURN, TK_STRING;
 terminal  String TK_PARENTESISI, TK_PARENTESISD,TK_PUNTOCOMA, TK_COMA,TK_TRUE, TK_FALSE, TK_COLON, TK_AND, TK_OR, TK_FOR;
+terminal  String TK_PUNTO;
 
-non terminal Nodo PROCEDURE, ASIGNACIONES, FOR, DECLARACIONES, TIPOS, PUT, GET;
-non terminal Nodo ID, FUNCTION, PARAMETROS, PARAMETROS_PRIME, PROCEDURE_P, TIPOS_PARAMETROS, TIPOS_VARIABLES;
+non terminal Nodo PROCEDURE, ASIGNACIONES, DECLARACIONES, TIPOS, PUT, GET;
+non terminal Nodo ID, FUNCTION, PARAMETROS, PARAMETROS_PRIME, PROCEDURE_P, TIPOS_PARAMETROS, TIPOS_VARIABLES, LISTA_ARGS;
 non terminal Marcador M;
-non terminal ArrayList<Integer> N, DECISION, DECISION_PRIME, STATEMENTS, WHILE, LOOP;
+non terminal ArrayList<Integer> N, DECISION, DECISION_PRIME, STATEMENTS, WHILE, LOOP, CONDICION_FOR, FOR;
 non terminal Condiciones CONDICION, CONDICIONP;
 non terminal String OPCONDICION;
-non terminal Objeto2 VALOR, OPARIT;
+non terminal Objeto2 VALOR, OPARIT, CALL;
 
 
 
@@ -148,7 +166,11 @@ STATEMENTS::= DECISION:d M:m STATEMENTS:s {:
                         RESULT = l;  
                 :}
                 | FOR STATEMENTS
-                | {: :}
+                | CALL:c STATEMENTS {: 
+
+
+                :}
+                | {:  :}
 ;
 
 //Gramática de parámetros
@@ -281,6 +303,11 @@ VALOR::= TK_DIGITO:i
         | OPARIT:o
         {:
             RESULT = o;
+        :}
+        | CALL: c
+        {:
+            cuadruplos.addCuadruplo("CALL", c.getValor());
+
         :}
 
 ;
@@ -432,6 +459,48 @@ TIPOS::= TK_BOOLEAN
         |TK_FLOAT TK_IGUAL TK_DIGITOFLOAT
 
 ;
+
+CALL::= TK_ID:d TK_PARENTESISI LISTA_ARGS TK_PARENTESISD TK_PUNTOCOMA
+    {:
+        tipoCall =" ";
+        cuadruplos.addCuadruplo("CALL", d.toString());
+        RESULT = new Objeto2(tipoCall, d.toString());
+    :}
+;
+
+LISTA_ARGS::= VALOR:v
+        {:
+            if(!v.getTipo().equalsIgnoreCase("INTEGER")){
+                errores.add("ERROR: "+v.getValor()+ " No es de tipo integer en el argumento de la funcion");
+            }
+            else if (cantidadVecesExiste(arbol, v.getValor(), 0)>1){
+                errores.add("ERROR: "+v.getValor()+ " ha sido declarado mas de una vez");
+            }
+            else {
+                cuadruplos.addCuadruplo("PARAM",v.getValor());
+                tipoCall+=v.getTipo()+" ";
+            }
+        
+        :}
+        | VALOR:v
+            {:  
+                if(!v.getTipo().equalsIgnoreCase("INTEGER")){
+                    errores.add("ERROR: "+v.getValor()+ " No es de tipo integer en el argumento de la funcion");
+                }
+                else if (cantidadVecesExiste(arbol, v.getValor(), 0)>1){
+                    errores.add("ERROR: "+v.getValor()+ " ha sido declarado mas de una vez");
+                }
+                else {
+                    cuadruplos.addCuadruplo("PARAM",v.getValor());
+                    tipoCall+=v.getTipo()+", ";
+                }
+        
+            :}
+
+         TK_COMA LISTA_ARGS 
+        
+        |  {: System.out.println("Este es tipo call"+tipoCall); :}
+;
                 
 //Gramática de Put y Get
 
@@ -476,8 +545,30 @@ FUNCTION ::= TK_FUNCTION TK_ID PARAMETROS TK_RETURN TIPOS_VARIABLES TK_IS DECLAR
 ;
 //Gramatica del For 
 
-FOR::= TK_FOR TK_PARENTESISI CONDICION TK_PARENTESISD TK_LOOP STATEMENTS TK_ENDLOOP TK_PUNTOCOMA
-        
+FOR::= TK_FOR M:m  CONDICION_FOR:c TK_LOOP STATEMENTS:p TK_ENDLOOP TK_PUNTOCOMA
+        {:
+            ArrayList<Integer> siguiente = new ArrayList<>(); 
+            cuadruplos.completa(p, cuadruplos.siguienteCuad());
+            cuadruplos.addCuadruplo("+",id_for,"1",id_for);
+            String num = Integer.toString(m.getNum());
+            cuadruplos.addCuadruplo("GOTO",num);
+            siguiente=c;
+            RESULT = siguiente;
+
+        :}
+;
+
+CONDICION_FOR::= TK_ID:id1 TK_IN TK_ID:id2 TK_PUNTO TK_PUNTO TK_DIGITO:d
+
+    {:
+        ArrayList<Integer> siguiente = new ArrayList<>(); 
+        cuadruplos.addCuadruplo("=", id1.toString(), id2.toString());
+        siguiente = creaLista(cuadruplos.siguienteCuad());
+        cuadruplos.addCuadruplo("IF_FOR>", id1.toString(), d.toString(), Integer.toString(cuadruplos.siguienteCuad()+1));
+        id_for = id1.toString();
+        RESULT = siguiente;
+
+    :}
 ;
 
 

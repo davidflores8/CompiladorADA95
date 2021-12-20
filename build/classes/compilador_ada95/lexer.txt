@@ -67,6 +67,7 @@ IN = in
 OUT = out 
 INOUT = inout
 FOR = for
+PUNTO = \.
 %%
 
 <YYINITIAL>{
@@ -111,6 +112,7 @@ FOR = for
 {OPADICION}   {return new Symbol (sym.TK_OPADICION, yyline + 1, yycolumn +1 , yytext() ) ; }
 {OPMULTI}     {return new Symbol (sym.TK_MULTI, yyline + 1, yycolumn +1 , yytext() ) ; }
 {ID}          {return new Symbol (sym.TK_ID, yyline + 1, yycolumn +1 , yytext() ) ; }
+{PUNTO}          {return new Symbol (sym.TK_PUNTO, yyline + 1, yycolumn +1 , yytext() ) ; }
 {COMENTARIO}  {yybegin(COMENTARIOS);}
 {COMILLA}     {yybegin(STRING);}
 {SALTOLINEA}  {  }

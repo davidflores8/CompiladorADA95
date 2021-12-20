@@ -33,8 +33,6 @@ public class CodigoFinal {
         } catch (Exception e) {
             System.out.println("Error: " + e);
         }
-        System.out.println("Tabla de registros");
-        System.out.println(tablaRegistro.toString());
         
     }
 
@@ -56,7 +54,7 @@ public class CodigoFinal {
                 operacion = tablaCuadruplos.getListaCuadruplo().get(i).getOp();
                 arg1 = tablaCuadruplos.getListaCuadruplo().get(i).getArg1();
                 arg2 = tablaCuadruplos.getListaCuadruplo().get(i).getArg2();
-                if (operacion.contains("IF")) {
+                if (operacion.contains("IF")){
                     genIf(operacion, arg1, arg2, destino);
                     String op, a1, a2, dest, lin;
                     dest = tablaCuadruplos.getListaCuadruplo().get(i + 1).getDestino();
@@ -67,16 +65,24 @@ public class CodigoFinal {
                     genMips("");
                     genEtiqueta("_etiq" + destino,destino);
                     String tam = Integer.toString(tablaCuadruplos.getListaCuadruplo().size());
+                    String l = "b _etiq"+a1+"\n";
+                    genMips(l);
                     genEtiqueta("_etiq" + a1,tam);
                     i=Integer.parseInt(a1)-1;
-                } else if (operacion.contains("PUT")) {
-                    genPut();
+                } else if (operacion.contains("PUT") && arg1.equalsIgnoreCase("STRING") ) {
+                    genPutString();
+                } else if (operacion.contains("PUT") && arg1.equalsIgnoreCase("ID") ) {
+                    genPutID(destino);
                 } else if (operacion.contains("GOTO") || arg1.equals("-")) {
-
+                    
                 }
                 else if (operacion.contains("GET")){
-                    genGet(destino);
-                    
+                    genGet(destino);   
+                }
+                else if (operacion.equals("+")){
+                      genAdd(operacion, arg1, arg2, destino);
+                }
+                else{        
                 }
             }
             String linea = "li $v0 10\n syscall";
@@ -86,6 +92,35 @@ public class CodigoFinal {
             e.printStackTrace();
         }
     }
+    
+    public void genTemporal(String op, String a1, String a2, String des){
+        
+        
+    }
+    
+    public void genAdd(String op, String a1, String a2, String des){
+        String linea="";
+        Registro r1;
+        Registro r2;
+        r1 = tablaRegistro.obtenerTemporalLibre(a1);
+        r2 = tablaRegistro.obtenerTemporalLibre(a2);
+        genlW(r1.getTemporal(),"_"+a1);
+        genlW(r2.getTemporal(),"_"+a2);
+        char c = des.charAt(des.length()-1);
+        int num = Character.getNumericValue(c)+2;
+        des = "$t"+num;
+        linea += "add "+des+", "+r1.getTemporal()+", "+r2.getTemporal()+" \n";
+        linea +="sw "+des+", _"+a1+"\n";
+        tablaRegistro.liberarTemporal(a1);
+        genMips(linea);
+    }
+    
+    public void genlW(String temporal, String variable){
+        String linea="";
+        linea+="lw "+temporal+", "+variable;
+        genMips(linea);
+    }
+    
 
     public void genEtiqueta(String nombre, String inicio) {
         genMips(nombre + ":");
@@ -96,19 +131,23 @@ public class CodigoFinal {
             operacion = tablaCuadruplos.getListaCuadruplo().get(i).getOp();
             arg1 = tablaCuadruplos.getListaCuadruplo().get(i).getArg1();
             arg2 = tablaCuadruplos.getListaCuadruplo().get(i).getArg2();
-            if (operacion.equalsIgnoreCase("put")) {
-                genPut();
-            } else if (operacion.equals("GOTO") || arg1.equals('-')) {
+            if (operacion.equalsIgnoreCase("PUT") && arg1.equalsIgnoreCase("STRING")) {
+                genPutString();
+            } else if (operacion.contains("PUT") && arg1.equalsIgnoreCase("ID") ) {
+                genPutID(destino);
+            } else if (operacion.equals("GOTO") || destino.equals('-')) {
                 i=2000;
+            }
+               else if (operacion.equals("GOTO") && !destino.equals('-')) {
+                
             }
             else if (operacion.equalsIgnoreCase("get")){
                 genGet(destino);
             }
         }
-
     }
 
-    public void genPut() {
+    public void genPutString() {
         String linea = "";
         linea += "li $v0, 4\n";
         linea += "la $a0, " + "_msg" + contMsg + "\n";
@@ -116,13 +155,18 @@ public class CodigoFinal {
         genMips(linea);
         contMsg++;
     }
+    public void genPutID(String id) {
+        String linea = "";
+        linea += "li $v0, 1\n";
+        linea += "la $a0, " + "_" + id + "\n";
+        linea += "syscall\n";
+        genMips(linea);
+    }
     
     public void genGet(String destino){
         String linea = "";
         linea += "li $v0, 5\n";
         linea += "syscall\n";
-        //Registro registro = tablaRegistro.obtenerTemporalLibre(destino);
-        //String temporal = registro.getTemporal();
         linea += "sw $v0, _"+destino+"\n";
         genMips(linea);
         
@@ -130,6 +174,8 @@ public class CodigoFinal {
 
     public void genIf(String op, String a1, String a2, String des) {
         String linea = "";
+        Registro reg1;
+        Registro reg2;
         linea += "lw $t0, _" + a1 + "\n";
         linea += "lw $t1, _" + a2 + "\n";
         if (op.contains(">")) {
@@ -149,10 +195,11 @@ public class CodigoFinal {
     public void buscarWrites(Cuadruplo tablaCuadruplos) {
         int count = 1;
         for (FilaCuadruplo filaCu : this.tablaCuadruplos.getListaCuadruplo()) {
-            String operacion, destino, linea, nuevoArg2;
+            String operacion, destino, linea, nuevoArg2, arg1;
             operacion = filaCu.getOp();
+            arg1 = filaCu.getArg1();
             destino = filaCu.getDestino();
-            if (operacion.equals("PUT")) {
+            if (operacion.equals("PUT") && arg1.equalsIgnoreCase("STRING")) {
                 linea = "_msg" + count + ": .asciiz " + "\"" + destino + "\"";
                 nuevoArg2 = "_msg" + count;
                 genMips(linea);

@@ -36,6 +36,7 @@ public class sym {
   public static final int TK_COLON = 40;
   public static final int EOF = 0;
   public static final int TK_ENDIF = 18;
+  public static final int TK_PUNTO = 44;
   public static final int error = 1;
   public static final int TK_WHILE = 11;
   public static final int TK_FLOAT = 5;
@@ -96,7 +97,8 @@ public class sym {
   "TK_COLON",
   "TK_AND",
   "TK_OR",
-  "TK_FOR"
+  "TK_FOR",
+  "TK_PUNTO"
   };
 }
 
