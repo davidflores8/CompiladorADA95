@@ -1,11 +1,12 @@
 procedure Hola () is
-	numero:Float:=23.34;
-	numero:Float:=23.34;
+	numero:INTEGER;
 begin	
+	put("Ingrese un numero: ");
+	get(numero);
 	loop
 		put("Dentro del loop");
 		put("Todavia dentro del loop");
-	exit when numero>56;
+	exit when numero>5;
 	end loop;
 
 	put("Fuera de todo");

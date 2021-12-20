@@ -47,8 +47,9 @@ public class CodigoFinal {
             buscarWrites(tablaCuadruplos);
             fw.write("\n");
             genMips("   .text");
-            genMips("   .globl Main");
+            genMips("   .globl main");
             fw.write("\n");
+            fw.write("main: \n");
             for (int i = 0; i < tablaCuadruplos.getListaCuadruplo().size(); i++) {
                 String operacion, arg1, arg2, destino, linea;
                 destino = tablaCuadruplos.getListaCuadruplo().get(i).getDestino();
@@ -97,7 +98,7 @@ public class CodigoFinal {
             arg2 = tablaCuadruplos.getListaCuadruplo().get(i).getArg2();
             if (operacion.equalsIgnoreCase("put")) {
                 genPut();
-            } else if (operacion.equals("GOTO") || arg1.equals("-")) {
+            } else if (operacion.equals("GOTO") || arg1.equals('-')) {
                 i=2000;
             }
             else if (operacion.equalsIgnoreCase("get")){
@@ -120,8 +121,9 @@ public class CodigoFinal {
         String linea = "";
         linea += "li $v0, 5\n";
         linea += "syscall\n";
-        
-        linea += "sw $v0, ";
+        //Registro registro = tablaRegistro.obtenerTemporalLibre(destino);
+        //String temporal = registro.getTemporal();
+        linea += "sw $v0, _"+destino+"\n";
         genMips(linea);
         
     }
@@ -168,7 +170,7 @@ public class CodigoFinal {
                     nodo.getHijos().get(i).getAmbito().equalsIgnoreCase("Global")) {
                 String nombre = nodo.getHijos().get(i).getEtiqueta();
                 String tipo = nodo.getHijos().get(i).getTipo();
-                String linea = "_" + nombre + "    .word 0";
+                String linea = "_" + nombre + ":    .word 0";
                 genMips(linea);
             }
         }

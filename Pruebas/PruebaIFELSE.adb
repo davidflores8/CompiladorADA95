@@ -2,12 +2,11 @@ procedure Hola () is
 	primero,segundo:INTEGER:=23;
 begin	
 	if(primero>segundo) then
-		put("Dentro del if");
+		put("Primero es mayor");
 	else
-		put("Dentro del else");	
+		put("Segundo es mayor");	
 	end if;
 
 	put("Fuera de todo");
-	put("Otra vez fuera de todo");
 
 end CUENTA; 

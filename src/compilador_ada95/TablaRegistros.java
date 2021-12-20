@@ -35,6 +35,16 @@ public class TablaRegistros {
             Registro registro = new Registro("$t"+i, " ");
             tablaRegistro.add(registro);
         }
-        
+    }
+    
+    public Registro obtenerTemporalLibre(String Variable){
+        Registro registro = new Registro();
+        for (int i = 0; i < tablaRegistro.size(); i++) {
+            if(tablaRegistro.get(i).getVariable().equals(" ")){
+                tablaRegistro.get(i).setVariable(Variable);
+                registro = tablaRegistro.get(i);
+            }
+        }
+        return registro;
     }
 }
